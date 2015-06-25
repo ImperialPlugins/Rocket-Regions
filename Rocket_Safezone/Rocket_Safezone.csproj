@@ -58,6 +58,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\CreateCommand.cs" />
+    <Compile Include="Commands\Pos1Command.cs" />
+    <Compile Include="Commands\Pos2Command.cs" />
     <Compile Include="SafeZonePlugin.cs" />
     <Compile Include="SafeZoneConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
