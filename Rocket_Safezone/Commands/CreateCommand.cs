@@ -42,6 +42,7 @@ namespace Rocket_Safezone.Commands
 
             SafeZonePlugin.Instance.Configuration.SafeZones.Add(zone);
             SafeZonePlugin.Instance.Configuration.Save();
+            SafeZonePlugin.Instance.OnSafeZoneCreated(zone);
 
             RocketChat.Say(caller.CSteamID, "Successfully created safezone: " + name, UnityEngine.Color.green);
         }

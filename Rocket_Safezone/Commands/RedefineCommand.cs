@@ -33,16 +33,12 @@ namespace Rocket_Safezone.Commands
             }
 
             SafeZonePlugin.Instance.Configuration.SafeZones.Remove(zone);
+            SafeZonePlugin.Instance.OnSafeZoneRemoved(zone);
             zone.Position1 = SafeZonePlugin.Instance.GetPosition1(caller);
             zone.Position2 = SafeZonePlugin.Instance.GetPosition2(caller);
             SafeZonePlugin.Instance.Configuration.SafeZones.Add(zone);
             SafeZonePlugin.Instance.Configuration.Save();
-
-            //Update players in safezones
-            foreach (uint id in SafeZonePlugin.Instance.GetUidsInSafeZone(zone))
-            {
-                SafeZonePlugin.Instance.OnPlayerLeftSafeZone(RocketPlayer.FromCSteamID(new CSteamID(id)), zone, false);
-            }
+            SafeZonePlugin.Instance.OnSafeZoneCreated(zone);
 
             RocketChat.Say(caller.CSteamID, "Successfully redefined safezone: " + name, UnityEngine.Color.green);
         }

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Timers;
 using Rocket.Unturned;
 using Rocket.Unturned.Events;
 using Rocket.Unturned.Logging;
 using Rocket.Unturned.Player;
 using Rocket.Unturned.Plugins;
+using SDG.Unturned;
 using Steamworks;
 using UnityEngine;
 
@@ -14,16 +16,74 @@ namespace Rocket_Safezone
     {
         public static SafeZonePlugin Instance;
         private readonly Dictionary<uint, SafeZone> _safeZonePlayers = new Dictionary<uint, SafeZone>();
-        private readonly Dictionary<uint, Boolean> _godModeStates = new Dictionary<uint, bool>(); 
-
+        private readonly Dictionary<uint, Boolean> _godModeStates = new Dictionary<uint, bool>();
+        private Timer _zombieTimer;
         protected override void Load()
         {
             Instance = this;
+            _zombieTimer = new Timer(Configuration.ZombieTimerSpeed * 1000);
+            _zombieTimer.Elapsed += delegate { OnRemoveZombies(); };
+
+            if (Configuration.SafeZones.Count > 0)
+            {
+                StartListening();
+            }
+
+            //Todo: loop all players and check if they are in safezones (for the case that this plugin was loaded after the start)
+        }
+
+        public void StartListening()
+        {
+            _zombieTimer.Start();
+
+            //Start listening to events
             RocketPlayerEvents.OnPlayerUpdatePosition += OnPlayerUpdatePosition;
             //RocketPlayerEvents.OnPlayerUpdateGesture += OnPlayerUpdateGesture; //not possible currently
             RocketServerEvents.OnPlayerConnected += OnPlayerConnect;
             RocketServerEvents.OnPlayerDisconnected += OnPlayerDisconnect;
-            //Todo: loop all players and check if they are in safezones (for the case that this plugin was loaded after the start)
+        }
+
+        public void StopListening()
+        {
+            _zombieTimer.Stop();
+
+            //Stop listening to events
+            RocketPlayerEvents.OnPlayerUpdatePosition -= OnPlayerUpdatePosition;
+            //RocketPlayerEvents.OnPlayerUpdateGesture -= OnPlayerUpdateGesture;
+            RocketServerEvents.OnPlayerConnected -= OnPlayerConnect;
+            RocketServerEvents.OnPlayerDisconnected -= OnPlayerDisconnect;
+        }
+
+        internal void OnSafeZoneCreated(SafeZone safeZone)
+        {
+            if (Configuration.SafeZones.Count != 1) return;
+            StartListening();
+        }
+
+        internal void OnSafeZoneRemoved(SafeZone safeZone)
+        {
+            //Update players in safezones
+            foreach (uint id in GetUidsInSafeZone(safeZone))
+            {
+                OnPlayerLeftSafeZone(RocketPlayer.FromCSteamID(new CSteamID(id)), safeZone, false);
+            }
+
+            if (Configuration.SafeZones.Count != 0) return;
+            StopListening();
+        }
+
+        private void OnRemoveZombies()
+        {
+            for (int v = 0; v < ZombieManager.ZombieRegions.Length; v++)
+            {
+                foreach (Zombie zombie in ZombieManager.ZombieRegions[v].Zombies)
+                {
+                    SafeZone safeZone = GetSafeZoneAt(zombie.transform.position);
+                    if (safeZone == null || !safeZone.NoZombies) continue;
+                    EPlayerKill pKill;
+                    zombie.askDamage(255, zombie.transform.up, out pKill);
+                }
+            }
         }
 
         private void OnPlayerUpdateGesture(RocketPlayer player, RocketPlayerEvents.PlayerGesture gesture)
@@ -54,13 +114,10 @@ namespace Rocket_Safezone
 
         private void OnPlayerConnect(RocketPlayer player)
         {
-            foreach (SafeZone zone in Configuration.SafeZones)
+            SafeZone safeZone = GetSafeZoneAt(player.Position);
+            if (safeZone != null)
             {
-                if (ContainsPosition(zone, player.Position))
-                {
-                    OnPlayerEnteredSafeZone(player, zone, true);        
-                    return;
-                }
+                OnPlayerEnteredSafeZone(player, safeZone, true);    
             }
         }
 
@@ -73,17 +130,9 @@ namespace Rocket_Safezone
         private void OnPlayerUpdatePosition(RocketPlayer player, Vector3 position)
         {
             uint id = GetId(player);
-            bool bIsInSafeZone = false;
-            SafeZone safeZone = null;
-            foreach (SafeZone zone in Configuration.SafeZones)
-            {
-                if (ContainsPosition(zone, position))
-                {
-                    bIsInSafeZone = true;
-                    safeZone = zone;
-                    break;
-                }
-            }
+
+            SafeZone safeZone = GetSafeZoneAt(position);
+            bool bIsInSafeZone = safeZone != null;
 
             if (!bIsInSafeZone && _safeZonePlayers.ContainsKey(id))
             {
@@ -120,7 +169,6 @@ namespace Rocket_Safezone
 
             if (bSendMessage)
             {
-                //Todo: use translation
                 RocketChat.Say(player.CSteamID, "Left safe zone: " + safeZone.Name, Color.red);
             }
         }
@@ -151,9 +199,9 @@ namespace Rocket_Safezone
             _godModeStates.Remove(id);
         }
 
-        private static bool ContainsPosition(SafeZone zone, Vector3 pos)
+        private static bool IsInSafeZone(Vector3 pos, SafeZone zone)
         {
-            Position p = new Position() { X = pos.x, Y = pos.z };
+            Position p = new Position { X = pos.x, Y = pos.z };
             
             Position p1 = zone.Position1;
             Position p4 = zone.Position2;
@@ -170,6 +218,18 @@ namespace Rocket_Safezone
             int height = (int) Math.Abs(p1.Y - p4.Y);
 
             return p.X >= Math.Min(p1.X, p4.X) && p.X <= Math.Min(p1.X, p4.X) + width && p.Y >= Math.Min(p1.Y, p4.Y) && p.Y <= Math.Min(p1.Y, p4.Y) + height;
+        }
+
+        public SafeZone GetSafeZoneAt(Vector3 pos)
+        {
+            foreach (SafeZone safeZone in Configuration.SafeZones)
+            {
+                if (IsInSafeZone(pos, safeZone))
+                {
+                    return safeZone;
+                }
+            }
+            return null;
         }
 
         private readonly Dictionary<uint, Position> _firstPositions = new Dictionary<uint, Position>();

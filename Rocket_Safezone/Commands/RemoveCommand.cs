@@ -28,12 +28,8 @@ namespace Rocket_Safezone.Commands
 
             SafeZonePlugin.Instance.Configuration.SafeZones.Remove(zone);
             SafeZonePlugin.Instance.Configuration.Save();
+            SafeZonePlugin.Instance.OnSafeZoneRemoved(zone);
 
-            //Update players in safezones
-            foreach (uint id in SafeZonePlugin.Instance.GetUidsInSafeZone(zone))
-            {
-                SafeZonePlugin.Instance.OnPlayerLeftSafeZone(RocketPlayer.FromCSteamID(new CSteamID(id)), zone, false);
-            }
             RocketChat.Say(caller.CSteamID, "Successfully removed safezone: " + name, UnityEngine.Color.green);
         }
 

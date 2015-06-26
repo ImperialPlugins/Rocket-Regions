@@ -16,9 +16,13 @@ namespace Rocket_Safezone
             {
                 SafeZoneConfiguration config = new SafeZoneConfiguration();
                 config.SafeZones = new List<SafeZone>();
+                config.ZombieTimerSpeed = 5;
                 return config;
             }
         }
+
+        [XmlArrayItem(ElementName = "ZombieTimerSpeed")] 
+        public int ZombieTimerSpeed;
     }
 
     public class SafeZone
