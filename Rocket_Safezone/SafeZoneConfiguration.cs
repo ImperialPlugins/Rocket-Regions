@@ -25,8 +25,6 @@ namespace Rocket_Safezone
     {
         [XmlAttribute("Name")]
         public string Name;
-        [XmlAttribute("Active")]
-        public bool Active;
         [XmlElement("Position1")]
         public Position Position1;
         [XmlElement("Position2")]
@@ -37,6 +35,8 @@ namespace Rocket_Safezone
         public bool PickupAllowed;
         [XmlAttribute("VehiclesAllowed")]
         public bool VehiclesAllowed;
+        [XmlAttribute("NoZombies")]
+        public bool NoZombies;
     }
 
     [Serializable]

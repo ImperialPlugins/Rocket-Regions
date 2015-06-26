@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Rocket.Unturned;
 using Rocket.Unturned.Events;
 using Rocket.Unturned.Logging;
@@ -109,11 +108,11 @@ namespace Rocket_Safezone
             if (bSendMessage)
             {
                 //Todo: use translation
-                RocketChat.Say(player.CSteamID, "Entered safe zone: " + safeZone.Name, UnityEngine.Color.green);
+                RocketChat.Say(player.CSteamID, "Entered safe zone: " + safeZone.Name, Color.green);
             }
         }
 
-        private void OnPlayerLeftSafeZone(RocketPlayer player, SafeZone safeZone, bool bSendMessage)
+        internal void OnPlayerLeftSafeZone(RocketPlayer player, SafeZone safeZone, bool bSendMessage)
         {
             uint id = GetId(player);
             DisableGodMode(player);
@@ -122,7 +121,7 @@ namespace Rocket_Safezone
             if (bSendMessage)
             {
                 //Todo: use translation
-                RocketChat.Say(player.CSteamID, "Left safe zone: " + safeZone.Name, UnityEngine.Color.red);
+                RocketChat.Say(player.CSteamID, "Left safe zone: " + safeZone.Name, Color.red);
             }
         }
 
@@ -159,37 +158,45 @@ namespace Rocket_Safezone
             Position p1 = zone.Position1;
             Position p4 = zone.Position2;
 
-            float x2 = p1.X;
-            float y2 = p4.X;
-            float x3 = p4.X;
-            float y3 = p1.Y;
+            //float x2 = p1.X;
+            //float y2 = p4.X;
+            //float x3 = p4.X;
+            //float y3 = p1.Y;
 
-            Position p2 = new Position() {X = x2, Y = y2};
-            Position p3 = new Position() {X = x3, Y = y3 };
+            //Position p2 = new Position() {X = x2, Y = y2};
+            //Position p3 = new Position() {X = x3, Y = y3 };
 
-            return IsInPolygon(new[] { p1, p2, p3, p4 }, p);
-        }
+            int width = (int) Math.Abs(p1.X - p4.X);
+            int height = (int) Math.Abs(p1.Y - p4.Y);
 
-        public static bool IsInPolygon(Position[] poly, Position point)
-        {
-            var coef = poly.Skip(1).Select((p, i) =>
-                                            (point.Y - poly[i].Y) * (p.X - poly[i].X)
-                                          - (point.X - poly[i].X) * (p.Y - poly[i].Y))
-                                    .ToList();
-
-            if (coef.Any(p => p == 0))
-                return true;
-
-            for (int i = 1; i < coef.Count(); i++)
-            {
-                if (coef[i] * coef[i - 1] < 0)
-                    return false;
-            }
-            return true;
+            return p.X >= Math.Min(p1.X, p4.X) && p.X <= Math.Min(p1.X, p4.X) + width && p.Y >= Math.Min(p1.Y, p4.Y) && p.Y <= Math.Min(p1.Y, p4.Y) + height;
         }
 
         private readonly Dictionary<uint, Position> _firstPositions = new Dictionary<uint, Position>();
         private readonly Dictionary<uint, Position> _secondsPositions = new Dictionary<uint, Position>();
+
+        public SafeZone GetSafeZone(String safeZoneName, bool exact = false)
+        {
+            if (Configuration.SafeZones == null || Configuration.SafeZones.Count == 0) return null;
+
+            foreach (SafeZone safeZone in Configuration.SafeZones)
+            {
+                if (exact)
+                {
+                    if (safeZone.Name == safeZoneName)
+                    {
+                        return safeZone;
+                    }
+                    continue;
+                }
+
+                if (safeZone.Name.StartsWith(safeZoneName))
+                {
+                    return safeZone;
+                }
+            }
+            return null;
+        }
 
         public void SetPosition1(RocketPlayer player, Position pos)
         {
@@ -230,6 +237,19 @@ namespace Rocket_Safezone
         public Position GetPosition2(RocketPlayer caller)
         {
             return _secondsPositions[GetId(caller)];
+        }
+
+        public IEnumerable<uint> GetUidsInSafeZone(SafeZone zone)
+        {
+            List<uint> ids = new List<uint>();
+            foreach (uint id in _safeZonePlayers.Keys)
+            {
+                if (_safeZonePlayers[id] == zone)
+                {
+                    ids.Add(id);
+                }
+            }
+            return ids;
         }
     }
 }
