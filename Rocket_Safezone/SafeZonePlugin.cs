@@ -104,11 +104,11 @@ namespace Rocket_Safezone
 
         protected override void Unload()
         {
-            foreach (uint id in _safeZonePlayers.Keys)
+            foreach (var safeZone in Configuration.SafeZones)
             {
-                RocketPlayer player = RocketPlayer.FromCSteamID(new CSteamID(id));
-                OnPlayerLeftSafeZone(player, _safeZonePlayers[id], false);
+                OnSafeZoneRemoved(safeZone);
             }
+            StopListening();
             Instance = null;
         }
 
