@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
+using System.Linq;
 using Rocket.Unturned;
 using Rocket.Unturned.Events;
 using Rocket.Unturned.Logging;
@@ -109,7 +109,7 @@ namespace Rocket_Safezone
             if (bSendMessage)
             {
                 //Todo: use translation
-                RocketChat.Say(player.CSteamID, "Entered safe zone: " + safeZone.Name, Color.green);
+                RocketChat.Say(player.CSteamID, "Entered safe zone: " + safeZone.Name, UnityEngine.Color.green);
             }
         }
 
@@ -122,7 +122,7 @@ namespace Rocket_Safezone
             if (bSendMessage)
             {
                 //Todo: use translation
-                RocketChat.Say(player.CSteamID, "Left safe zone: " + safeZone.Name, Color.red);
+                RocketChat.Say(player.CSteamID, "Left safe zone: " + safeZone.Name, UnityEngine.Color.red);
             }
         }
 
@@ -158,40 +158,60 @@ namespace Rocket_Safezone
             
             Position p1 = zone.Position1;
             Position p4 = zone.Position2;
-            Position p2 = new Position() {X = p4.X, Y = p1.Y};
-            Position p3 = new Position() {X = p1.X, Y = p4.Y };
 
-            return IsPointInPolygon(new[] {p1, p2, p3, p4}, p);
+            float x2 = p1.X;
+            float y2 = p4.X;
+            float x3 = p4.X;
+            float y3 = p1.Y;
+
+            Position p2 = new Position() {X = x2, Y = y2};
+            Position p3 = new Position() {X = x3, Y = y3 };
+
+            return IsInPolygon(new[] { p1, p2, p3, p4 }, p);
         }
 
-        private static bool IsPointInPolygon(Position[] polygon, Position point)
+        public static bool IsInPolygon(Position[] poly, Position point)
         {
-            bool isInside = false;
-            for (int i = 0, j = polygon.Length - 1; i < polygon.Length; j = i++)
+            var coef = poly.Skip(1).Select((p, i) =>
+                                            (point.Y - poly[i].Y) * (p.X - poly[i].X)
+                                          - (point.X - poly[i].X) * (p.Y - poly[i].Y))
+                                    .ToList();
+
+            if (coef.Any(p => p == 0))
+                return true;
+
+            for (int i = 1; i < coef.Count(); i++)
             {
-                if (((polygon[i].Y > point.Y) != (polygon[j].Y > point.Y)) &&
-                (point.X < (polygon[j].X - polygon[i].X) * (point.Y - polygon[i].Y) / (polygon[j].Y - polygon[i].Y) + polygon[i].X))
-                {
-                    isInside = !isInside;
-                }
+                if (coef[i] * coef[i - 1] < 0)
+                    return false;
             }
-            return isInside;
+            return true;
         }
 
         private readonly Dictionary<uint, Position> _firstPositions = new Dictionary<uint, Position>();
         private readonly Dictionary<uint, Position> _secondsPositions = new Dictionary<uint, Position>();
 
-        public void SetPosition1([NotNull] RocketPlayer player, [NotNull] Position pos)
+        public void SetPosition1(RocketPlayer player, Position pos)
         {
+            if (_firstPositions.ContainsKey(GetId(player)))
+            {
+                _firstPositions[GetId(player)] = pos;
+                return;
+            }
             _firstPositions.Add(GetId(player), pos);
         }
 
-        public void SetPosition2([NotNull] RocketPlayer player, [NotNull] Position pos)
+        public void SetPosition2(RocketPlayer player, Position pos)
         {
+            if (_secondsPositions.ContainsKey(GetId(player)))
+            {
+                _secondsPositions[GetId(player)] = pos;
+                return;
+            }
             _secondsPositions.Add(GetId(player), pos);
         }
 
-        public bool HasPositionSet([NotNull] RocketPlayer player)
+        public bool HasPositionSet(RocketPlayer player)
         {
             return _firstPositions.ContainsKey(GetId(player)) && _secondsPositions.ContainsKey(GetId(player));
         }

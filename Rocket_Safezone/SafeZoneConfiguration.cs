@@ -27,9 +27,9 @@ namespace Rocket_Safezone
         public string Name;
         [XmlAttribute("Active")]
         public bool Active;
-        [XmlAttribute("Position1")]
+        [XmlElement("Position1")]
         public Position Position1;
-        [XmlAttribute("Position2")]
+        [XmlElement("Position2")]
         public Position Position2;
 
         //Todo: implement these
@@ -39,6 +39,8 @@ namespace Rocket_Safezone
         public bool VehiclesAllowed;
     }
 
+    [Serializable]
+    [XmlTypeAttribute(AnonymousType = true)]
     public class Position
     {
         [XmlAttribute("x")]

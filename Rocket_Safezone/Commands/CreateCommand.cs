@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Rocket.Unturned;
 using Rocket.Unturned.Commands;
 using Rocket.Unturned.Player;
+using Rocket.Unturned.Plugins;
 
 namespace Rocket_Safezone.Commands
 {
@@ -26,7 +27,10 @@ namespace Rocket_Safezone.Commands
                 Active = true
             };
 
+            RocketChat.Say(caller.CSteamID, "Successfully created safezone: " + name, UnityEngine.Color.green);
+
             SafeZonePlugin.Instance.Configuration.SafeZones.Add(zone);
+            SafeZonePlugin.Instance.Configuration.Save();
         }
 
         public bool RunFromConsole
