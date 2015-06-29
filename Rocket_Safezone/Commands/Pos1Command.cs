@@ -4,7 +4,7 @@ using Rocket.Unturned.Commands;
 using Rocket.Unturned.Player;
 using UnityEngine;
 
-namespace Rocket_Safezone.Commands
+namespace Safezone.Commands
 {
     public class Pos1Command : IRocketCommand
     {

@@ -10,7 +10,7 @@ using SDG.Unturned;
 using Steamworks;
 using UnityEngine;
 
-namespace Rocket_Safezone
+namespace Safezone
 {
     public class SafeZonePlugin : RocketPlugin<SafeZoneConfiguration>
     {

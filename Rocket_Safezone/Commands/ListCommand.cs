@@ -7,7 +7,7 @@ using Rocket.Unturned.Plugins;
 using Steamworks;
 using UnityEngine;
 
-namespace Rocket_Safezone.Commands
+namespace Safezone.Commands
 {
     public class ListCommand : IRocketCommand
     {

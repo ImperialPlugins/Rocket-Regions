@@ -5,7 +5,7 @@ using Rocket.Unturned.Commands;
 using Rocket.Unturned.Player;
 using Rocket.Unturned.Plugins;
 
-namespace Rocket_Safezone.Commands
+namespace Safezone.Commands
 {
     public class CreateCommand :IRocketCommand
     {

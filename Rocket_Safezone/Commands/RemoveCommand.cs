@@ -6,7 +6,7 @@ using Rocket.Unturned.Player;
 using Rocket.Unturned.Plugins;
 using Steamworks;
 
-namespace Rocket_Safezone.Commands
+namespace Safezone.Commands
 {
     public class RemoveCommand : IRocketCommand
     {

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rocket_Safezone", "Rocket_Safezone\Rocket_Safezone.csproj", "{E765482E-CDA0-4DB0-9376-4650A9EA9264}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Safezone", "Rocket_Safezone\Safezone.csproj", "{E765482E-CDA0-4DB0-9376-4650A9EA9264}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

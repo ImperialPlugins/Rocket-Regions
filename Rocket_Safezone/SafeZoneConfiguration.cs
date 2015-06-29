@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using Rocket.API;
 
-namespace Rocket_Safezone
+namespace Safezone
 {
     public class SafeZoneConfiguration : IRocketPluginConfiguration
     {
@@ -44,7 +44,7 @@ namespace Rocket_Safezone
     }
 
     [Serializable]
-    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlType(AnonymousType = true)]
     public class Position
     {
         [XmlAttribute("x")]
