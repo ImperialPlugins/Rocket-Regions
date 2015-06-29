@@ -12,7 +12,7 @@ namespace Rocket_Safezone.Commands
         {
             Vector3 callerPos = caller.Position;
             Position pos = new Position { X = callerPos.x, Y = callerPos.z };
-            RocketChat.Say(caller.CSteamID, "Second position set to: X:" + callerPos.x + ", Z: " + callerPos.y);
+            RocketChat.Say(caller.CSteamID, "Second position set to: X:" + pos.X + ", Z: " + pos.Y);
             SafeZonePlugin.Instance.SetPosition2(caller, pos);
         }
 

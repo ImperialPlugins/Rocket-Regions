@@ -21,21 +21,27 @@ namespace Rocket_Safezone
         protected override void Load()
         {
             Instance = this;
+
+            // 0 is invalid, reset it
+            if (Configuration.ZombieTimerSpeed == 0)
+            {
+                Configuration.ZombieTimerSpeed = ((SafeZoneConfiguration)Configuration.DefaultConfiguration).ZombieTimerSpeed;
+                Configuration.Save();
+            }
             _zombieTimer = new Timer(Configuration.ZombieTimerSpeed * 1000);
             _zombieTimer.Elapsed += delegate { OnRemoveZombies(); };
-
-            if (Configuration.SafeZones.Count > 0)
-            {
-                StartListening();
-            }
+            if (Configuration.SafeZones.Count < 1) return;
+            StartListening();
 
             //Todo: loop all players and check if they are in safezones (for the case that this plugin was loaded after the start)
         }
 
         public void StartListening()
         {
-            _zombieTimer.Start();
-
+            if (_zombieTimer != null)
+            {
+                _zombieTimer.Start();
+            }
             //Start listening to events
             RocketPlayerEvents.OnPlayerUpdatePosition += OnPlayerUpdatePosition;
             //RocketPlayerEvents.OnPlayerUpdateGesture += OnPlayerUpdateGesture; //not possible currently
@@ -45,8 +51,10 @@ namespace Rocket_Safezone
 
         public void StopListening()
         {
-            _zombieTimer.Stop();
-
+            if (_zombieTimer != null)
+            {
+                _zombieTimer.Stop();
+            }
             //Stop listening to events
             RocketPlayerEvents.OnPlayerUpdatePosition -= OnPlayerUpdatePosition;
             //RocketPlayerEvents.OnPlayerUpdateGesture -= OnPlayerUpdateGesture;
@@ -204,7 +212,7 @@ namespace Rocket_Safezone
             Position p = new Position { X = pos.x, Y = pos.z };
             
             Position p1 = zone.Position1;
-            Position p4 = zone.Position2;
+            Position p2 = zone.Position2;
 
             //float x2 = p1.X;
             //float y2 = p4.X;
@@ -214,10 +222,12 @@ namespace Rocket_Safezone
             //Position p2 = new Position() {X = x2, Y = y2};
             //Position p3 = new Position() {X = x3, Y = y3 };
 
-            int width = (int) Math.Abs(p1.X - p4.X);
-            int height = (int) Math.Abs(p1.Y - p4.Y);
+            bool b1 = p.X >= Math.Min(p1.X, p2.X);
+            bool b2 = p.X <= Math.Max(p1.X, p2.X);
+            bool b3 = p.Y >= Math.Min(p1.Y, p2.Y);
+            bool b4 = p.Y <= Math.Max(p1.Y, p2.Y);           
 
-            return p.X >= Math.Min(p1.X, p4.X) && p.X <= Math.Min(p1.X, p4.X) + width && p.Y >= Math.Min(p1.Y, p4.Y) && p.Y <= Math.Min(p1.Y, p4.Y) + height;
+            return  b1 && b2 && b3 && b4;
         }
 
         public SafeZone GetSafeZoneAt(Vector3 pos)
@@ -243,14 +253,14 @@ namespace Rocket_Safezone
             {
                 if (exact)
                 {
-                    if (safeZone.Name == safeZoneName)
+                    if (safeZone.Name.ToLower() == safeZoneName.ToLower())
                     {
                         return safeZone;
                     }
                     continue;
                 }
 
-                if (safeZone.Name.StartsWith(safeZoneName))
+                if (safeZone.Name.ToLower().Trim().StartsWith(safeZoneName.ToLower().Trim()))
                 {
                     return safeZone;
                 }

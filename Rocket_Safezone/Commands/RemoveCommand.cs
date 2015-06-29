@@ -19,7 +19,7 @@ namespace Rocket_Safezone.Commands
             }
 
             String name = command.GetStringParameter(0);
-            SafeZone zone = SafeZonePlugin.Instance.GetSafeZone(name, true);
+            SafeZone zone = SafeZonePlugin.Instance.GetSafeZone(name, false);
             if (zone == null)
             {
                 RocketChat.Say(caller.CSteamID, "Safezone \"" + name + "\" not found", UnityEngine.Color.red);
