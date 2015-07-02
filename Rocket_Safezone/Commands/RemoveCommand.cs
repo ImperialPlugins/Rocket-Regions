@@ -4,6 +4,7 @@ using Rocket.Unturned;
 using Rocket.Unturned.Commands;
 using Rocket.Unturned.Player;
 using Rocket.Unturned.Plugins;
+using Safezone.Model;
 using Steamworks;
 
 namespace Safezone.Commands

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Rocket.Unturned;
 using Rocket.Unturned.Commands;
 using Rocket.Unturned.Player;
 using Rocket.Unturned.Plugins;
+using Safezone.Model;
 using Steamworks;
 
 namespace Safezone.Commands
@@ -34,8 +36,9 @@ namespace Safezone.Commands
 
             SafeZonePlugin.Instance.Configuration.SafeZones.Remove(zone);
             SafeZonePlugin.Instance.OnSafeZoneRemoved(zone);
-            zone.Position1 = SafeZonePlugin.Instance.GetPosition1(caller);
-            zone.Position2 = SafeZonePlugin.Instance.GetPosition2(caller);
+            ArrayList args = new ArrayList(command);
+            args.RemoveAt(0); // remove name
+            zone.Type.Redefine(caller, args);
             SafeZonePlugin.Instance.Configuration.SafeZones.Add(zone);
             SafeZonePlugin.Instance.Configuration.Save();
             SafeZonePlugin.Instance.OnSafeZoneCreated(zone);

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Timers;
 using Rocket.Unturned;
 using Rocket.Unturned.Events;
 using Rocket.Unturned.Logging;
 using Rocket.Unturned.Player;
 using Rocket.Unturned.Plugins;
+using Safezone.Model;
+using Safezone.Model.Flag;
 using SDG.Unturned;
 using Steamworks;
 using UnityEngine;
@@ -82,15 +85,10 @@ namespace Safezone
 
         private void OnRemoveZombies()
         {
-            for (int v = 0; v < ZombieManager.ZombieRegions.Length; v++)
+            foreach (Zombie zombie in ZombieManager.ZombieRegions.SelectMany(t => (from zombie in t.Zombies let safeZone = GetSafeZoneAt(zombie.transform.position) where safeZone != null && safeZone.GetFlag(typeof (NoZombieFlag)).GetValue<bool>() select zombie)))
             {
-                foreach (Zombie zombie in ZombieManager.ZombieRegions[v].Zombies)
-                {
-                    SafeZone safeZone = GetSafeZoneAt(zombie.transform.position);
-                    if (safeZone == null || !safeZone.NoZombies) continue;
-                    EPlayerKill pKill;
-                    zombie.askDamage(255, zombie.transform.up, out pKill);
-                }
+                EPlayerKill pKill;
+                zombie.askDamage(255, zombie.transform.up, out pKill);
             }
         }
 
@@ -100,7 +98,7 @@ namespace Safezone
             switch (gesture)
             {
                 case RocketPlayerEvents.PlayerGesture.Pickup:
-                    if (_safeZonePlayers[GetId(player)].PickupAllowed)
+                    if (_safeZonePlayers[GetId(player)].GetFlag(typeof(PickupAllowedFlag)).GetValue<bool>())
                     {
                         break;
                     }
@@ -149,17 +147,20 @@ namespace Safezone
             else if (bIsInSafeZone && !_safeZonePlayers.ContainsKey(id))
             {
                 OnPlayerEnteredSafeZone(player, safeZone, true);
-                return;
             }
-
-            //Player is still inside or outside a safezone, don't update anything
+            else
+            {
+                //Player is still inside or outside a safezone, don't update anything
+            }
         }
 
         private void OnPlayerEnteredSafeZone(RocketPlayer player, SafeZone safeZone, bool bSendMessage)
         {
             uint id = GetId(player);
-            if(safeZone == null) throw new ArgumentNullException("safeZone");
-            EnableGodMode(player);
+            if (safeZone.GetFlag(typeof (GodmodeFlag)).GetValue<bool>())
+            {
+                EnableGodMode(player);
+            }
             _safeZonePlayers.Add(id, safeZone);
 
             if (bSendMessage)
@@ -172,7 +173,11 @@ namespace Safezone
         internal void OnPlayerLeftSafeZone(RocketPlayer player, SafeZone safeZone, bool bSendMessage)
         {
             uint id = GetId(player);
-            DisableGodMode(player);
+
+            if (safeZone.GetFlag(typeof (GodmodeFlag)).GetValue<bool>())
+            {
+                DisableGodMode(player);
+            }
             _safeZonePlayers.Remove(id);
 
             if (bSendMessage)
@@ -210,36 +215,12 @@ namespace Safezone
         private static bool IsInSafeZone(Vector3 pos, SafeZone zone)
         {
             Position p = new Position { X = pos.x, Y = pos.z };
-            
-            Position p1 = zone.Position1;
-            Position p2 = zone.Position2;
-
-            //float x2 = p1.X;
-            //float y2 = p4.X;
-            //float x3 = p4.X;
-            //float y3 = p1.Y;
-
-            //Position p2 = new Position() {X = x2, Y = y2};
-            //Position p3 = new Position() {X = x3, Y = y3 };
-
-            bool b1 = p.X >= Math.Min(p1.X, p2.X);
-            bool b2 = p.X <= Math.Max(p1.X, p2.X);
-            bool b3 = p.Y >= Math.Min(p1.Y, p2.Y);
-            bool b4 = p.Y <= Math.Max(p1.Y, p2.Y);           
-
-            return  b1 && b2 && b3 && b4;
+            return zone.Type.IsInSafeZone(p);
         }
 
         public SafeZone GetSafeZoneAt(Vector3 pos)
         {
-            foreach (SafeZone safeZone in Configuration.SafeZones)
-            {
-                if (IsInSafeZone(pos, safeZone))
-                {
-                    return safeZone;
-                }
-            }
-            return null;
+            return Configuration.SafeZones.FirstOrDefault(safeZone => IsInSafeZone(pos, safeZone));
         }
 
         private readonly Dictionary<uint, Position> _firstPositions = new Dictionary<uint, Position>();
@@ -311,15 +292,7 @@ namespace Safezone
 
         public IEnumerable<uint> GetUidsInSafeZone(SafeZone zone)
         {
-            List<uint> ids = new List<uint>();
-            foreach (uint id in _safeZonePlayers.Keys)
-            {
-                if (_safeZonePlayers[id] == zone)
-                {
-                    ids.Add(id);
-                }
-            }
-            return ids;
+            return _safeZonePlayers.Keys.Where(id => _safeZonePlayers[id] == zone).ToList();
         }
     }
 }

@@ -2,6 +2,7 @@
 using Rocket.Unturned;
 using Rocket.Unturned.Commands;
 using Rocket.Unturned.Player;
+using Safezone.Model;
 using UnityEngine;
 
 namespace Safezone.Commands

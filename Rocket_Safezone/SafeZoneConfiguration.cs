@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using Rocket.API;
+using Safezone.Model;
 
 namespace Safezone
 {
@@ -25,31 +26,5 @@ namespace Safezone
         public int ZombieTimerSpeed;
     }
 
-    public class SafeZone
-    {
-        [XmlAttribute("Name")]
-        public string Name;
-        [XmlElement("Position1")]
-        public Position Position1;
-        [XmlElement("Position2")]
-        public Position Position2;
-
-        //Todo: implement these
-        [XmlAttribute("PickupAllowed")]
-        public bool PickupAllowed;
-        [XmlAttribute("VehiclesAllowed")]
-        public bool VehiclesAllowed;
-        [XmlAttribute("NoZombies")]
-        public bool NoZombies;
-    }
-
-    [Serializable]
-    [XmlType(AnonymousType = true)]
-    public class Position
-    {
-        [XmlAttribute("x")]
-        public float X;
-        [XmlAttribute("y")]
-        public float Y;
-    }
+ 
 }

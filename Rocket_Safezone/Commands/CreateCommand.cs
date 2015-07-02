@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Rocket.Unturned;
 using Rocket.Unturned.Commands;
 using Rocket.Unturned.Player;
 using Rocket.Unturned.Plugins;
+using Safezone.Model;
 
 namespace Safezone.Commands
 {
@@ -17,11 +19,6 @@ namespace Safezone.Commands
                 return;
             }
 
-            if (!SafeZonePlugin.Instance.HasPositionSet(caller))
-            {
-                RocketChat.Say(caller.CSteamID, "Please set pos1 (/spos1) and pos2 (/spos2) before using this command", UnityEngine.Color.red);
-                return;
-            }
             String name = command.GetStringParameter(0);
             
             if (SafeZonePlugin.Instance.GetSafeZone(name, true) != null)
@@ -29,20 +26,22 @@ namespace Safezone.Commands
                 RocketChat.Say(caller.CSteamID, "A safezone with this name already exists!", UnityEngine.Color.red);
                 return;
             }
-            
-            SafeZone zone = new SafeZone
-            {
-                Name = name,
-                Position1 = SafeZonePlugin.Instance.GetPosition1(caller),
-                Position2 = SafeZonePlugin.Instance.GetPosition2(caller),
-                PickupAllowed = true,
-                VehiclesAllowed = true,
-                NoZombies = true
-            };
 
-            SafeZonePlugin.Instance.Configuration.SafeZones.Add(zone);
+            SafeZoneType type = SafeZoneType.CreateSafeZoneType(name);
+            ArrayList args = new ArrayList(command);
+            args.RemoveAt(0); // remove name
+
+            SafeZone safeZone = type.Create(caller, name, args);
+
+            if (safeZone == null)
+            {
+                RocketChat.Say(caller.CSteamID, "Could't create safezone!", UnityEngine.Color.red);
+                return;
+            }
+
+            SafeZonePlugin.Instance.Configuration.SafeZones.Add(safeZone);
             SafeZonePlugin.Instance.Configuration.Save();
-            SafeZonePlugin.Instance.OnSafeZoneCreated(zone);
+            SafeZonePlugin.Instance.OnSafeZoneCreated(safeZone);
 
             RocketChat.Say(caller.CSteamID, "Successfully created safezone: " + name, UnityEngine.Color.green);
         }

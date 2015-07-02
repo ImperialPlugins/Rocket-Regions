@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Rocket_Safezone</RootNamespace>
     <AssemblyName>Rocket_Safezone</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -64,6 +65,15 @@
     <Compile Include="Commands\Pos2Command.cs" />
     <Compile Include="Commands\RedefineCommand.cs" />
     <Compile Include="Commands\RemoveCommand.cs" />
+    <Compile Include="Model\Flag\EnterVehiclesFlag.cs" />
+    <Compile Include="Model\Flag\Flag.cs" />
+    <Compile Include="Model\Flag\GodmodeFlag.cs" />
+    <Compile Include="Model\Flag\NoZombieFlag.cs" />
+    <Compile Include="Model\Flag\PickupAllowedFlag.cs" />
+    <Compile Include="Model\Position.cs" />
+    <Compile Include="Model\Safezone\RectangleType.cs" />
+    <Compile Include="Model\Safezone\SafeZone.cs" />
+    <Compile Include="Model\Safezone\SafeZoneType.cs" />
     <Compile Include="SafeZonePlugin.cs" />
     <Compile Include="SafeZoneConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
