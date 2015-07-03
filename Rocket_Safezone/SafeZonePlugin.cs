@@ -25,6 +25,8 @@ namespace Safezone
         {
             Instance = this;
 
+            SafeZoneType.RegisterSafeZoneType("rectangle", typeof(RectangleType));
+
             // 0 is invalid, reset it
             if (Configuration.ZombieTimerSpeed == 0)
             {
