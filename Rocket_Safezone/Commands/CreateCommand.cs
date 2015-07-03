@@ -13,9 +13,9 @@ namespace Safezone.Commands
     {
         public void Execute(RocketPlayer caller, string[] command)
         {
-            if (command.Length == 0)
+            if (command.Length < 2)
             {
-                RocketChat.Say(caller.CSteamID, "Usage: /screate <name>", UnityEngine.Color.red);
+                RocketChat.Say(caller.CSteamID, "Usage: /screate <type> <name>", UnityEngine.Color.red);
                 return;
             }
 
@@ -28,6 +28,22 @@ namespace Safezone.Commands
             }
 
             SafeZoneType type = SafeZoneType.CreateSafeZoneType(name);
+            if (type == null)
+            {
+                String types = "";
+                foreach (String typeName in SafeZoneType.GetTypes())
+                {
+                    if (types == "")
+                    {
+                        types = typeName;
+                        continue;
+                    }
+
+                    types = ", " + typeName;
+                }
+                RocketChat.Say(caller.CSteamID, "Unknown type: " + name + "! Available types: " + types, UnityEngine.Color.red);
+                return;
+            }
             ArrayList args = new ArrayList(command);
             args.RemoveAt(0); // remove name
 

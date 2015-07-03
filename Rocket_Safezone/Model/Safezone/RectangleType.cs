@@ -40,14 +40,6 @@ namespace Safezone.Model
             Position p1 = Position1;
             Position p2 = Position2;
 
-            //float x2 = p1.X;
-            //float y2 = p4.X;
-            //float x3 = p4.X;
-            //float y3 = p1.Y;
-
-            //Position p2 = new Position() {X = x2, Y = y2};
-            //Position p3 = new Position() {X = x3, Y = y3 };
-
             bool b1 = p.X >= Math.Min(p1.X, p2.X);
             bool b2 = p.X <= Math.Max(p1.X, p2.X);
             bool b3 = p.Y >= Math.Min(p1.Y, p2.Y);

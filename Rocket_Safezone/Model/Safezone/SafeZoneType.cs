@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 using Rocket.Unturned.Player;
 
@@ -45,5 +46,10 @@ namespace Safezone.Model
         public abstract SafeZone Create(RocketPlayer player, String name, ArrayList args);
         public abstract bool IsInSafeZone(Position p);
         public abstract bool Redefine(RocketPlayer player, ArrayList args);
+
+        public static ReadOnlyCollection<String> GetTypes()
+        {
+            return new ReadOnlyCollection<string>(new List<string>(RegistereTypes.Keys));
+        }
     }
 }
