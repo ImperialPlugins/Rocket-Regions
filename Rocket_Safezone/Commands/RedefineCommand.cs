@@ -31,7 +31,7 @@ namespace Safezone.Commands
             ArrayList args = new ArrayList(command);
             args.RemoveAt(0);
 
-            if (zone.Type.Redefine(caller, (string[]) args.ToArray(typeof (string))))
+            if (zone.Type.OnRedefine(caller, (string[]) args.ToArray(typeof (string))))
             {
                 SafeZonePlugin.Instance.Configuration.SafeZones.Remove(zone);
                 SafeZonePlugin.Instance.Configuration.Save();

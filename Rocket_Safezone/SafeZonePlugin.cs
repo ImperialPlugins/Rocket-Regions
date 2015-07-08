@@ -10,6 +10,7 @@ using Rocket.Unturned.Plugins;
 using Safezone.Model;
 using Safezone.Model.Flag;
 using SDG.Unturned;
+using Flag = Safezone.Model.Flag.Flag;
 using Steamworks;
 using UnityEngine;
 
@@ -29,6 +30,12 @@ namespace Safezone
 
             SafeZoneType.RegisterSafeZoneType("rectangle", typeof(RectangleType));
             SafeZoneType.RegisterSafeZoneType("circle", typeof(CircleType));
+
+            Flag.RegisterFlag("EnterVehicles", typeof(EnterVehiclesFlag));
+            Flag.RegisterFlag("Godmode", typeof(GodmodeFlag));
+            Flag.RegisterFlag("NoEnter", typeof(NoEnterFlag));
+            Flag.RegisterFlag("NoLeave", typeof(NoLeaveFlag));
+            Flag.RegisterFlag("NoZombie", typeof(NoZombieFlag));
 
             // 0 is invalid, reset it
             if (Configuration.ZombieTimerSpeed == 0)
@@ -52,7 +59,6 @@ namespace Safezone
             }
             //Start listening to events
             RocketPlayerEvents.OnPlayerUpdatePosition += OnPlayerUpdatePosition;
-            //RocketPlayerEvents.OnPlayerUpdateGesture += OnPlayerUpdateGesture; //not possible currently
             RocketServerEvents.OnPlayerConnected += OnPlayerConnect;
             RocketServerEvents.OnPlayerDisconnected += OnPlayerDisconnect;
         }
@@ -65,7 +71,6 @@ namespace Safezone
             }
             //Stop listening to events
             RocketPlayerEvents.OnPlayerUpdatePosition -= OnPlayerUpdatePosition;
-            //RocketPlayerEvents.OnPlayerUpdateGesture -= OnPlayerUpdateGesture;
             RocketServerEvents.OnPlayerConnected -= OnPlayerConnect;
             RocketServerEvents.OnPlayerDisconnected -= OnPlayerDisconnect;
         }
@@ -94,22 +99,6 @@ namespace Safezone
             {
                 EPlayerKill pKill;
                 zombie.askDamage(255, zombie.transform.up, out pKill);
-            }
-        }
-
-        private void OnPlayerUpdateGesture(RocketPlayer player, RocketPlayerEvents.PlayerGesture gesture)
-        {
-            if (!_safeZonePlayers.ContainsKey(GetId(player))) return;
-            switch (gesture)
-            {
-                case RocketPlayerEvents.PlayerGesture.Pickup:
-                    if (_safeZonePlayers[GetId(player)].GetFlag(typeof(PickupAllowedFlag)).GetValue<bool>())
-                    {
-                        break;
-                    }
-
-                    //Todo cancel event (not possible currently?)
-                    break;
             }
         }
 

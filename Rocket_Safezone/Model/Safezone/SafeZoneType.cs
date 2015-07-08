@@ -37,9 +37,10 @@ namespace Safezone.Model
             RegistereTypes.Add(name, t);
         }
 
-        public abstract SafeZone Create(RocketPlayer player, String name, string[] args);
+        public abstract SafeZone OnCreate(RocketPlayer player, String name, string[] args);
+        public abstract bool OnRedefine(RocketPlayer player, string[] args);
+
         public abstract bool IsInSafeZone(SerializablePosition p);
-        public abstract bool Redefine(RocketPlayer player, string[] args);
 
         public static ReadOnlyCollection<String> GetTypes()
         {

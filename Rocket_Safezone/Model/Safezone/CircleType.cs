@@ -11,7 +11,7 @@ namespace Safezone.Model
         public int? Radius;
         public SerializablePosition Center;
 
-        public override SafeZone Create(RocketPlayer player, string name, string[] args)
+        public override SafeZone OnCreate(RocketPlayer player, string name, string[] args)
         {
             if(args.Length < 1)
             {
@@ -44,7 +44,7 @@ namespace Safezone.Model
             return distance <= Radius;
         }
 
-        public override bool Redefine(RocketPlayer player, string[] args)
+        public override bool OnRedefine(RocketPlayer player, string[] args)
         {
             if (args.Length < 1)
             {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Serialization;
+using Safezone.Model.Flag;
 
 namespace Safezone.Model
 {
@@ -15,7 +15,7 @@ namespace Safezone.Model
         public SafeZoneType Type;
 
         [XmlArray("Flags")]
-        public List<Flag.Flag> Flags;
+        public List<SerializableFlag> Flags;
 
         public Flag.Flag GetFlag(Type t, bool createIfNotFound = true)
         {
@@ -24,13 +24,17 @@ namespace Safezone.Model
                 throw new ArgumentException("Can't get " + t.Name + " as flag!");
             }
 
-            foreach (Flag.Flag flag in Flags.Where(flag => flag.GetType().FullName == t.FullName))
+            foreach (SerializableFlag serializedFlag in Flags)
             {
-                return flag;
+                Type type = Flag.Flag.GetFlagType(serializedFlag.Name);
+                if (type != t) continue;
+
+                Flag.Flag deserializedFlag = (Flag.Flag)Activator.CreateInstance(type);
+                deserializedFlag.Value = serializedFlag.Value; 
+                return deserializedFlag;
             }
 
             if (!createIfNotFound) return null;
-
             return (Flag.Flag)Activator.CreateInstance(t);
         }
     }
