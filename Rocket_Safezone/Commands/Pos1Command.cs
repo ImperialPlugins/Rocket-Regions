@@ -39,8 +39,7 @@ namespace Safezone.Commands
         {
             get
             {
-                List<string> list = new List<string> {"spos1"};
-                return list;
+                return new List<string> {"spos1"};
             }
         }
     }

@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CreateCommand.cs" />
+    <Compile Include="Commands\InfoCommand.cs" />
     <Compile Include="Commands\ListCommand.cs" />
     <Compile Include="Commands\Pos1Command.cs" />
     <Compile Include="Commands\Pos2Command.cs" />
