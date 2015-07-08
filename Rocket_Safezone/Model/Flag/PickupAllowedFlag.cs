@@ -1,7 +1,4 @@
-﻿using System;
-using System.Xml.Serialization;
-
-namespace Safezone.Model.Flag
+﻿namespace Safezone.Model.Flag
 {
     public class PickupAllowedFlag : Flag
     {

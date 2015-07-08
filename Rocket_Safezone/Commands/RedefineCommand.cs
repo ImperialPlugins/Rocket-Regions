@@ -6,8 +6,7 @@ using Rocket.Unturned.Commands;
 using Rocket.Unturned.Player;
 using Rocket.Unturned.Plugins;
 using Safezone.Model;
-using Safezone.Util;
-using Steamworks;
+using UnityEngine;
 
 namespace Safezone.Commands
 {
@@ -17,7 +16,7 @@ namespace Safezone.Commands
         {
             if (command.Length == 0)
             {
-                RocketChat.Say(caller.CSteamID, "Usage: /sredefine <name> [...]", UnityEngine.Color.red);
+                RocketChat.Say(caller.CSteamID, "Usage: /sredefine <name> [...]", Color.red);
                 return;
             }
 
@@ -26,7 +25,7 @@ namespace Safezone.Commands
             SafeZone zone = SafeZonePlugin.Instance.GetSafeZone(name, true);
             if (zone == null)
             {
-                RocketChat.Say(caller.CSteamID, "Safezone \"" + name + "\" not found", UnityEngine.Color.red);
+                RocketChat.Say(caller.CSteamID, "Safezone \"" + name + "\" not found", Color.red);
                 return;
             }
             ArrayList args = new ArrayList(command);
@@ -42,7 +41,7 @@ namespace Safezone.Commands
                 SafeZonePlugin.Instance.OnSafeZoneCreated(zone);
             }
 
-            RocketChat.Say(caller.CSteamID, "Successfully redefined safezone: " + name, UnityEngine.Color.green);
+            RocketChat.Say(caller.CSteamID, "Successfully redefined safezone: " + name, Color.green);
         }
 
         public bool RunFromConsole

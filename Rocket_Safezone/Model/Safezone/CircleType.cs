@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using Rocket.Unturned;
 using Rocket.Unturned.Commands;
 using Rocket.Unturned.Player;
@@ -10,7 +9,7 @@ namespace Safezone.Model
     public class CircleType : SafeZoneType
     {
         public int? Radius;
-        public Position Center;
+        public SerializablePosition Center;
 
         public override SafeZone Create(RocketPlayer player, string name, string[] args)
         {
@@ -27,7 +26,7 @@ namespace Safezone.Model
                 return null;
             }
 
-            Center = new Position {X = player.Position.x, Y = player.Position.y};
+            Center = new SerializablePosition(player.Position);
 
             SafeZone zone = new SafeZone
             {
@@ -39,7 +38,7 @@ namespace Safezone.Model
             return zone;
         }
 
-        public override bool IsInSafeZone(Position p)
+        public override bool IsInSafeZone(SerializablePosition p)
         {
             double distance = Math.Sqrt(Math.Pow(p.X - Center.X, 2) + Math.Pow(p.Y - Center.Y, 2));
             return distance <= Radius;
@@ -61,7 +60,7 @@ namespace Safezone.Model
                 return false;
             }
 
-            Center = new Position { X = player.Position.x, Y = player.Position.y };
+            Center = new SerializablePosition(player.Position);
             return true;
         }
     }

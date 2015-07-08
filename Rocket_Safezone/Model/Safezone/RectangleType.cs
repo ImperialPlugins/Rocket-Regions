@@ -1,20 +1,20 @@
 ﻿using System;
-using System.Collections;
 using Rocket.Unturned;
 using Rocket.Unturned.Player;
+using UnityEngine;
 
 namespace Safezone.Model
 {
     public class RectangleType : SafeZoneType
     {
-        public Position Position1;
-        public Position Position2;
+        public SerializablePosition Position1;
+        public SerializablePosition Position2;
 
         public override SafeZone Create(RocketPlayer player, String name, string[] args)
         {
             if (!SafeZonePlugin.Instance.HasPositionSet(player))
             {
-                RocketChat.Say(player.CSteamID, "Please set pos1 (/spos1) and pos2 (/spos2) before using this command", UnityEngine.Color.red);
+                RocketChat.Say(player.CSteamID, "Please set pos1 (/spos1) and pos2 (/spos2) before using this command", Color.red);
                 return null;
             }
 
@@ -30,10 +30,10 @@ namespace Safezone.Model
             return zone;
         }
 
-        public override bool IsInSafeZone(Position p)
+        public override bool IsInSafeZone(SerializablePosition p)
         {
-            Position p1 = Position1;
-            Position p2 = Position2;
+            SerializablePosition p1 = Position1;
+            SerializablePosition p2 = Position2;
 
             bool b1 = p.X >= Math.Min(p1.X, p2.X);
             bool b2 = p.X <= Math.Max(p1.X, p2.X);
@@ -47,7 +47,7 @@ namespace Safezone.Model
         {
             if (!SafeZonePlugin.Instance.HasPositionSet(player))
             {
-                RocketChat.Say(player.CSteamID, "Please set pos1 (/spos1) and pos2 (/spos2) before using this command", UnityEngine.Color.red);
+                RocketChat.Say(player.CSteamID, "Please set pos1 (/spos1) and pos2 (/spos2) before using this command", Color.red);
                 return false;
             }
 

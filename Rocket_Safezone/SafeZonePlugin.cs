@@ -20,6 +20,8 @@ namespace Safezone
         public static SafeZonePlugin Instance;
         private readonly Dictionary<uint, SafeZone> _safeZonePlayers = new Dictionary<uint, SafeZone>();
         private readonly Dictionary<uint, Boolean> _godModeStates = new Dictionary<uint, bool>();
+        private readonly Dictionary<uint, SerializablePosition> _lastPositions = new Dictionary<uint, SerializablePosition>();
+ 
         private Timer _zombieTimer;
         protected override void Load()
         {
@@ -143,18 +145,44 @@ namespace Safezone
             SafeZone safeZone = GetSafeZoneAt(position);
             bool bIsInSafeZone = safeZone != null;
 
+            SerializablePosition lastPosition = null;
+            if (_lastPositions.ContainsKey(id))
+            {
+                lastPosition = _lastPositions[id];
+            }
+
             if (!bIsInSafeZone && _safeZonePlayers.ContainsKey(id))
             {
+                safeZone = _safeZonePlayers[id];
+                if (safeZone.GetFlag(typeof (NoLeaveFlag)).GetValue<bool>() && lastPosition != null)
+                {
+                    //Todo: send message to player (can't leave safezone)
+                    player.Teleport(new Vector3(lastPosition.X, lastPosition.Y), player.Rotation);
+                    return;
+                }
                 OnPlayerLeftSafeZone(player, _safeZonePlayers[id], true);
             }
-            else if (bIsInSafeZone && !_safeZonePlayers.ContainsKey(id))
+            else if (bIsInSafeZone && !_safeZonePlayers.ContainsKey(id) && lastPosition != null)
             {
+                if (safeZone.GetFlag(typeof (NoEnterFlag)).GetValue<bool>())
+                {
+                    //Todo: send message to player (can't enter safezone)
+                    player.Teleport(new Vector3(lastPosition.X, lastPosition.Y), player.Rotation);
+                    return;
+                }
                 OnPlayerEnteredSafeZone(player, safeZone, true);
             }
             else
             {
                 //Player is still inside or outside a safezone, don't update anything
             }
+
+            if (lastPosition == null)
+            {
+                _lastPositions.Add(id, new SerializablePosition(player.Position));
+                return;
+            }
+            _lastPositions[id] = new SerializablePosition(player.Position);
         }
 
         private void OnPlayerEnteredSafeZone(RocketPlayer player, SafeZone safeZone, bool bSendMessage)
@@ -217,8 +245,7 @@ namespace Safezone
 
         private static bool IsInSafeZone(Vector3 pos, SafeZone zone)
         {
-            Position p = new Position { X = pos.x, Y = pos.z };
-            return zone.Type.IsInSafeZone(p);
+            return zone.Type.IsInSafeZone(new SerializablePosition(pos));
         }
 
         public SafeZone GetSafeZoneAt(Vector3 pos)
@@ -226,8 +253,8 @@ namespace Safezone
             return Configuration.SafeZones.FirstOrDefault(safeZone => IsInSafeZone(pos, safeZone));
         }
 
-        private readonly Dictionary<uint, Position> _firstPositions = new Dictionary<uint, Position>();
-        private readonly Dictionary<uint, Position> _secondsPositions = new Dictionary<uint, Position>();
+        private readonly Dictionary<uint, SerializablePosition> _firstPositions = new Dictionary<uint, SerializablePosition>();
+        private readonly Dictionary<uint, SerializablePosition> _secondsPositions = new Dictionary<uint, SerializablePosition>();
 
         public SafeZone GetSafeZone(String safeZoneName, bool exact = false)
         {
@@ -252,7 +279,7 @@ namespace Safezone
             return null;
         }
 
-        public void SetPosition1(RocketPlayer player, Position pos)
+        public void SetPosition1(RocketPlayer player, SerializablePosition pos)
         {
             if (_firstPositions.ContainsKey(GetId(player)))
             {
@@ -262,7 +289,7 @@ namespace Safezone
             _firstPositions.Add(GetId(player), pos);
         }
 
-        public void SetPosition2(RocketPlayer player, Position pos)
+        public void SetPosition2(RocketPlayer player, SerializablePosition pos)
         {
             if (_secondsPositions.ContainsKey(GetId(player)))
             {
@@ -283,12 +310,12 @@ namespace Safezone
             return id.GetAccountID().m_AccountID;
         }
 
-        public Position GetPosition1(RocketPlayer caller)
+        public SerializablePosition GetPosition1(RocketPlayer caller)
         {
             return _firstPositions[GetId(caller)];
         }
 
-        public Position GetPosition2(RocketPlayer caller)
+        public SerializablePosition GetPosition2(RocketPlayer caller)
         {
             return _secondsPositions[GetId(caller)];
         }

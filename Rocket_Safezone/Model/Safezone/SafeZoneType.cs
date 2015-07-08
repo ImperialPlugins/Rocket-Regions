@@ -38,7 +38,7 @@ namespace Safezone.Model
         }
 
         public abstract SafeZone Create(RocketPlayer player, String name, string[] args);
-        public abstract bool IsInSafeZone(Position p);
+        public abstract bool IsInSafeZone(SerializablePosition p);
         public abstract bool Redefine(RocketPlayer player, string[] args);
 
         public static ReadOnlyCollection<String> GetTypes()

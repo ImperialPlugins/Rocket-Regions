@@ -3,7 +3,6 @@ using Rocket.Unturned;
 using Rocket.Unturned.Commands;
 using Rocket.Unturned.Player;
 using Safezone.Model;
-using UnityEngine;
 
 namespace Safezone.Commands
 {
@@ -11,8 +10,7 @@ namespace Safezone.Commands
     {
         public void Execute(RocketPlayer caller, string[] command)
         {
-            Vector3 callerPos = caller.Position;
-            Position pos = new Position { X = callerPos.x, Y = callerPos.z };
+            SerializablePosition pos = new SerializablePosition(caller.Position);
             RocketChat.Say(caller.CSteamID, "Second position set to: X:" + pos.X + ", Z: " + pos.Y);
             SafeZonePlugin.Instance.SetPosition2(caller, pos);
         }

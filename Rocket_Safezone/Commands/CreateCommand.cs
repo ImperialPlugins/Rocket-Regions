@@ -6,6 +6,7 @@ using Rocket.Unturned.Commands;
 using Rocket.Unturned.Player;
 using Rocket.Unturned.Plugins;
 using Safezone.Model;
+using UnityEngine;
 
 namespace Safezone.Commands
 {
@@ -15,7 +16,7 @@ namespace Safezone.Commands
         {
             if (command.Length < 2)
             {
-                RocketChat.Say(caller.CSteamID, "Usage: /screate <type> <name>", UnityEngine.Color.red);
+                RocketChat.Say(caller.CSteamID, "Usage: /screate <type> <name>", Color.red);
                 return;
             }
 
@@ -23,7 +24,7 @@ namespace Safezone.Commands
             
             if (SafeZonePlugin.Instance.GetSafeZone(name, true) != null)
             {
-                RocketChat.Say(caller.CSteamID, "A safezone with this name already exists!", UnityEngine.Color.red);
+                RocketChat.Say(caller.CSteamID, "A safezone with this name already exists!", Color.red);
                 return;
             }
 
@@ -41,7 +42,7 @@ namespace Safezone.Commands
 
                     types = ", " + typeName;
                 }
-                RocketChat.Say(caller.CSteamID, "Unknown type: " + name + "! Available types: " + types, UnityEngine.Color.red);
+                RocketChat.Say(caller.CSteamID, "Unknown type: " + name + "! Available types: " + types, Color.red);
                 return;
             }
             ArrayList args = new ArrayList(command);
@@ -51,7 +52,7 @@ namespace Safezone.Commands
 
             if (safeZone == null)
             {
-                RocketChat.Say(caller.CSteamID, "Could't create safezone!", UnityEngine.Color.red);
+                RocketChat.Say(caller.CSteamID, "Could't create safezone!", Color.red);
                 return;
             }
 
@@ -59,7 +60,7 @@ namespace Safezone.Commands
             SafeZonePlugin.Instance.Configuration.Save();
             SafeZonePlugin.Instance.OnSafeZoneCreated(safeZone);
 
-            RocketChat.Say(caller.CSteamID, "Successfully created safezone: " + name, UnityEngine.Color.green);
+            RocketChat.Say(caller.CSteamID, "Successfully created safezone: " + name, Color.green);
         }
 
         public bool RunFromConsole

@@ -9,7 +9,8 @@ namespace Safezone.Model.Flag
     [XmlInclude(typeof(GodmodeFlag))]
     [XmlInclude(typeof(NoZombieFlag))]
     [XmlInclude(typeof(EnterVehiclesFlag))]
-
+    [XmlInclude(typeof(NoEnterFlag))]
+    [XmlInclude(typeof(NoLeaveFlag))]
     //for now this does not support 3rd party flags
     public abstract class Flag
     {

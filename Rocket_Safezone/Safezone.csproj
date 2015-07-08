@@ -68,9 +68,11 @@
     <Compile Include="Model\Flag\EnterVehiclesFlag.cs" />
     <Compile Include="Model\Flag\Flag.cs" />
     <Compile Include="Model\Flag\GodmodeFlag.cs" />
+    <Compile Include="Model\Flag\NoEnterFlag.cs" />
+    <Compile Include="Model\Flag\NoLeaveFlag.cs" />
     <Compile Include="Model\Flag\NoZombieFlag.cs" />
     <Compile Include="Model\Flag\PickupAllowedFlag.cs" />
-    <Compile Include="Model\Position.cs" />
+    <Compile Include="Model\SerializablePosition.cs" />
     <Compile Include="Model\Safezone\CircleType.cs" />
     <Compile Include="Model\Safezone\RectangleType.cs" />
     <Compile Include="Model\Safezone\SafeZone.cs" />
