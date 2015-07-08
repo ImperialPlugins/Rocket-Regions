@@ -7,6 +7,7 @@ using Rocket.Unturned.Player;
 namespace Safezone.Model
 {
     [XmlInclude(typeof(RectangleType))]
+    [XmlInclude(typeof(CircleType))]
     public abstract class SafeZoneType
     {
         private static readonly Dictionary<String, Type> RegistereTypes = new Dictionary<String, Type>();
