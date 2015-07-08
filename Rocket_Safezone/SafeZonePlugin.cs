@@ -22,6 +22,7 @@ namespace Safezone
         private readonly Dictionary<uint, SafeZone> _safeZonePlayers = new Dictionary<uint, SafeZone>();
         private readonly Dictionary<uint, Boolean> _godModeStates = new Dictionary<uint, bool>();
         private readonly Dictionary<uint, SerializablePosition> _lastPositions = new Dictionary<uint, SerializablePosition>();
+        private readonly Dictionary<uint, bool> _lastVehicleStates = new Dictionary<uint, bool>();
  
         private Timer _zombieTimer;
         protected override void Load()
@@ -142,6 +143,7 @@ namespace Safezone
 
             if (!bIsInSafeZone && _safeZonePlayers.ContainsKey(id))
             {
+                //Left a safezone
                 safeZone = _safeZonePlayers[id];
                 if (safeZone.GetFlag(typeof (NoLeaveFlag)).GetValue<bool>() && lastPosition != null)
                 {
@@ -149,10 +151,11 @@ namespace Safezone
                     player.Teleport(new Vector3(lastPosition.X, lastPosition.Y), player.Rotation);
                     return;
                 }
-                OnPlayerLeftSafeZone(player, _safeZonePlayers[id], true);
+                OnPlayerLeftSafeZone(player, safeZone, true);
             }
             else if (bIsInSafeZone && !_safeZonePlayers.ContainsKey(id) && lastPosition != null)
             {
+                //Entered a safezone
                 if (safeZone.GetFlag(typeof (NoEnterFlag)).GetValue<bool>())
                 {
                     //Todo: send message to player (can't enter safezone)
@@ -171,6 +174,34 @@ namespace Safezone
                 _lastPositions.Add(id, new SerializablePosition(player.Position));
                 return;
             }
+
+            //Todo: move this codeblock somewhere else?
+            if (safeZone != null)
+            {
+                InteractableVehicle veh = player.Player.Movement.getVehicle();
+                bool isInVeh = veh != null;
+
+                if (!_lastVehicleStates.ContainsKey(id))
+                {
+                    _lastVehicleStates.Add(id, veh);
+                }
+
+                bool wasDriving = _lastVehicleStates[id];
+                
+                if (isInVeh && !wasDriving && !safeZone.GetFlag(typeof (EnterVehiclesFlag)).GetValue<bool>())
+                {
+                    byte seat = 0; 
+                    foreach (Passenger p in player.Player.Movement.getVehicle().passengers)
+                    {
+                        if (GetId(p.player) == id)
+                        {
+                            break;
+                        }
+                        seat++;
+                    }  
+                    veh.kickPlayer(seat);
+                }
+             }
             _lastPositions[id] = new SerializablePosition(player.Position);
         }
 
@@ -296,6 +327,12 @@ namespace Safezone
         public static uint GetId(RocketPlayer player)
         {
             CSteamID id = player.CSteamID;
+            return id.GetAccountID().m_AccountID;
+        }
+
+        private ulong GetId(SteamPlayer player)
+        {
+            CSteamID id = player.playerID.CSteamID;
             return id.GetAccountID().m_AccountID;
         }
 
