@@ -29,7 +29,7 @@ namespace Safezone.Model
 
         public static void RegisterSafeZoneType(String name, Type t)
         {
-            if(t != typeof(SafeZoneType))
+            if(typeof(SafeZoneType).IsAssignableFrom(t))
             {
                 throw new ArgumentException(t.Name + " is not a SafeZoneType!");
             }
