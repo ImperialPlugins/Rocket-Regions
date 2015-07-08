@@ -12,11 +12,6 @@ namespace Safezone.Model
         public int? Radius;
         public Position Center;
 
-        public override string GetName()
-        {
-            return "Circle";
-        }
-
         public override SafeZone Create(RocketPlayer player, string name, ArrayList args)
         {
             if(args.Count < 1)

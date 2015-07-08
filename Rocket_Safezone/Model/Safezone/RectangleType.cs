@@ -10,11 +10,6 @@ namespace Safezone.Model
         public Position Position1;
         public Position Position2;
 
-        public override string GetName()
-        {
-            return "Rectangle";
-        }
-
         public override SafeZone Create(RocketPlayer player, String name, ArrayList args)
         {
             if (!SafeZonePlugin.Instance.HasPositionSet(player))

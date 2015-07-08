@@ -10,7 +10,7 @@ namespace Safezone.Model
     [XmlInclude(typeof(RectangleType))]
     public abstract class SafeZoneType
     {
-        public SafeZoneType()
+        protected SafeZoneType()
         {
             // dummy
         }
@@ -42,7 +42,6 @@ namespace Safezone.Model
             RegistereTypes.Add(name, t);
         }
 
-        public abstract String GetName();
         public abstract SafeZone Create(RocketPlayer player, String name, ArrayList args);
         public abstract bool IsInSafeZone(Position p);
         public abstract bool Redefine(RocketPlayer player, ArrayList args);
