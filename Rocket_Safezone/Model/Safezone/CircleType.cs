@@ -12,16 +12,15 @@ namespace Safezone.Model
         public int? Radius;
         public Position Center;
 
-        public override SafeZone Create(RocketPlayer player, string name, ArrayList args)
+        public override SafeZone Create(RocketPlayer player, string name, string[] args)
         {
-            if(args.Count < 1)
+            if(args.Length < 1)
             {
                 RocketChat.Say(player.CSteamID, "Usage: /screate circle <radius>", Color.red);
                 return null;
             }
-            string[] command = (string[]) args.ToArray(typeof(string));
             
-            Radius = command.GetInt32Parameter(0);
+            Radius = args.GetInt32Parameter(0);
             if (Radius == null)
             {
                 RocketChat.Say(player.CSteamID, "Usage: /screate circle <radius>", Color.red);
@@ -46,20 +45,19 @@ namespace Safezone.Model
             return distance <= Radius;
         }
 
-        public override bool Redefine(RocketPlayer player, ArrayList args)
+        public override bool Redefine(RocketPlayer player, string[] args)
         {
-            if (args.Count < 1)
+            if (args.Length < 1)
             {
                 RocketChat.Say(player.CSteamID, "Usage: /sredefine circle <radius>", Color.red);
                 return false;
             }
 
-            string[] command = (string[])args.ToArray(typeof(string));
+            Radius = args.GetInt32Parameter(0);
 
-            Radius = command.GetInt32Parameter(0);
             if (Radius == null)
             {
-                RocketChat.Say(player.CSteamID, "Usage: /screate circle <radius>", Color.red);
+                RocketChat.Say(player.CSteamID, "Usage: /sredefine circle <radius>", Color.red);
                 return false;
             }
 

@@ -47,7 +47,7 @@ namespace Safezone.Commands
             ArrayList args = new ArrayList(command);
             args.RemoveAt(0); // remove name
 
-            SafeZone safeZone = type.Create(caller, name, args);
+            SafeZone safeZone = type.Create(caller, name, (string[]) args.ToArray(typeof(string)));
 
             if (safeZone == null)
             {

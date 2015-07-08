@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Xml.Serialization;
@@ -10,11 +9,6 @@ namespace Safezone.Model
     [XmlInclude(typeof(RectangleType))]
     public abstract class SafeZoneType
     {
-        protected SafeZoneType()
-        {
-            // dummy
-        }
-
         private static readonly Dictionary<String, Type> RegistereTypes = new Dictionary<String, Type>();
 
         public static SafeZoneType CreateSafeZoneType(String name)
@@ -42,9 +36,9 @@ namespace Safezone.Model
             RegistereTypes.Add(name, t);
         }
 
-        public abstract SafeZone Create(RocketPlayer player, String name, ArrayList args);
+        public abstract SafeZone Create(RocketPlayer player, String name, string[] args);
         public abstract bool IsInSafeZone(Position p);
-        public abstract bool Redefine(RocketPlayer player, ArrayList args);
+        public abstract bool Redefine(RocketPlayer player, string[] args);
 
         public static ReadOnlyCollection<String> GetTypes()
         {

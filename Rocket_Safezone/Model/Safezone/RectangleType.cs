@@ -10,7 +10,7 @@ namespace Safezone.Model
         public Position Position1;
         public Position Position2;
 
-        public override SafeZone Create(RocketPlayer player, String name, ArrayList args)
+        public override SafeZone Create(RocketPlayer player, String name, string[] args)
         {
             if (!SafeZonePlugin.Instance.HasPositionSet(player))
             {
@@ -43,7 +43,7 @@ namespace Safezone.Model
             return b1 && b2 && b3 && b4;
         }
 
-        public override bool Redefine(RocketPlayer player, ArrayList args)
+        public override bool Redefine(RocketPlayer player, string[] args)
         {
             if (!SafeZonePlugin.Instance.HasPositionSet(player))
             {
