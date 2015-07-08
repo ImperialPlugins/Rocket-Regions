@@ -71,6 +71,7 @@
     <Compile Include="Model\Flag\NoZombieFlag.cs" />
     <Compile Include="Model\Flag\PickupAllowedFlag.cs" />
     <Compile Include="Model\Position.cs" />
+    <Compile Include="Model\Safezone\CircleType.cs" />
     <Compile Include="Model\Safezone\RectangleType.cs" />
     <Compile Include="Model\Safezone\SafeZone.cs" />
     <Compile Include="Model\Safezone\SafeZoneType.cs" />
