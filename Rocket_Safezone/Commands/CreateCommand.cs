@@ -20,29 +20,30 @@ namespace Safezone.Commands
                 return;
             }
 
-            String name = command.GetStringParameter(0);
-            
+            String typeName = command.GetStringParameter(0).ToLower();
+            String name = command.GetStringParameter(1);
+
             if (SafeZonePlugin.Instance.GetSafeZone(name, true) != null)
             {
                 RocketChat.Say(caller.CSteamID, "A safezone with this name already exists!", Color.red);
                 return;
             }
 
-            SafeZoneType type = SafeZoneType.CreateSafeZoneType(name);
+            SafeZoneType type = SafeZoneType.RegisterSafeZoneType(typeName);
             if (type == null)
             {
                 String types = "";
-                foreach (String typeName in SafeZoneType.GetTypes())
+                foreach (String t in SafeZoneType.GetTypes())
                 {
                     if (types == "")
                     {
-                        types = typeName;
+                        types = t;
                         continue;
                     }
 
-                    types = ", " + typeName;
+                    types = ", " + t;
                 }
-                RocketChat.Say(caller.CSteamID, "Unknown type: " + name + "! Available types: " + types, Color.red);
+                RocketChat.Say(caller.CSteamID, "Unknown type: " + typeName + "! Available types: " + types, Color.red);
                 return;
             }
             ArrayList args = new ArrayList(command);

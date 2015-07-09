@@ -19,7 +19,7 @@ namespace Safezone.Model
 
         public Flag.Flag GetFlag(Type t, bool createIfNotFound = true)
         {
-            if (t != typeof(Flag.Flag))
+            if (!typeof(Flag.Flag).IsAssignableFrom(t))
             {
                 throw new ArgumentException("Can't get " + t.Name + " as flag!");
             }

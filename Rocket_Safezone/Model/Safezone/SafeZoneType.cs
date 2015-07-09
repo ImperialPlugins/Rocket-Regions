@@ -12,8 +12,15 @@ namespace Safezone.Model
     {
         private static readonly Dictionary<String, Type> RegistereTypes = new Dictionary<String, Type>();
 
-        public static SafeZoneType CreateSafeZoneType(String name)
+        public static SafeZoneType RegisterSafeZoneType(String name)
         {
+            if (name == null)
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            name = name.ToLower();
+
             if (!RegistereTypes.ContainsKey(name))
             {
                 return null;
@@ -24,7 +31,7 @@ namespace Safezone.Model
 
         public static void RegisterSafeZoneType(String name, Type t)
         {
-            if(typeof(SafeZoneType).IsAssignableFrom(t))
+            if(!typeof(SafeZoneType).IsAssignableFrom(t))
             {
                 throw new ArgumentException(t.Name + " is not a SafeZoneType!");
             }
