@@ -1,23 +1,16 @@
-﻿using Rocket.Unturned;
-using Rocket.Unturned.Player;
-using UnityEngine;
+﻿using Rocket.Unturned.Player;
 
 namespace Safezone.Model.Flag
 {
     public class BoolFlag : Flag
     {
-        public BoolFlag(string name, object defaultValue) : base(name, defaultValue)
+        public BoolFlag(string name, bool defaultValue) : base(name, defaultValue)
         {
         }
 
-        public override bool OnSetValue(RocketPlayer caller, string[] args)
+        public override bool OnSetValue(RocketPlayer caller, SafeZone zone, params string[] values)
         {
-            if (args.Length < 1)
-            {
-                RocketChat.Say(caller.CSteamID, "Usage: /sflag <region> " + Name + " <on/off/true/false/1/0>", Color.red);
-                return false;
-            }
-            switch (args[0])
+            switch (values[0])
             {
                 case "on":
                 case "true":
@@ -32,8 +25,12 @@ namespace Safezone.Model.Flag
                     return true;
             }
 
-            RocketChat.Say(caller.CSteamID, "Usage: /sflag <region> " + Name + " <on/off/true/false/1/0>", Color.red);
             return false;
+        }
+
+        public override string Usage
+        {
+            get { return "<on/off/true/false/1/0>"; }
         }
     }
 }

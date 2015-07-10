@@ -10,9 +10,9 @@ using Rocket.Unturned.Plugins;
 using Safezone.Model;
 using Safezone.Model.Flag;
 using SDG.Unturned;
-using Flag = Safezone.Model.Flag.Flag;
 using Steamworks;
 using UnityEngine;
+using Flag = Safezone.Model.Flag.Flag;
 
 namespace Safezone
 {

@@ -1,26 +1,22 @@
-﻿using Rocket.Unturned;
-using Rocket.Unturned.Commands;
-using Rocket.Unturned.Player;
-using UnityEngine;
+﻿using Rocket.Unturned.Player;
 
 namespace Safezone.Model.Flag
 {
     public class StringFlag : Flag
     {
-        public StringFlag(string name, object defaultValue) : base(name, defaultValue)
+        public StringFlag(string name, string defaultValue) : base(name, defaultValue)
         {
         }
 
-        public override bool OnSetValue(RocketPlayer caller, string[] args)
+        public override bool OnSetValue(RocketPlayer caller, SafeZone zone, params string[] values)
         {
-            if (args.Length < 1)
-            {
-                RocketChat.Say(caller.CSteamID, "Usage: /sflag <region> " + Name + " <String>", Color.red);
-                return false;
-            }
-
-            Value = args.GetStringParameter(0);
+            Value = values[0];
             return true;
+        }
+
+        public override string Usage
+        {
+            get { return "<String>"; }
         }
     }
 }

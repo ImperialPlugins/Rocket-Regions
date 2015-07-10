@@ -1,33 +1,31 @@
-﻿using Rocket.Unturned;
+﻿using System;
 using Rocket.Unturned.Commands;
 using Rocket.Unturned.Player;
-using UnityEngine;
 
 namespace Safezone.Model.Flag
 {
     public class IntFlag : Flag
     {
-        public IntFlag(string name, object defaultValue) : base(name, defaultValue)
+        public IntFlag(string name, int defaultValue) : base(name, defaultValue)
         {
         }
 
-        public override bool OnSetValue(RocketPlayer caller, string[] args)
+        public override bool OnSetValue(RocketPlayer caller, SafeZone zone, params string[] values)
         {
-            if (args.Length < 1)
+            try
             {
-                RocketChat.Say(caller.CSteamID, "Usage: /sflag <region> " + Name + " <on/off/true/false/1/0>", Color.red);
+                Value = Convert.ToInt32(values[0]);
+                return true;
+            }
+            catch (Exception)
+            {
                 return false;
             }
+        }
 
-            int? value = args.GetInt32Parameter(0);
-            if (value == null)
-            {
-                RocketChat.Say(caller.CSteamID, "Usage: /sflag <region> " + Name + " <on/off/true/false/1/0>", Color.red);
-                return false;
-            }
-
-            Value = value;
-            return true;
+        public override string Usage
+        {
+            get { return "<number>"; }
         }
     }
 }

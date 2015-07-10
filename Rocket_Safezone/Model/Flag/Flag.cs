@@ -1,14 +1,10 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.Net;
 using System.Xml.Serialization;
 using Rocket.Unturned.Player;
 
 namespace Safezone.Model.Flag
 {
-    [Serializable]
-    [XmlType(AnonymousType = false)]
     public abstract class Flag
     {
         private static readonly Dictionary<String, Type> RegisteredFlags = new Dictionary<String, Type>();
@@ -33,7 +29,8 @@ namespace Safezone.Model.Flag
             return (T)_defaultValue;
         }
 
-        public abstract bool OnSetValue(RocketPlayer caller, string[] args);
+        public abstract bool OnSetValue(RocketPlayer caller, SafeZone safeZone, params string[] values);
+        public abstract string Usage { get; }
 
         private readonly Object _defaultValue;
         protected Flag(String name, Object defaultValue)
@@ -62,7 +59,7 @@ namespace Safezone.Model.Flag
         {
             if (!RegisteredFlags.ContainsKey(name))
             {
-                throw new ArgumentException("\"" + name + "\" is an unknown flag!");
+                return null;
             }
 
             return RegisteredFlags[name];
