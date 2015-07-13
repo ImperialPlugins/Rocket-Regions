@@ -7,8 +7,8 @@
     <ProjectGuid>{E765482E-CDA0-4DB0-9376-4650A9EA9264}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Rocket_Safezone</RootNamespace>
-    <AssemblyName>Rocket_Safezone</AssemblyName>
+    <RootNamespace>Safezone</RootNamespace>
+    <AssemblyName>Safezones</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
