@@ -31,6 +31,13 @@ namespace Safezone.Commands
             }
             
             String flagName = command.GetStringParameter(1);
+
+            if (!PermissionUtil.HasPermission(caller, "flag." + flagName))
+            {
+                RocketChat.Say(caller.CSteamID, "You don't have access to this flag!", Color.red);
+                return;
+            }
+
             Type t = Flag.GetFlagType(flagName);
             if (t == null)
             {
