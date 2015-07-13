@@ -33,7 +33,7 @@ namespace Safezone.Commands
             Type t = Flag.GetFlagType(flagName);
             if (t == null)
             {
-                RocketChat.Say(caller.CSteamID, "Unknown flag: \"" + name + "\"", Color.red);
+                RocketChat.Say(caller.CSteamID, "Unknown flag: \"" + flagName + "\"", Color.red);
                 return;
             }
 

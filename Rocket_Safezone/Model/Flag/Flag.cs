@@ -42,6 +42,7 @@ namespace Safezone.Model.Flag
         
         public static void RegisterFlag(String name, Type type)
         {
+            name = name.ToLower();
             if (!typeof (Flag).IsAssignableFrom(type))
             {
                 throw new ArgumentException(type.FullName + " does not extend the abstract Flag type!");
@@ -57,12 +58,8 @@ namespace Safezone.Model.Flag
 
         public static Type GetFlagType(String name)
         {
-            if (!RegisteredFlags.ContainsKey(name))
-            {
-                return null;
-            }
-
-            return RegisteredFlags[name];
+            name = name.ToLower();
+            return !RegisteredFlags.ContainsKey(name) ? null : RegisteredFlags[name];
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Safezone.Model
 
         public static void RegisterSafeZoneType(String name, Type t)
         {
-            if(!t.IsSameOrSubclass(typeof(Flag.Flag)))
+            if(!t.IsSameOrSubclass(typeof(SafeZoneType)))
             {
                 throw new ArgumentException(t.Name + " is not a SafeZoneType!");
             }
