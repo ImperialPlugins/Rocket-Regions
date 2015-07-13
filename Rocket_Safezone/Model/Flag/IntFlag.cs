@@ -4,9 +4,9 @@ using Rocket.Unturned.Player;
 
 namespace Safezone.Model.Flag
 {
-    public class IntFlag : Flag
+    public abstract class IntFlag : Flag
     {
-        public IntFlag(string name, int defaultValue) : base(name, defaultValue)
+        protected IntFlag(string name) : base(name)
         {
         }
 

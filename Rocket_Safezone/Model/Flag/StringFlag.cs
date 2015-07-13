@@ -2,10 +2,11 @@
 
 namespace Safezone.Model.Flag
 {
-    public class StringFlag : Flag
+    public abstract class StringFlag : Flag
     {
-        public StringFlag(string name, string defaultValue) : base(name, defaultValue)
+        protected StringFlag(string name) : base(name)
         {
+
         }
 
         public override bool OnSetValue(RocketPlayer caller, SafeZone zone, params string[] values)

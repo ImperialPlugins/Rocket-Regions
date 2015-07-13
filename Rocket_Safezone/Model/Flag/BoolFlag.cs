@@ -2,10 +2,10 @@
 
 namespace Safezone.Model.Flag
 {
-    public class BoolFlag : Flag
+    public abstract class BoolFlag : Flag
     {
-        public BoolFlag(string name, bool defaultValue) : base(name, defaultValue)
-        {
+        protected BoolFlag(string name) : base(name)
+        {    
         }
 
         public override bool OnSetValue(RocketPlayer caller, SafeZone zone, params string[] values)

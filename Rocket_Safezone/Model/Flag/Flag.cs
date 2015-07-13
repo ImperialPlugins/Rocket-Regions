@@ -11,9 +11,12 @@ namespace Safezone.Model.Flag
         public String Name;
         public Object Value;
 
+        public abstract String Description { get;  }
+        public abstract Object DefaultValue { get;  }
+
         public T GetValue<T>()
         {
-            if (!(Value is T))
+            if (!Value.GetType().IsSubclassOf(typeof(T)))
             {
                 throw new InvalidOperationException("Can't cast " + Value.GetType().Name + " to " + typeof(T).Name);
             }
@@ -22,28 +25,26 @@ namespace Safezone.Model.Flag
 
         public T GetDefaultValue<T>()
         {
-            if (!(_defaultValue is T))
+            if (!DefaultValue.GetType().IsSubclassOf(typeof(T)))
             {
                 throw new InvalidOperationException("Can't cast " + Value.GetType().Name + " to " + typeof(T).Name);
             }
-            return (T)_defaultValue;
+            return (T)DefaultValue;
         }
 
         public abstract bool OnSetValue(RocketPlayer caller, SafeZone safeZone, params string[] values);
         public abstract string Usage { get; }
 
-        private readonly Object _defaultValue;
-        protected Flag(String name, Object defaultValue)
+        protected Flag(String name)
         {
             Name = name;
-            Value = defaultValue;
-            _defaultValue = defaultValue;
+            Value = DefaultValue;
         }
         
         public static void RegisterFlag(String name, Type type)
         {
             name = name.ToLower();
-            if (!typeof (Flag).IsAssignableFrom(type))
+            if (!type.IsSubclassOf(typeof(Flag)))
             {
                 throw new ArgumentException(type.FullName + " does not extend the abstract Flag type!");
             }
