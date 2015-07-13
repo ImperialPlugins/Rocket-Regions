@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 using Rocket.Unturned.Player;
+using Safezone.Util;
 
 namespace Safezone.Model
 {
@@ -31,7 +32,7 @@ namespace Safezone.Model
 
         public static void RegisterSafeZoneType(String name, Type t)
         {
-            if(!typeof(SafeZoneType).IsAssignableFrom(t))
+            if(!t.IsSameOrSubclass(typeof(Flag.Flag)))
             {
                 throw new ArgumentException(t.Name + " is not a SafeZoneType!");
             }

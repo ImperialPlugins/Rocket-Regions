@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using Rocket.Unturned.Plugins;
 using Safezone.Model.Flag;
+using Safezone.Util;
 
 namespace Safezone.Model
 {
@@ -20,7 +21,7 @@ namespace Safezone.Model
 
         public Flag.Flag GetFlag(Type t, bool createIfNotFound = true)
         {
-            if (!typeof(Flag.Flag).IsAssignableFrom(t))
+            if (!t.IsSameOrSubclass(typeof(Flag.Flag)))
             {
                 throw new ArgumentException("Can't get " + t.Name + " as flag!");
             }
