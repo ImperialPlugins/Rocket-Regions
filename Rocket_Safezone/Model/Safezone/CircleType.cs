@@ -13,12 +13,7 @@ namespace Safezone.Model
 
         public override SafeZone OnCreate(RocketPlayer player, string name, string[] args)
         {
-            if(args.Length < 1)
-            {
-                RocketChat.Say(player.CSteamID, "Usage: /screate circle <radius>", Color.red);
-                return null;
-            }
-            
+           
             Radius = args.GetInt32Parameter(0);
             if (Radius == null)
             {

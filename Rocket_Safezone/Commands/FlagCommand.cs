@@ -22,6 +22,12 @@ namespace Safezone.Commands
                 RocketChat.Say(caller.CSteamID, "Safezone \"" + name + "\" not found", Color.red);
                 return;
             }
+
+            if (!zone.IsOwner(SafeZonePlugin.GetId(caller)) && !caller.HasPermission("safezoneflag.override"))
+            {
+                RocketChat.Say(caller.CSteamID, "You're not the owner of this region!", Color.red);
+                return;
+            }
             
             String flagName = command.GetStringParameter(1);
             Type t = Flag.GetFlagType(flagName);

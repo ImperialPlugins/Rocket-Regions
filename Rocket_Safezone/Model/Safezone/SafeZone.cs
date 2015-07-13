@@ -61,5 +61,10 @@ namespace Safezone.Model
                 SafeZonePlugin.Instance.Configuration.Save();
             }
         }
+
+        public bool IsOwner(uint id)
+        {
+            return Owner == id;
+        }
     }
 }
