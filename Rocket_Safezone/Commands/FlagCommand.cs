@@ -5,6 +5,7 @@ using Rocket.Unturned.Commands;
 using Rocket.Unturned.Player;
 using Rocket.Unturned.Plugins;
 using Safezone.Model;
+using Safezone.Util;
 using SDG.Unturned;
 using UnityEngine;
 using Flag = Safezone.Model.Flag.Flag;
@@ -23,7 +24,7 @@ namespace Safezone.Commands
                 return;
             }
 
-            if (!zone.IsOwner(SafeZonePlugin.GetId(caller)) && !caller.HasPermission("safezoneflag.override"))
+            if (!zone.IsOwner(SafeZonePlugin.GetId(caller)) && !PermissionUtil.HasPermission(caller, "flag.override"))
             {
                 RocketChat.Say(caller.CSteamID, "You're not the owner of this region!", Color.red);
                 return;

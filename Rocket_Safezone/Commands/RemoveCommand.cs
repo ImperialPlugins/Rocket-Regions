@@ -5,6 +5,7 @@ using Rocket.Unturned.Commands;
 using Rocket.Unturned.Player;
 using Rocket.Unturned.Plugins;
 using Safezone.Model;
+using Safezone.Util;
 using UnityEngine;
 
 namespace Safezone.Commands
@@ -24,6 +25,12 @@ namespace Safezone.Commands
             if (zone == null)
             {
                 RocketChat.Say(caller.CSteamID, "Safezone \"" + name + "\" not found", Color.red);
+                return;
+            }
+
+            if (!zone.IsOwner(SafeZonePlugin.GetId(caller)) && !PermissionUtil.HasPermission(caller, "remove.override"))
+            {
+                RocketChat.Say(caller.CSteamID, "You're not the owner of this region!", Color.red);
                 return;
             }
 

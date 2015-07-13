@@ -6,6 +6,7 @@ using Rocket.Unturned.Commands;
 using Rocket.Unturned.Player;
 using Rocket.Unturned.Plugins;
 using Safezone.Model;
+using Safezone.Util;
 using UnityEngine;
 
 namespace Safezone.Commands
@@ -28,6 +29,13 @@ namespace Safezone.Commands
                 RocketChat.Say(caller.CSteamID, "Safezone \"" + name + "\" not found", Color.red);
                 return;
             }
+
+            if (!zone.IsOwner(SafeZonePlugin.GetId(caller)) && !PermissionUtil.HasPermission(caller, "redefine.override"))
+            {
+                RocketChat.Say(caller.CSteamID, "You're not the owner of this region!", Color.red);
+                return;
+            }
+
             ArrayList args = new ArrayList(command);
             args.RemoveAt(0);
 
