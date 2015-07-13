@@ -115,6 +115,11 @@ namespace Safezone
 
         private void OnPlayerConnect(RocketPlayer player)
         {
+            if (!player.HasPermission("info"))
+            {
+                RocketChat.Say(player.CSteamID, "This server is running Safezones by Trojaner", Color.gray);
+            }
+
             SafeZone safeZone = GetSafeZoneAt(player.Position);
             if (safeZone != null)
             {
