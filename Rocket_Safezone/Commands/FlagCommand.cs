@@ -32,12 +32,6 @@ namespace Safezone.Commands
             
             String flagName = command.GetStringParameter(1);
 
-            if (!PermissionUtil.HasPermission(caller, "flag." + flagName))
-            {
-                RocketChat.Say(caller.CSteamID, "You don't have access to this flag!", Color.red);
-                return;
-            }
-
             Type t = Flag.GetFlagType(flagName);
             if (t == null)
             {
@@ -47,6 +41,32 @@ namespace Safezone.Commands
 
             Flag f = zone.GetFlag(t);
 
+            bool hasFlagPermission = PermissionUtil.HasPermission(caller, "flag." + flagName);
+            String usage = "Usage: /sflag " + name + " " + f.Name + " " + f.Usage;
+            if (command.Length == 2)
+            {
+                String description = f.Description;
+                System.Object defaultValue = f.DefaultValue;
+                System.Object value = f.Value;
+
+                RocketChat.Say(caller.CSteamID, "Flag: " + f.Name, Color.blue);
+                RocketChat.Say(caller.CSteamID, "Description: " + description, Color.blue);
+                if (hasFlagPermission)
+                {
+                    RocketChat.Say(caller.CSteamID, "Usage: " + usage);
+                    RocketChat.Say(caller.CSteamID, "Value: " + value, Color.blue);
+                }
+                RocketChat.Say(caller.CSteamID, "Default: " + defaultValue, Color.blue);
+                return;
+            }
+
+            if (!hasFlagPermission)
+            {
+                RocketChat.Say(caller.CSteamID, "You don't have access to this flag!", Color.red);
+                return;
+            }
+
+
             List<String> argsList = new List<string>();
             for (int i = 2; i <= command.Length -1; i++)
             {
@@ -55,7 +75,7 @@ namespace Safezone.Commands
             string[] args = argsList.ToArray();
             if (!f.OnSetValue(caller, zone, command))
             {
-                RocketChat.Say(caller.CSteamID, "Usage: /sflag " + name + " " + f.Name + " " + f.Usage, Color.red);
+                RocketChat.Say(caller.CSteamID, usage, Color.red);
                 return;
             }
             zone.SetFlag(f.Name, f.Value);
