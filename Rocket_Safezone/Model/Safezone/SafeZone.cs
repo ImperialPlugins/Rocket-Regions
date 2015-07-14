@@ -28,8 +28,13 @@ namespace Safezone.Model
 
             foreach (SerializableFlag serializedFlag in Flags)
             {
+                if (serializedFlag == null)
+                {
+                    Flags.Remove(serializedFlag);
+                    continue;
+                }
                 Type type = Flag.Flag.GetFlagType(serializedFlag.Name);
-                if (type != t) continue;
+                if (type != t || type == null) continue;
 
                 Flag.Flag deserializedFlag = (Flag.Flag)Activator.CreateInstance(type);
                 deserializedFlag.Value = serializedFlag.Value; 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using Rocket.Unturned.Player;
+using Safezone.Util;
 
 namespace Safezone.Model.Flag
 {
@@ -16,18 +17,18 @@ namespace Safezone.Model.Flag
 
         public T GetValue<T>()
         {
-            if (!Value.GetType().IsSubclassOf(typeof(T)))
+            if (!Value.GetType().IsSameOrSubclass(typeof(T)))
             {
-                throw new InvalidOperationException("Can't cast " + Value.GetType().Name + " to " + typeof(T).Name);
+                throw new InvalidCastException("Can't cast " + Value.GetType().Name + " to " + typeof(T).Name);
             }
             return (T) Value;
         }
 
         public T GetDefaultValue<T>()
         {
-            if (!DefaultValue.GetType().IsSubclassOf(typeof(T)))
+            if (!DefaultValue.GetType().IsSameOrSubclass(typeof(T)))
             {
-                throw new InvalidOperationException("Can't cast " + Value.GetType().Name + " to " + typeof(T).Name);
+                throw new InvalidCastException("Can't cast " + Value.GetType().Name + " to " + typeof(T).Name);
             }
             return (T)DefaultValue;
         }
@@ -44,7 +45,7 @@ namespace Safezone.Model.Flag
         public static void RegisterFlag(String name, Type type)
         {
             name = name.ToLower();
-            if (!type.IsSubclassOf(typeof(Flag)))
+            if (!type.IsSameOrSubclass(typeof(Flag)))
             {
                 throw new ArgumentException(type.FullName + " does not extend the abstract Flag type!");
             }
