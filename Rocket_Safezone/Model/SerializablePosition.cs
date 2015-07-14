@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Safezone.Model
 {
     [Serializable]
-    [XmlType(AnonymousType = true)]
+    [XmlType(TypeName = "Position")]
     public class SerializablePosition
     {
         public SerializablePosition()

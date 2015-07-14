@@ -7,6 +7,8 @@ using Safezone.Util;
 
 namespace Safezone.Model
 {
+    [Serializable]
+    [XmlType(TypeName = "Safezone")] 
     public class SafeZone
     {
         [XmlAttribute("Name")]

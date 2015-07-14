@@ -7,8 +7,10 @@ using Safezone.Util;
 
 namespace Safezone.Model
 {
+    [Serializable]
     [XmlInclude(typeof(RectangleType))]
     [XmlInclude(typeof(CircleType))]
+    [XmlType(TypeName = "Type")]
     public abstract class SafeZoneType
     {
         private static readonly Dictionary<String, Type> RegistereTypes = new Dictionary<String, Type>();
