@@ -33,10 +33,19 @@ namespace Safezone.Model
             return zone;
         }
 
+        public override double GetDistance(SerializablePosition p)
+        {
+            return (double) (GetDistanceToCenter(p) - Radius);
+        }
+
+        public double GetDistanceToCenter(SerializablePosition p)
+        {
+            return Math.Sqrt(Math.Pow(p.X - Center.X, 2) + Math.Pow(p.Y - Center.Y, 2));
+        }
+
         public override bool IsInSafeZone(SerializablePosition p)
         {
-            double distance = Math.Sqrt(Math.Pow(p.X - Center.X, 2) + Math.Pow(p.Y - Center.Y, 2));
-            return distance <= Radius;
+            return GetDistance(p) <= Radius;
         }
 
         public override bool OnRedefine(RocketPlayer player, string[] args)

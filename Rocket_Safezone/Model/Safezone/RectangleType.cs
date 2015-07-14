@@ -30,6 +30,55 @@ namespace Safezone.Model
             return zone;
         }
 
+        public override double GetDistance(SerializablePosition pos)
+        {
+            // http://wiki.unity3d.com/index.php/Distance_from_a_point_to_a_rectangle
+
+            float xMin = Math.Min(Position1.X, Position2.X);
+            float xMax = Math.Max(Position1.X, Position2.X); 
+            float yMin = Math.Min(Position1.Y, Position2.Y);
+            float yMax = Math.Max(Position1.Y, Position2.Y);
+            Vector2 point = new Vector2(pos.X, pos.Y);
+
+            if (pos.X < xMin)
+            {
+                if (pos.Y < yMin)
+                { 
+                    Vector2 diff = point - new Vector2(xMin, yMin);
+                    return diff.magnitude;
+                }
+                if (pos.Y > yMax)
+                { 
+                    Vector2 diff = point - new Vector2(xMin, yMax);
+                    return diff.magnitude;
+                }
+                return xMin - pos.X;
+            }
+            if (pos.X > xMax)
+            {
+                if (pos.Y < yMin)
+                { 
+                    Vector2 diff = point - new Vector2(xMax, yMin);
+                    return diff.magnitude;
+                }
+                if (pos.Y > yMax)
+                { 
+                    Vector2 diff = point - new Vector2(xMax, yMax);
+                    return diff.magnitude;
+                }
+                return pos.X - xMax;
+            }
+            if (pos.Y < yMin)
+            { 
+                return yMin - pos.Y;
+            }
+            if (pos.Y > yMax)
+            { 
+                return pos.Y - yMax;
+            }
+            return 0f;
+        }
+
         public override bool IsInSafeZone(SerializablePosition p)
         {
             SerializablePosition p1 = Position1;

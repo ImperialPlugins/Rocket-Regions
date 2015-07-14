@@ -47,6 +47,7 @@ namespace Safezone.Model
 
         public abstract SafeZone OnCreate(RocketPlayer player, String name, string[] args);
         public abstract bool OnRedefine(RocketPlayer player, string[] args);
+        public abstract double GetDistance(SerializablePosition pos);
 
         public abstract bool IsInSafeZone(SerializablePosition p);
 
