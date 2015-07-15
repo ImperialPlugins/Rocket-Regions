@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using Rocket.Unturned.Plugins;
 using Safezone.Model.Flag;
+using Safezone.Model.Safezone.Type;
 using Safezone.Util;
-
-namespace Safezone.Model
+namespace Safezone.Model.Safezone
 {
     [Serializable]
     [XmlType(TypeName = "Safezone")] 
@@ -21,7 +21,7 @@ namespace Safezone.Model
         [XmlArray("Flags")]
         public List<SerializableFlag> Flags;
 
-        public Flag.Flag GetFlag(Type t, bool createIfNotFound = true)
+        public Flag.Flag GetFlag(System.Type t, bool createIfNotFound = true)
         {
             if (!t.IsSameOrSubclass(typeof(Flag.Flag)))
             {
@@ -35,7 +35,7 @@ namespace Safezone.Model
                     Flags.Remove(serializedFlag);
                     continue;
                 }
-                Type type = Flag.Flag.GetFlagType(serializedFlag.Name);
+                System.Type type = Flag.Flag.GetFlagType(serializedFlag.Name);
                 if (type != t || type == null) continue;
 
                 Flag.Flag deserializedFlag = (Flag.Flag)Activator.CreateInstance(type);
@@ -49,7 +49,7 @@ namespace Safezone.Model
 
         public void SetFlag(string name, object value, bool save = true)
         {
-            Type flagType = Flag.Flag.GetFlagType(name);
+            System.Type flagType = Flag.Flag.GetFlagType(name);
             if (flagType == null)
             {
                 throw new ArgumentException("Unknown flag: " + name);

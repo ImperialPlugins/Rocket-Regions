@@ -4,7 +4,7 @@ using Rocket.Unturned.Commands;
 using Rocket.Unturned.Player;
 using UnityEngine;
 
-namespace Safezone.Model
+namespace Safezone.Model.Safezone.Type
 {
     public class CircleType : SafeZoneType
     {

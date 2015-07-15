@@ -3,6 +3,7 @@ using Rocket.Unturned;
 using Rocket.Unturned.Commands;
 using Rocket.Unturned.Player;
 using Safezone.Model;
+using Safezone.Model.Safezone;
 using UnityEngine;
 
 namespace Safezone.Commands

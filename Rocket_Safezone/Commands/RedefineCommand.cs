@@ -6,6 +6,7 @@ using Rocket.Unturned.Commands;
 using Rocket.Unturned.Player;
 using Rocket.Unturned.Plugins;
 using Safezone.Model;
+using Safezone.Model.Safezone;
 using Safezone.Util;
 using UnityEngine;
 

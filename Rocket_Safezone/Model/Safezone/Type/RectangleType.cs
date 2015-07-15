@@ -3,7 +3,7 @@ using Rocket.Unturned;
 using Rocket.Unturned.Player;
 using UnityEngine;
 
-namespace Safezone.Model
+namespace Safezone.Model.Safezone.Type
 {
     public class RectangleType : SafeZoneType
     {

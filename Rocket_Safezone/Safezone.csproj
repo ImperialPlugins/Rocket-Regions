@@ -78,10 +78,10 @@
     <Compile Include="Model\Flag\SerializableFlag.cs" />
     <Compile Include="Model\Flag\StringFlag.cs" />
     <Compile Include="Model\SerializablePosition.cs" />
-    <Compile Include="Model\Safezone\CircleType.cs" />
-    <Compile Include="Model\Safezone\RectangleType.cs" />
+    <Compile Include="Model\Safezone\Type\CircleType.cs" />
+    <Compile Include="Model\Safezone\Type\RectangleType.cs" />
     <Compile Include="Model\Safezone\SafeZone.cs" />
-    <Compile Include="Model\Safezone\SafeZoneType.cs" />
+    <Compile Include="Model\Safezone\Type\SafeZoneType.cs" />
     <Compile Include="SafeZonePlugin.cs" />
     <Compile Include="SafeZoneConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

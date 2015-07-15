@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using Rocket.Unturned.Player;
+using Safezone.Model.Safezone;
 using Safezone.Util;
 
 namespace Safezone.Model.Flag

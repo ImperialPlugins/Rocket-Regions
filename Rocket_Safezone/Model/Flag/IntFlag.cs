@@ -1,6 +1,7 @@
 ﻿using System;
 using Rocket.Unturned.Commands;
 using Rocket.Unturned.Player;
+using Safezone.Model.Safezone;
 
 namespace Safezone.Model.Flag
 {

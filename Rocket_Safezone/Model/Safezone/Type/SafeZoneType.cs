@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 using Rocket.Unturned.Player;
 using Safezone.Util;
 
-namespace Safezone.Model
+namespace Safezone.Model.Safezone.Type
 {
     [Serializable]
     [XmlInclude(typeof(RectangleType))]
@@ -13,7 +13,7 @@ namespace Safezone.Model
     [XmlType(TypeName = "Type")]
     public abstract class SafeZoneType
     {
-        private static readonly Dictionary<String, Type> RegistereTypes = new Dictionary<String, Type>();
+        private static readonly Dictionary<String, System.Type> RegistereTypes = new Dictionary<String, System.Type>();
 
         public static SafeZoneType RegisterSafeZoneType(String name)
         {
@@ -28,11 +28,11 @@ namespace Safezone.Model
             {
                 return null;
             }
-            Type t = RegistereTypes[name];
+            System.Type t = RegistereTypes[name];
             return (SafeZoneType)Activator.CreateInstance(t);
         }
 
-        public static void RegisterSafeZoneType(String name, Type t)
+        public static void RegisterSafeZoneType(String name, System.Type t)
         {
             if(!t.IsSameOrSubclass(typeof(SafeZoneType)))
             {
