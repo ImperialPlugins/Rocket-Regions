@@ -48,9 +48,12 @@ namespace Safezone.Commands
                 SafeZonePlugin.Instance.Configuration.SafeZones.Add(zone);
                 SafeZonePlugin.Instance.Configuration.Save();
                 SafeZonePlugin.Instance.OnSafeZoneCreated(zone);
+
+                RocketChat.Say(caller.CSteamID, "Successfully redefined safezone: " + name, Color.green);
+                return;
             }
 
-            RocketChat.Say(caller.CSteamID, "Successfully redefined safezone: " + name, Color.green);
+            RocketChat.Say(caller.CSteamID, "Redefine of safezone: " + name + " failed.", Color.red);
         }
 
         public bool RunFromConsole
