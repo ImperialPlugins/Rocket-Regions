@@ -52,7 +52,7 @@ namespace Safezone.Model.Safezone.Type
         {
             if (args.Length < 1)
             {
-                RocketChat.Say(player.CSteamID, "Usage: /sredefine circle <radius>", Color.red);
+                RocketChat.Say(player.CSteamID, "Usage: /sredefine <name> circle <radius>", Color.red);
                 return false;
             }
 
@@ -60,7 +60,7 @@ namespace Safezone.Model.Safezone.Type
 
             if (Radius == null)
             {
-                RocketChat.Say(player.CSteamID, "Usage: /sredefine circle <radius>", Color.red);
+                RocketChat.Say(player.CSteamID, "Usage: /sredefine <name> circle <radius>", Color.red);
                 return false;
             }
 
