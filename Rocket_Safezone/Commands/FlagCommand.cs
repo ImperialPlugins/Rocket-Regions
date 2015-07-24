@@ -41,7 +41,11 @@ namespace Safezone.Commands
             }
 
             Flag f = zone.GetFlag(t);
-
+            if (f == null)
+            {
+                RocketChat.Say(caller.CSteamID, "An unexpected error occurred: flag instance equals null but type was registered. Please report this", Color.red);
+                return;
+            }
             bool hasFlagPermission = PermissionUtil.HasPermission(caller, "flag." + flagName);
             String usage = "Usage: /sflag " + name + " " + f.Name + " " + f.Usage;
             if (command.Length == 2)
@@ -67,14 +71,13 @@ namespace Safezone.Commands
                 return;
             }
 
-
             List<String> argsList = new List<string>();
             for (int i = 2; i <= command.Length -1; i++)
             {
                 argsList.Add(command[i]);
             }
             string[] args = argsList.ToArray();
-            if (!f.OnSetValue(caller, zone, command))
+            if (!f.OnSetValue(caller, zone, args))
             {
                 RocketChat.Say(caller.CSteamID, usage, Color.red);
                 return;

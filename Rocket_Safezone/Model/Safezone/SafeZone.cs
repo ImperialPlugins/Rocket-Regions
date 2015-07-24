@@ -28,19 +28,22 @@ namespace Safezone.Model.Safezone
                 throw new ArgumentException("Can't get " + t.Name + " as flag!");
             }
 
-            foreach (SerializableFlag serializedFlag in Flags)
+            if (Flags != null && Flags.Count > 0)
             {
-                if (serializedFlag == null)
+                foreach (SerializableFlag serializedFlag in Flags)
                 {
-                    Flags.Remove(serializedFlag);
-                    continue;
-                }
-                System.Type type = Flag.Flag.GetFlagType(serializedFlag.Name);
-                if (type != t || type == null) continue;
+                    if (serializedFlag == null)
+                    {
+                        Flags.Remove(serializedFlag);
+                        continue;
+                    }
+                    System.Type type = Flag.Flag.GetFlagType(serializedFlag.Name);
+                    if (type != t || type == null) continue;
 
-                Flag.Flag deserializedFlag = (Flag.Flag)Activator.CreateInstance(type);
-                deserializedFlag.Value = serializedFlag.Value; 
-                return deserializedFlag;
+                    Flag.Flag deserializedFlag = (Flag.Flag) Activator.CreateInstance(type);
+                    deserializedFlag.Value = serializedFlag.Value;
+                    return deserializedFlag;
+                }
             }
 
             if (!createIfNotFound) return null;

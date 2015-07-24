@@ -22,8 +22,9 @@ namespace Safezone.Commands
                 return;
             }
 
-            String typeName = command.GetStringParameter(0).ToLower();
-            String name = command.GetStringParameter(1);
+
+            String name = command.GetStringParameter(0);
+            String typeName = command.GetStringParameter(1).ToLower();
 
             if (SafeZonePlugin.Instance.GetSafeZone(name, true) != null)
             {
@@ -49,8 +50,8 @@ namespace Safezone.Commands
                 return;
             }
             ArrayList args = new ArrayList(command);
-            args.RemoveAt(0); // remove name
-
+            args.RemoveAt(0); // remove name...
+            args.RemoveAt(0); // remove type...
             SafeZone safeZone = type.OnCreate(caller, name, (string[]) args.ToArray(typeof(string)));
 
             if (safeZone == null)
