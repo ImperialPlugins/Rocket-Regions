@@ -58,6 +58,11 @@ namespace Safezone.Model.Safezone
                 throw new ArgumentException("Unknown flag: " + name);
             }
 
+            if (Flags == null)
+            {
+                Flags = new List<SerializableFlag>();
+            }
+
             foreach (SerializableFlag f in Flags)
             {
                 if (f.Name != name) continue;
