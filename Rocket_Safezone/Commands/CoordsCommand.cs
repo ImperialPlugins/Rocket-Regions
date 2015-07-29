@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Rocket.API;
 using Rocket.Unturned.Chat;
+using Safezone.Util;
 using UnityEngine;
 
 namespace Safezone.Commands
@@ -9,7 +10,7 @@ namespace Safezone.Commands
     {
         public void Execute(IRocketPlayer caller, string[] command)
         {
-            var player = SafeZonePlugin.GetUnturnedPlayer(caller);
+            var player = PlayerUtil.GetUnturnedPlayer(caller);
             Vector3 pos = player.Position;
             UnturnedChat.Say(caller, "Position: X: " + pos.x + ", Y: " + pos.y + ", Z: " + pos.z + " - Rotation: " + player.Rotation, Color.green);
         }

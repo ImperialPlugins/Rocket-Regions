@@ -38,7 +38,7 @@ namespace Safezone.Commands
             ArrayList args = new ArrayList(command);
             args.RemoveAt(0);
 
-            if (zone.Type.OnRedefine(SafeZonePlugin.GetUnturnedPlayer(caller), (string[]) args.ToArray(typeof (string))))
+            if (zone.Type.OnRedefine(PlayerUtil.GetUnturnedPlayer(caller), (string[])args.ToArray(typeof(string))))
             {
                 SafeZonePlugin.Instance.Configuration.Instance.SafeZones.Remove(zone);
                 SafeZonePlugin.Instance.Configuration.Save();

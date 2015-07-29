@@ -13,6 +13,7 @@ using Safezone.Model;
 using Safezone.Model.Flag;
 using Safezone.Model.Safezone;
 using Safezone.Model.Safezone.Type;
+using Safezone.Util;
 using SDG.Unturned;
 using Steamworks;
 using UnityEngine;
@@ -119,7 +120,7 @@ namespace Safezone
 
         private void OnPlayerConnect(IRocketPlayer player)
         {
-            var untPlayer = GetUnturnedPlayer(player);
+            var untPlayer = PlayerUtil.GetUnturnedPlayer(player);
 
             if (!player.HasPermission("info"))
             {
@@ -135,8 +136,8 @@ namespace Safezone
 
         private void OnPlayerDisconnect(IRocketPlayer player)
         {
-            if (!_safeZonePlayers.ContainsKey(GetId(player))) return;
-            OnPlayerLeftSafeZone(player, _safeZonePlayers[GetId(player)], false);
+            if (!_safeZonePlayers.ContainsKey(PlayerUtil.GetId(player))) return;
+            OnPlayerLeftSafeZone(player, _safeZonePlayers[PlayerUtil.GetId(player)], false);
         }
 
         private void OnPlayerUpdatePosition(IRocketPlayer player, Vector3 position)
@@ -147,8 +148,8 @@ namespace Safezone
                 throw new NotSupportedException();
             }
 
-            uint id = GetId(player);
-            var untPlayer = GetUnturnedPlayer(player);
+            uint id = PlayerUtil.GetId(player);
+            var untPlayer = PlayerUtil.GetUnturnedPlayer(player);
 
             SafeZone safeZone = GetSafeZoneAt(position);
             bool bIsInSafeZone = safeZone != null;
@@ -214,7 +215,7 @@ namespace Safezone
                     byte seat = 0;
                     foreach (Passenger p in untPlayer.Player.Movement.getVehicle().passengers)
                     {
-                        if (GetId(p.player) == id)
+                        if (PlayerUtil.GetId(p.player) == id)
                         {
                             break;
                         }
@@ -227,7 +228,7 @@ namespace Safezone
 
         private void OnPlayerEnteredSafeZone(IRocketPlayer player, SafeZone safeZone, bool bSendMessage)
         {
-            uint id = GetId(player);
+            uint id = PlayerUtil.GetId(player);
             if (safeZone.GetFlag(typeof (GodmodeFlag)).GetValue<bool>())
             {
                 EnableGodMode(player);
@@ -243,7 +244,7 @@ namespace Safezone
 
         internal void OnPlayerLeftSafeZone(IRocketPlayer player, SafeZone safeZone, bool bSendMessage)
         {
-            uint id = GetId(player);
+            uint id = PlayerUtil.GetId(player);
 
             if (safeZone.GetFlag(typeof (GodmodeFlag)).GetValue<bool>())
             {
@@ -263,7 +264,7 @@ namespace Safezone
             {
                 throw new NotSupportedException();
             }
-            uint id = GetId(player);
+            uint id = PlayerUtil.GetId(player);
             var unturnedPlayer = (UnturnedPlayer) player;
             //Safe current godmode state and restore it later when the player leaves the safezone
             //this is for e.g. players who enter with /god safezones
@@ -277,7 +278,7 @@ namespace Safezone
             {
                 throw new NotSupportedException();
             }
-            uint id = GetId(player);
+            uint id = PlayerUtil.GetId(player);
 
             var unturnedPlayer = (UnturnedPlayer)player;
             try
@@ -304,9 +305,6 @@ namespace Safezone
             return Configuration.Instance.SafeZones.FirstOrDefault(safeZone => IsInSafeZone(pos, safeZone));
         }
 
-        private readonly Dictionary<uint, SerializablePosition> _firstPositions = new Dictionary<uint, SerializablePosition>();
-        private readonly Dictionary<uint, SerializablePosition> _secondsPositions = new Dictionary<uint, SerializablePosition>();
-
         public SafeZone GetSafeZone(String safeZoneName, bool exact = false)
         {
             if (Configuration.Instance.SafeZones == null || Configuration.Instance.SafeZones.Count == 0) return null;
@@ -330,73 +328,10 @@ namespace Safezone
             return null;
         }
 
-        public void SetPosition1(IRocketPlayer player, SerializablePosition pos)
-        {
-            if (_firstPositions.ContainsKey(GetId(player)))
-            {
-                _firstPositions[GetId(player)] = pos;
-                return;
-            }
-            _firstPositions.Add(GetId(player), pos);
-        }
-
-        public void SetPosition2(IRocketPlayer player, SerializablePosition pos)
-        {
-            if (_secondsPositions.ContainsKey(GetId(player)))
-            {
-                _secondsPositions[GetId(player)] = pos;
-                return;
-            }
-            _secondsPositions.Add(GetId(player), pos);
-        }
-
-        public bool HasPositionSet(IRocketPlayer player)
-        {
-            return _firstPositions.ContainsKey(GetId(player)) && _secondsPositions.ContainsKey(GetId(player));
-        }
-
-        public static uint GetId(IRocketPlayer player)
-        {
-            CSteamID id = GetCSteamId(player);
-            return id.GetAccountID().m_AccountID;
-        }
-
-        public static ulong GetId(SteamPlayer player)
-        {
-            CSteamID id = player.playerID.CSteamID;
-            return id.GetAccountID().m_AccountID;
-        }
-
-        public SerializablePosition GetPosition1(IRocketPlayer caller)
-        {
-            return _firstPositions[GetId(caller)];
-        }
-
-        public SerializablePosition GetPosition2(IRocketPlayer caller)
-        {
-            return _secondsPositions[GetId(caller)];
-        }
-
         public IEnumerable<uint> GetUidsInSafeZone(SafeZone zone)
         {
             return _safeZonePlayers.Keys.Where(id => _safeZonePlayers[id] == zone).ToList();
         }
 
-        public static UnturnedPlayer GetUnturnedPlayer(IRocketPlayer player)
-        {
-            if (player == null) return null;
-            if (!(player is UnturnedPlayer))
-            {
-                throw new NotSupportedException("This plugin is for Unturned!");
-            }
-
-            return (UnturnedPlayer) player;
-        }
-
-        public static CSteamID GetCSteamId(IRocketPlayer player)
-        {
-            if (player == null) return CSteamID.Nil;
-            return GetUnturnedPlayer(player).CSteamID;
-        }
     }
 }

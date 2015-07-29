@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using Rocket.API;
 using Rocket.Unturned.Chat;
+using Safezone.Util;
 using UnityEngine;
 
 namespace Safezone.Model.Safezone.Type
@@ -9,21 +11,23 @@ namespace Safezone.Model.Safezone.Type
     {
         public SerializablePosition Position1;
         public SerializablePosition Position2;
+        private static readonly Dictionary<uint, SerializablePosition> FirstPositions = new Dictionary<uint, SerializablePosition>();
+        private static readonly Dictionary<uint, SerializablePosition> SecondsPositions = new Dictionary<uint, SerializablePosition>();
 
         public override SafeZone OnCreate(IRocketPlayer player, String name, string[] args)
         {
-            if (!SafeZonePlugin.Instance.HasPositionSet(player))
+            if (!HasPositionSet(player))
             {
                 UnturnedChat.Say(player, "Please set pos1 (/spos1) and pos2 (/spos2) before using this command", Color.red);
                 return null;
             }
 
-            Position1 = SafeZonePlugin.Instance.GetPosition1(player);
-            Position2 = SafeZonePlugin.Instance.GetPosition2(player);
+            Position1 = GetPosition1(player);
+            Position2 = GetPosition2(player);
             SafeZone zone = new SafeZone
             {
                 Name = name,
-                Owner = SafeZonePlugin.GetId(player),
+                Owner = PlayerUtil.GetId(player),
                 Type = this
             };
 
@@ -94,15 +98,50 @@ namespace Safezone.Model.Safezone.Type
 
         public override bool OnRedefine(IRocketPlayer player, string[] args)
         {
-            if (!SafeZonePlugin.Instance.HasPositionSet(player))
+            if (!HasPositionSet(player))
             {
                 UnturnedChat.Say(player, "Please set pos1 (/spos1) and pos2 (/spos2) before using this command", Color.red);
                 return false;
             }
 
-            Position1 = SafeZonePlugin.Instance.GetPosition1(player);
-            Position2 = SafeZonePlugin.Instance.GetPosition2(player);
+            Position1 = GetPosition1(player);
+            Position2 = GetPosition2(player);
             return true;
+        }
+
+        public static void SetPosition1(IRocketPlayer player, SerializablePosition pos)
+        {
+            if (FirstPositions.ContainsKey(PlayerUtil.GetId(player)))
+            {
+                FirstPositions[PlayerUtil.GetId(player)] = pos;
+                return;
+            }
+            FirstPositions.Add(PlayerUtil.GetId(player), pos);
+        }
+
+        public static void SetPosition2(IRocketPlayer player, SerializablePosition pos)
+        {
+            if (SecondsPositions.ContainsKey(PlayerUtil.GetId(player)))
+            {
+                SecondsPositions[PlayerUtil.GetId(player)] = pos;
+                return;
+            }
+            SecondsPositions.Add(PlayerUtil.GetId(player), pos);
+        }
+
+        public static bool HasPositionSet(IRocketPlayer player)
+        {
+            return FirstPositions.ContainsKey(PlayerUtil.GetId(player)) && SecondsPositions.ContainsKey(PlayerUtil.GetId(player));
+        }
+
+        public static SerializablePosition GetPosition1(IRocketPlayer caller)
+        {
+            return FirstPositions[PlayerUtil.GetId(caller)];
+        }
+
+        public static SerializablePosition GetPosition2(IRocketPlayer caller)
+        {
+            return SecondsPositions[PlayerUtil.GetId(caller)];
         }
     }
 }

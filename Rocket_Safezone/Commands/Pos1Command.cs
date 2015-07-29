@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Rocket.API;
 using Rocket.Unturned.Chat;
 using Safezone.Model;
+using Safezone.Model.Safezone.Type;
+using Safezone.Util;
 
 namespace Safezone.Commands
 {
@@ -10,10 +12,10 @@ namespace Safezone.Commands
     {
         public void Execute(IRocketPlayer caller, string[] command)
         {
-            var rawpos = SafeZonePlugin.GetUnturnedPlayer(caller).Position;
+            var rawpos = PlayerUtil.GetUnturnedPlayer(caller).Position;
             SerializablePosition pos = new SerializablePosition(rawpos);
             UnturnedChat.Say(caller, "First position set to: X:" + pos.X + ", Z: " + pos.Y);
-            SafeZonePlugin.Instance.SetPosition1(caller, pos);
+            RectangleType.SetPosition1(caller, pos);
         }
 
         public bool AllowFromConsole

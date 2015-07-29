@@ -2,6 +2,7 @@
 using Rocket.API;
 using Rocket.Unturned.Chat;
 using Rocket.Unturned.Commands;
+using Safezone.Util;
 using UnityEngine;
 
 namespace Safezone.Model.Safezone.Type
@@ -13,7 +14,7 @@ namespace Safezone.Model.Safezone.Type
 
         public override SafeZone OnCreate(IRocketPlayer player, string name, string[] args)
         {
-            var pos = SafeZonePlugin.GetUnturnedPlayer(player).Position;
+            var pos = PlayerUtil.GetUnturnedPlayer(player).Position;
             Radius = args.GetInt32Parameter(0);
             if (Radius == null)
             {
@@ -26,7 +27,7 @@ namespace Safezone.Model.Safezone.Type
             SafeZone zone = new SafeZone
             {
                 Name = name,
-                Owner = SafeZonePlugin.GetId(player),
+                Owner = PlayerUtil.GetId(player),
                 Type = this
             };
 
@@ -50,7 +51,7 @@ namespace Safezone.Model.Safezone.Type
 
         public override bool OnRedefine(IRocketPlayer player, string[] args)
         {
-            var pos = SafeZonePlugin.GetUnturnedPlayer(player).Position;
+            var pos = PlayerUtil.GetUnturnedPlayer(player).Position;
             if (args.Length < 1)
             {
                 UnturnedChat.Say(player, "Usage: /sredefine <name> circle <radius>", Color.red);

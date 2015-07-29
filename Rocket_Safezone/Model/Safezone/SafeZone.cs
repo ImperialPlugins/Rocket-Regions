@@ -85,7 +85,7 @@ namespace Safezone.Model.Safezone
             {
                 return true;
             }
-            return IsOwner(SafeZonePlugin.GetId(player));
+            return IsOwner(PlayerUtil.GetId(player));
         }
 
         public bool IsOwner(uint id)
