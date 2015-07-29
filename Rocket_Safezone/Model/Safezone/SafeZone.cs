@@ -44,6 +44,7 @@ namespace Safezone.Model.Safezone
 
                     Flag.Flag deserializedFlag = (Flag.Flag) Activator.CreateInstance(type);
                     deserializedFlag.Value = serializedFlag.Value;
+                    deserializedFlag.GroupValues = serializedFlag.GroupValues ?? new Dictionary<string, object>(); 
                     return deserializedFlag;
                 }
             }
