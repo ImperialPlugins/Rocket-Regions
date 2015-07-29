@@ -1,13 +1,13 @@
 ﻿using System;
-using Rocket.Unturned.Player;
+using Rocket.API;
 
 namespace Safezone.Util
 {
     public static class PermissionUtil
     {
-        public static bool HasPermission(RocketPlayer player, String permission)
+        public static bool HasPermission(IRocketPlayer player, String permission)
         {
-            return player.HasPermission("safezone" + permission) || player.HasPermission("s" + permission);
+            return player.HasPermission("safezones." + permission);
         }
     }
 }

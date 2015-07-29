@@ -1,33 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using Rocket.Unturned;
+using Rocket.API;
+using Rocket.Unturned.Chat;
 using Rocket.Unturned.Commands;
-using Rocket.Unturned.Player;
-using Rocket.Unturned.Plugins;
-using Safezone.Model;
+using Safezone.Model.Flag;
 using Safezone.Model.Safezone;
 using Safezone.Util;
-using SDG.Unturned;
 using UnityEngine;
-using Flag = Safezone.Model.Flag.Flag;
+using Object = System.Object;
 
 namespace Safezone.Commands
 {
     public class FlagCommand : IRocketCommand
     {
-        public void Execute(RocketPlayer caller, string[] command)
+        public void Execute(IRocketPlayer caller, string[] command)
         {
             String name = command.GetStringParameter(0);
             SafeZone zone = SafeZonePlugin.Instance.GetSafeZone(name, true);
             if (zone == null)
             {
-                RocketChat.Say(caller.CSteamID, "Safezone \"" + name + "\" not found", Color.red);
+                UnturnedChat.Say(caller, "Safezone \"" + name + "\" not found", Color.red);
                 return;
             }
 
-            if (!zone.IsOwner(SafeZonePlugin.GetId(caller)) && !PermissionUtil.HasPermission(caller, "flag.override"))
+            if (!zone.IsOwner(caller) && !PermissionUtil.HasPermission(caller, "flag.override"))
             {
-                RocketChat.Say(caller.CSteamID, "You're not the owner of this region!", Color.red);
+                UnturnedChat.Say(caller, "You're not the owner of this region!", Color.red);
                 return;
             }
             
@@ -36,14 +34,14 @@ namespace Safezone.Commands
             Type t = Flag.GetFlagType(flagName);
             if (t == null)
             {
-                RocketChat.Say(caller.CSteamID, "Unknown flag: \"" + flagName + "\"", Color.red);
+                UnturnedChat.Say(caller, "Unknown flag: \"" + flagName + "\"", Color.red);
                 return;
             }
 
             Flag f = zone.GetFlag(t);
             if (f == null)
             {
-                RocketChat.Say(caller.CSteamID, "An unexpected error occurred: flag instance equals null but type was registered. Please report this", Color.red);
+                UnturnedChat.Say(caller, "An unexpected error occurred: flag instance equals null but type was registered. Please report this", Color.red);
                 return;
             }
             bool hasFlagPermission = PermissionUtil.HasPermission(caller, "flag." + flagName);
@@ -51,23 +49,23 @@ namespace Safezone.Commands
             if (command.Length == 2)
             {
                 String description = f.Description;
-                System.Object defaultValue = f.DefaultValue;
-                System.Object value = f.Value;
+                Object defaultValue = f.DefaultValue;
+                Object value = f.Value;
 
-                RocketChat.Say(caller.CSteamID, "Flag: " + f.Name, Color.blue);
-                RocketChat.Say(caller.CSteamID, "Description: " + description, Color.blue);
+                UnturnedChat.Say(caller, "Flag: " + f.Name, Color.blue);
+                UnturnedChat.Say(caller, "Description: " + description, Color.blue);
                 if (hasFlagPermission)
                 {
-                    RocketChat.Say(caller.CSteamID, "Usage: " + usage);
-                    RocketChat.Say(caller.CSteamID, "Value: " + value, Color.blue);
+                    UnturnedChat.Say(caller, "Usage: " + usage);
+                    UnturnedChat.Say(caller, "Value: " + value, Color.blue);
                 }
-                RocketChat.Say(caller.CSteamID, "Default: " + defaultValue, Color.blue);
+                UnturnedChat.Say(caller, "Default: " + defaultValue, Color.blue);
                 return;
             }
 
             if (!hasFlagPermission)
             {
-                RocketChat.Say(caller.CSteamID, "You don't have access to this flag!", Color.red);
+                UnturnedChat.Say(caller, "You don't have access to this flag!", Color.red);
                 return;
             }
 
@@ -79,13 +77,13 @@ namespace Safezone.Commands
             string[] args = argsList.ToArray();
             if (!f.OnSetValue(caller, zone, args))
             {
-                RocketChat.Say(caller.CSteamID, usage, Color.red);
+                UnturnedChat.Say(caller, usage, Color.red);
                 return;
             }
             zone.SetFlag(f.Name, f.Value);
         }
 
-        public bool RunFromConsole
+        public bool AllowFromConsole
         {
             get { return false; }
         }
@@ -108,6 +106,11 @@ namespace Safezone.Commands
         public List<string> Aliases
         {
             get { return new List<string> { "sflag" }; }
+        }
+
+        public List<string> Permissions
+        {
+            get { return new List<string> { "safezones.flag" }; }
         }
     }
 }

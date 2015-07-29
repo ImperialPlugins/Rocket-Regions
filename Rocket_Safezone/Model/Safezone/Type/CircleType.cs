@@ -1,7 +1,7 @@
 ﻿using System;
-using Rocket.Unturned;
+using Rocket.API;
+using Rocket.Unturned.Chat;
 using Rocket.Unturned.Commands;
-using Rocket.Unturned.Player;
 using UnityEngine;
 
 namespace Safezone.Model.Safezone.Type
@@ -11,17 +11,17 @@ namespace Safezone.Model.Safezone.Type
         public int? Radius;
         public SerializablePosition Center;
 
-        public override SafeZone OnCreate(RocketPlayer player, string name, string[] args)
+        public override SafeZone OnCreate(IRocketPlayer player, string name, string[] args)
         {
-           
+            var pos = SafeZonePlugin.GetUnturnedPlayer(player).Position;
             Radius = args.GetInt32Parameter(0);
             if (Radius == null)
             {
-                RocketChat.Say(player.CSteamID, "Usage: /screate circle <radius>", Color.red);
+                UnturnedChat.Say(player, "Usage: /screate circle <radius>", Color.red);
                 return null;
             }
 
-            Center = new SerializablePosition(player.Position);
+            Center = new SerializablePosition(pos);
 
             SafeZone zone = new SafeZone
             {
@@ -48,11 +48,12 @@ namespace Safezone.Model.Safezone.Type
             return GetDistance(p) <= Radius;
         }
 
-        public override bool OnRedefine(RocketPlayer player, string[] args)
+        public override bool OnRedefine(IRocketPlayer player, string[] args)
         {
+            var pos = SafeZonePlugin.GetUnturnedPlayer(player).Position;
             if (args.Length < 1)
             {
-                RocketChat.Say(player.CSteamID, "Usage: /sredefine <name> circle <radius>", Color.red);
+                UnturnedChat.Say(player, "Usage: /sredefine <name> circle <radius>", Color.red);
                 return false;
             }
 
@@ -60,11 +61,11 @@ namespace Safezone.Model.Safezone.Type
 
             if (Radius == null)
             {
-                RocketChat.Say(player.CSteamID, "Usage: /sredefine <name> circle <radius>", Color.red);
+                UnturnedChat.Say(player, "Usage: /sredefine <name> circle <radius>", Color.red);
                 return false;
             }
 
-            Center = new SerializablePosition(player.Position);
+            Center = new SerializablePosition(pos);
             return true;
         }
     }

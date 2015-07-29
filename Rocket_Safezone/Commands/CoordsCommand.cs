@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
-using Rocket.Unturned;
-using Rocket.Unturned.Commands;
-using Rocket.Unturned.Player;
+using Rocket.API;
+using Rocket.Unturned.Chat;
 using UnityEngine;
 
 namespace Safezone.Commands
 {
     public class CoordsCommand : IRocketCommand
     {
-        public void Execute(RocketPlayer caller, string[] command)
+        public void Execute(IRocketPlayer caller, string[] command)
         {
-            Vector3 pos = caller.Position;
-            RocketChat.Say(caller.CSteamID, "Position: X: " + pos.x + ", Y: " + pos.y + ", Z: " + pos.z + " - Rotation: " + caller.Rotation, Color.green);
+            var player = SafeZonePlugin.GetUnturnedPlayer(caller);
+            Vector3 pos = player.Position;
+            UnturnedChat.Say(caller, "Position: X: " + pos.x + ", Y: " + pos.y + ", Z: " + pos.z + " - Rotation: " + player.Rotation, Color.green);
         }
 
-        public bool RunFromConsole
+        public bool AllowFromConsole
         {
             get { return false; }
         }
@@ -37,6 +37,11 @@ namespace Safezone.Commands
         public List<string> Aliases
         {
             get { return new List<string>(); }
+        }
+
+        public List<string> Permissions
+        {
+            get { return new List<string> { "safezones.coords" }; }
         }
     }
 }

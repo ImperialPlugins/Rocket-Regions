@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Rocket.Unturned;
+using Rocket.API;
+using Rocket.Unturned.Chat;
 using Rocket.Unturned.Commands;
-using Rocket.Unturned.Player;
-using Rocket.Unturned.Plugins;
-using Safezone.Model;
 using Safezone.Model.Safezone;
 using Safezone.Util;
 using UnityEngine;
@@ -14,11 +12,11 @@ namespace Safezone.Commands
 {
     public class RedefineCommand : IRocketCommand
     {
-        public void Execute(RocketPlayer caller, string[] command)
+        public void Execute(IRocketPlayer caller, string[] command)
         {
             if (command.Length == 0)
             {
-                RocketChat.Say(caller.CSteamID, "Usage: /sredefine <name> [...]", Color.red);
+                UnturnedChat.Say(caller, "Usage: /sredefine <name> [...]", Color.red);
                 return;
             }
 
@@ -27,36 +25,36 @@ namespace Safezone.Commands
             SafeZone zone = SafeZonePlugin.Instance.GetSafeZone(name, true);
             if (zone == null)
             {
-                RocketChat.Say(caller.CSteamID, "Safezone \"" + name + "\" not found", Color.red);
+                UnturnedChat.Say(caller, "Safezone \"" + name + "\" not found", Color.red);
                 return;
             }
 
-            if (!zone.IsOwner(SafeZonePlugin.GetId(caller)) && !PermissionUtil.HasPermission(caller, "redefine.override"))
+            if (!zone.IsOwner(caller) && !PermissionUtil.HasPermission(caller, "redefine.override"))
             {
-                RocketChat.Say(caller.CSteamID, "You're not the owner of this region!", Color.red);
+                UnturnedChat.Say(caller, "You're not the owner of this region!", Color.red);
                 return;
             }
 
             ArrayList args = new ArrayList(command);
             args.RemoveAt(0);
 
-            if (zone.Type.OnRedefine(caller, (string[]) args.ToArray(typeof (string))))
+            if (zone.Type.OnRedefine(SafeZonePlugin.GetUnturnedPlayer(caller), (string[]) args.ToArray(typeof (string))))
             {
-                SafeZonePlugin.Instance.Configuration.SafeZones.Remove(zone);
+                SafeZonePlugin.Instance.Configuration.Instance.SafeZones.Remove(zone);
                 SafeZonePlugin.Instance.Configuration.Save();
                 SafeZonePlugin.Instance.OnSafeZoneRemoved(zone);
-                SafeZonePlugin.Instance.Configuration.SafeZones.Add(zone);
+                SafeZonePlugin.Instance.Configuration.Instance.SafeZones.Add(zone);
                 SafeZonePlugin.Instance.Configuration.Save();
                 SafeZonePlugin.Instance.OnSafeZoneCreated(zone);
 
-                RocketChat.Say(caller.CSteamID, "Successfully redefined safezone: " + name, Color.green);
+                UnturnedChat.Say(caller, "Successfully redefined safezone: " + name, Color.green);
                 return;
             }
 
-            RocketChat.Say(caller.CSteamID, "Redefine of safezone: " + name + " failed.", Color.red);
+            UnturnedChat.Say(caller, "Redefine of safezone: " + name + " failed.", Color.red);
         }
 
-        public bool RunFromConsole
+        public bool AllowFromConsole
         {
             get { return false; }
         }
@@ -79,6 +77,11 @@ namespace Safezone.Commands
         public List<string> Aliases
         {
             get { return new List<string> { "sredefine" }; }
+        }
+
+        public List<string> Permissions
+        {
+            get { return new List<string> { "safezones.redefine" }; }
         }
     }
 }

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
-using Rocket.Unturned.Plugins;
+using Rocket.API;
 using Safezone.Model.Flag;
 using Safezone.Model.Safezone.Type;
 using Safezone.Util;
+
 namespace Safezone.Model.Safezone
 {
     [Serializable]
@@ -76,6 +77,15 @@ namespace Safezone.Model.Safezone
             {
                 SafeZonePlugin.Instance.Configuration.Save();
             }
+        }
+
+        public bool IsOwner(IRocketPlayer player)
+        {
+            if (player is ConsolePlayer)
+            {
+                return true;
+            }
+            return IsOwner(SafeZonePlugin.GetId(player));
         }
 
         public bool IsOwner(uint id)

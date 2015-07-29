@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Rocket.Unturned;
+using Rocket.API;
+using Rocket.Unturned.Chat;
 using Rocket.Unturned.Commands;
-using Rocket.Unturned.Player;
-using Rocket.Unturned.Plugins;
-using Safezone.Model;
 using Safezone.Model.Safezone;
 using Safezone.Model.Safezone.Type;
 using UnityEngine;
@@ -14,21 +12,20 @@ namespace Safezone.Commands
 {
     public class CreateCommand :IRocketCommand
     {
-        public void Execute(RocketPlayer caller, string[] command)
+        public void Execute(IRocketPlayer caller, string[] command)
         {
             if (command.Length < 2)
             {
-                RocketChat.Say(caller.CSteamID, "Usage: /screate <type> <name>", Color.red);
+                UnturnedChat.Say(caller, "Usage: /screate <type> <name>", Color.red);
                 return;
             }
-
 
             String name = command.GetStringParameter(0);
             String typeName = command.GetStringParameter(1).ToLower();
 
             if (SafeZonePlugin.Instance.GetSafeZone(name, true) != null)
             {
-                RocketChat.Say(caller.CSteamID, "A safezone with this name already exists!", Color.red);
+                UnturnedChat.Say(caller, "A safezone with this name already exists!", Color.red);
                 return;
             }
 
@@ -46,7 +43,7 @@ namespace Safezone.Commands
 
                     types = ", " + t;
                 }
-                RocketChat.Say(caller.CSteamID, "Unknown type: " + typeName + "! Available types: " + types, Color.red);
+                UnturnedChat.Say(caller, "Unknown type: " + typeName + "! Available types: " + types, Color.red);
                 return;
             }
             ArrayList args = new ArrayList(command);
@@ -56,18 +53,18 @@ namespace Safezone.Commands
 
             if (safeZone == null)
             {
-                RocketChat.Say(caller.CSteamID, "Could't create safezone!", Color.red);
+                UnturnedChat.Say(caller, "Could't create safezone!", Color.red);
                 return;
             }
 
-            SafeZonePlugin.Instance.Configuration.SafeZones.Add(safeZone);
+            SafeZonePlugin.Instance.Configuration.Instance.SafeZones.Add(safeZone);
             SafeZonePlugin.Instance.Configuration.Save();
             SafeZonePlugin.Instance.OnSafeZoneCreated(safeZone);
 
-            RocketChat.Say(caller.CSteamID, "Successfully created safezone: " + name, Color.green);
+            UnturnedChat.Say(caller, "Successfully created safezone: " + name, Color.green);
         }
 
-        public bool RunFromConsole
+        public bool AllowFromConsole
         {
             get { return false; }
         }
@@ -90,6 +87,11 @@ namespace Safezone.Commands
         public List<string> Aliases
         {
             get { return new List<string> { "screate" }; }
+        }
+
+        public List<string> Permissions
+        {
+            get { return new List<string> { "safezones.create" }; }
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml.Serialization;
-using Rocket.Unturned.Player;
+using Rocket.API;
 using Safezone.Model.Safezone;
 using Safezone.Util;
 
@@ -34,7 +33,7 @@ namespace Safezone.Model.Flag
             return (T)DefaultValue;
         }
 
-        public abstract bool OnSetValue(RocketPlayer caller, SafeZone safeZone, params string[] values);
+        public abstract bool OnSetValue(IRocketPlayer caller, SafeZone safeZone, params string[] values);
         public abstract string Usage { get; }
 
         protected Flag(String name)

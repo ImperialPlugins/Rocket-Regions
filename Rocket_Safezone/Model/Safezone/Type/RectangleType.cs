@@ -1,6 +1,6 @@
 ﻿using System;
-using Rocket.Unturned;
-using Rocket.Unturned.Player;
+using Rocket.API;
+using Rocket.Unturned.Chat;
 using UnityEngine;
 
 namespace Safezone.Model.Safezone.Type
@@ -10,11 +10,11 @@ namespace Safezone.Model.Safezone.Type
         public SerializablePosition Position1;
         public SerializablePosition Position2;
 
-        public override SafeZone OnCreate(RocketPlayer player, String name, string[] args)
+        public override SafeZone OnCreate(IRocketPlayer player, String name, string[] args)
         {
             if (!SafeZonePlugin.Instance.HasPositionSet(player))
             {
-                RocketChat.Say(player.CSteamID, "Please set pos1 (/spos1) and pos2 (/spos2) before using this command", Color.red);
+                UnturnedChat.Say(player, "Please set pos1 (/spos1) and pos2 (/spos2) before using this command", Color.red);
                 return null;
             }
 
@@ -92,11 +92,11 @@ namespace Safezone.Model.Safezone.Type
             return b1 && b2 && b3 && b4;
         }
 
-        public override bool OnRedefine(RocketPlayer player, string[] args)
+        public override bool OnRedefine(IRocketPlayer player, string[] args)
         {
             if (!SafeZonePlugin.Instance.HasPositionSet(player))
             {
-                RocketChat.Say(player.CSteamID, "Please set pos1 (/spos1) and pos2 (/spos2) before using this command", Color.red);
+                UnturnedChat.Say(player, "Please set pos1 (/spos1) and pos2 (/spos2) before using this command", Color.red);
                 return false;
             }
 

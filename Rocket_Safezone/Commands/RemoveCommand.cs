@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Rocket.Unturned;
+using Rocket.API;
+using Rocket.Unturned.Chat;
 using Rocket.Unturned.Commands;
-using Rocket.Unturned.Player;
-using Rocket.Unturned.Plugins;
-using Safezone.Model;
 using Safezone.Model.Safezone;
 using Safezone.Util;
 using UnityEngine;
@@ -13,11 +11,11 @@ namespace Safezone.Commands
 {
     public class RemoveCommand : IRocketCommand
     {
-        public void Execute(RocketPlayer caller, string[] command)
+        public void Execute(IRocketPlayer caller, string[] command)
         {
             if (command.Length == 0)
             {
-                RocketChat.Say(caller.CSteamID, "Usage: /sremove <name>", Color.red);
+                UnturnedChat.Say(caller, "Usage: /sremove <name>", Color.red);
                 return;
             }
 
@@ -25,24 +23,24 @@ namespace Safezone.Commands
             SafeZone zone = SafeZonePlugin.Instance.GetSafeZone(name, false);
             if (zone == null)
             {
-                RocketChat.Say(caller.CSteamID, "Safezone \"" + name + "\" not found", Color.red);
+                UnturnedChat.Say(caller, "Safezone \"" + name + "\" not found", Color.red);
                 return;
             }
 
-            if (!zone.IsOwner(SafeZonePlugin.GetId(caller)) && !PermissionUtil.HasPermission(caller, "remove.override"))
+            if (!zone.IsOwner(caller) && !PermissionUtil.HasPermission(caller, "remove.override"))
             {
-                RocketChat.Say(caller.CSteamID, "You're not the owner of this region!", Color.red);
+                UnturnedChat.Say(caller, "You're not the owner of this region!", Color.red);
                 return;
             }
 
-            SafeZonePlugin.Instance.Configuration.SafeZones.Remove(zone);
+            SafeZonePlugin.Instance.Configuration.Instance.SafeZones.Remove(zone);
             SafeZonePlugin.Instance.Configuration.Save();
             SafeZonePlugin.Instance.OnSafeZoneRemoved(zone);
 
-            RocketChat.Say(caller.CSteamID, "Successfully removed safezone: " + name, Color.green);
+            UnturnedChat.Say(caller, "Successfully removed safezone: " + name, Color.green);
         }
 
-        public bool RunFromConsole
+        public bool AllowFromConsole
         {
             get { return false; }
         }
@@ -65,6 +63,11 @@ namespace Safezone.Commands
         public List<string> Aliases
         {
             get { return new List<string> { "sremove" }; }
-        } 
+        }
+
+        public List<string> Permissions
+        {
+            get { return new List<string> { "safezones.remove" }; }
+        }
     }
 }

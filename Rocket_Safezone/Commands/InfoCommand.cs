@@ -1,24 +1,23 @@
 ﻿using System.Collections.Generic;
-using Rocket.Unturned;
-using Rocket.Unturned.Commands;
-using Rocket.Unturned.Player;
+using Rocket.API;
+using Rocket.Unturned.Chat;
 using UnityEngine;
 
 namespace Safezone.Commands
 {
     public class InfoCommand : IRocketCommand
     {
-        public void Execute(RocketPlayer caller, string[] command)
+        public void Execute(IRocketPlayer caller, string[] command)
         {
-            RocketChat.Say(caller.CSteamID, "Rocket SafeZone by Trojaner", Color.cyan);
-            RocketChat.Say(caller.CSteamID, "Available under GNU Affero General Public License v3", Color.cyan);
-            RocketChat.Say(caller.CSteamID, "Copyright © 2015 http://static-interface.de", Color.cyan);
-            RocketChat.Say(caller.CSteamID, "Source code available under http://github.com/Trojaner25/Rocket-Safezone", Color.cyan);
+            UnturnedChat.Say(caller, "Rocket SafeZone by Trojaner", Color.cyan);
+            UnturnedChat.Say(caller, "Available under GNU Affero General Public License v3", Color.cyan);
+            UnturnedChat.Say(caller, "Copyright © 2015 http://static-interface.de", Color.cyan);
+            UnturnedChat.Say(caller, "Source code available under http://github.com/Trojaner25/Rocket-Safezone", Color.cyan);
         }
 
-        public bool RunFromConsole
+        public bool AllowFromConsole
         {
-            get { return true; }
+            get { return false; }
         }
 
         public string Name
@@ -39,6 +38,11 @@ namespace Safezone.Commands
         public List<string> Aliases
         {
             get { return new List<string> { "sinfo" }; }
+        }
+
+        public List<string> Permissions
+        {
+            get { return new List<string>(); }
         }
     }
 }

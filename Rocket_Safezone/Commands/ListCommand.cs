@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using Rocket.Unturned;
-using Rocket.Unturned.Commands;
-using Rocket.Unturned.Player;
-using Safezone.Model;
+using Rocket.API;
+using Rocket.Unturned.Chat;
 using Safezone.Model.Safezone;
 using UnityEngine;
 
@@ -10,24 +8,24 @@ namespace Safezone.Commands
 {
     public class ListCommand : IRocketCommand
     {
-        public void Execute(RocketPlayer caller, string[] command)
+        public void Execute(IRocketPlayer  caller, string[] command)
         {
-            RocketChat.Say(caller.CSteamID, "Safezones:", Color.green);
+            UnturnedChat.Say(caller, "Safezones:", Color.green);
 
             bool bZonesFound = false;
-            foreach (SafeZone zone in SafeZonePlugin.Instance.Configuration.SafeZones)
+            foreach (SafeZone zone in SafeZonePlugin.Instance.Configuration.Instance.SafeZones)
             {
-                RocketChat.Say(caller.CSteamID, "• " + zone.Name, Color.green);
+                UnturnedChat.Say(caller, "• " + zone.Name, Color.green);
                 bZonesFound = true;
             }
 
             if (!bZonesFound)
             {
-                RocketChat.Say(caller.CSteamID, "No SafeZones found", Color.red);
+                UnturnedChat.Say(caller, "No SafeZones found", Color.red);
             }
         }
 
-        public bool RunFromConsole
+        public bool AllowFromConsole
         {
             get { return false; }
         }
@@ -50,6 +48,11 @@ namespace Safezone.Commands
         public List<string> Aliases
         {
             get { return new List<string> { "slist" }; }
-        } 
+        }
+
+        public List<string> Permissions
+        {
+            get { return new List<string> { "safezones.list" }; }
+        }
     }
 }

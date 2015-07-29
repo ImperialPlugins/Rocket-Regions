@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Xml.Serialization;
+using Rocket.API;
 using Rocket.Unturned.Player;
 using Safezone.Util;
 
@@ -47,8 +48,8 @@ namespace Safezone.Model.Safezone.Type
             RegistereTypes.Add(name, t);
         }
 
-        public abstract SafeZone OnCreate(RocketPlayer player, String name, string[] args);
-        public abstract bool OnRedefine(RocketPlayer player, string[] args);
+        public abstract SafeZone OnCreate(IRocketPlayer player, String name, string[] args);
+        public abstract bool OnRedefine(IRocketPlayer player, string[] args);
         public abstract double GetDistance(SerializablePosition pos);
 
         public abstract bool IsInSafeZone(SerializablePosition p);

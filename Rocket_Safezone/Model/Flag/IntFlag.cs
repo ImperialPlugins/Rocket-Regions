@@ -1,6 +1,5 @@
 ﻿using System;
-using Rocket.Unturned.Commands;
-using Rocket.Unturned.Player;
+using Rocket.API;
 using Safezone.Model.Safezone;
 
 namespace Safezone.Model.Flag
@@ -11,7 +10,7 @@ namespace Safezone.Model.Flag
         {
         }
 
-        public override bool OnSetValue(RocketPlayer caller, SafeZone zone, params string[] values)
+        public override bool OnSetValue(IRocketPlayer caller, SafeZone zone, params string[] values)
         {
             try
             {
