@@ -75,7 +75,7 @@ namespace Safezone.Model.Safezone
             Flags.Add(flag);
             if (save)
             {
-                SafeZonePlugin.Instance.Configuration.Save();
+                SafeZonePlugin.Instance.Configuration.Save(SafeZonePlugin.Instance.Configuration.Instance);
             }
         }
 

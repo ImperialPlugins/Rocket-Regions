@@ -34,7 +34,7 @@ namespace Safezone.Commands
             }
 
             SafeZonePlugin.Instance.Configuration.Instance.SafeZones.Remove(zone);
-            SafeZonePlugin.Instance.Configuration.Save();
+            SafeZonePlugin.Instance.Configuration.Save(SafeZonePlugin.Instance.Configuration.Instance);
             SafeZonePlugin.Instance.OnSafeZoneRemoved(zone);
 
             UnturnedChat.Say(caller, "Successfully removed safezone: " + name, Color.green);

@@ -41,10 +41,10 @@ namespace Safezone.Commands
             if (zone.Type.OnRedefine(PlayerUtil.GetUnturnedPlayer(caller), (string[])args.ToArray(typeof(string))))
             {
                 SafeZonePlugin.Instance.Configuration.Instance.SafeZones.Remove(zone);
-                SafeZonePlugin.Instance.Configuration.Save();
+                SafeZonePlugin.Instance.Configuration.Save(SafeZonePlugin.Instance.Configuration.Instance);
                 SafeZonePlugin.Instance.OnSafeZoneRemoved(zone);
                 SafeZonePlugin.Instance.Configuration.Instance.SafeZones.Add(zone);
-                SafeZonePlugin.Instance.Configuration.Save();
+                SafeZonePlugin.Instance.Configuration.Save(SafeZonePlugin.Instance.Configuration.Instance);
                 SafeZonePlugin.Instance.OnSafeZoneCreated(zone);
 
                 UnturnedChat.Say(caller, "Successfully redefined safezone: " + name, Color.green);

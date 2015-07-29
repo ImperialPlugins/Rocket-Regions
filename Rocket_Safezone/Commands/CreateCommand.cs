@@ -16,7 +16,7 @@ namespace Safezone.Commands
         {
             if (command.Length < 2)
             {
-                UnturnedChat.Say(caller, "Usage: /screate <type> <name>", Color.red);
+                UnturnedChat.Say(caller, "Usage: /screate <name> <type>", Color.red);
                 return;
             }
 
@@ -41,7 +41,7 @@ namespace Safezone.Commands
                         continue;
                     }
 
-                    types = ", " + t;
+                    types += ", " + t;
                 }
                 UnturnedChat.Say(caller, "Unknown type: " + typeName + "! Available types: " + types, Color.red);
                 return;
@@ -58,7 +58,7 @@ namespace Safezone.Commands
             }
 
             SafeZonePlugin.Instance.Configuration.Instance.SafeZones.Add(safeZone);
-            SafeZonePlugin.Instance.Configuration.Save();
+            SafeZonePlugin.Instance.Configuration.Save(SafeZonePlugin.Instance.Configuration.Instance);
             SafeZonePlugin.Instance.OnSafeZoneCreated(safeZone);
 
             UnturnedChat.Say(caller, "Successfully created safezone: " + name, Color.green);

@@ -85,6 +85,7 @@ namespace Safezone.Model.Safezone.Type
 
         public override bool IsInSafeZone(SerializablePosition p)
         {
+            /*
             SerializablePosition p1 = Position1;
             SerializablePosition p2 = Position2;
 
@@ -94,6 +95,10 @@ namespace Safezone.Model.Safezone.Type
             bool b4 = p.Y <= Math.Max(p1.Y, p2.Y);
 
             return b1 && b2 && b3 && b4;
+              
+             
+             */
+            return GetDistance(p) <= 0;
         }
 
         public override bool OnRedefine(IRocketPlayer player, string[] args)

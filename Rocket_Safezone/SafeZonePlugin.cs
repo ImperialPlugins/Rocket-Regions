@@ -44,12 +44,15 @@ namespace Safezone
             Flag.RegisterFlag("NoZombie", typeof(NoZombieFlag));
 
             // 0 is invalid, reset it
-            if (Configuration.Instance.ZombieTimerSpeed == 0)
+            Configuration.Load();
+            int timerspeed = Configuration.Instance.ZombieTimerSpeed;
+            if (timerspeed == 0)
             {
                 Configuration.Instance.ZombieTimerSpeed = ((SafeZoneConfiguration)Configuration.Instance.DefaultConfiguration).ZombieTimerSpeed;
-                Configuration.Save();
+                timerspeed = ((SafeZoneConfiguration)Configuration.Instance.DefaultConfiguration).ZombieTimerSpeed;
+                Configuration.Save(Configuration.Instance);
             }
-            _zombieTimer = new Timer(Configuration.Instance.ZombieTimerSpeed * 1000);
+            _zombieTimer = new Timer(timerspeed * 1000);
             _zombieTimer.Elapsed += delegate { OnRemoveZombies(); };
             if (Configuration.Instance.SafeZones.Count < 1) return;
             StartListening();
