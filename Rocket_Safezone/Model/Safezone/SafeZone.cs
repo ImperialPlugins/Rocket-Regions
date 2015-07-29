@@ -14,14 +14,15 @@ namespace Safezone.Model.Safezone
     {
         [XmlAttribute("Name")]
         public string Name;
-        [XmlAttribute("Owner")]
-        public uint Owner;
+        [XmlArray("Owners")]
+        public List<uint> Owners;
         [XmlElement("Type")]
         public SafeZoneType Type;
 
         [XmlArray("Flags")]
         public List<SerializableFlag> Flags;
 
+        [XmlArray] public List<uint> Members; 
         public Flag.Flag GetFlag(System.Type t, bool createIfNotFound = true)
         {
             if (!t.IsSameOrSubclass(typeof(Flag.Flag)))
@@ -51,7 +52,28 @@ namespace Safezone.Model.Safezone
             return (Flag.Flag)Activator.CreateInstance(t);
         }
 
-        public void SetFlag(string name, object value, bool save = true)
+        public Group GetGroup(IRocketPlayer player)
+        {
+            uint id = PlayerUtil.GetId(player);
+            foreach (var member in GetAllMembers())
+            {
+                if (member == id)
+                {
+                    return Group.MEMBERS;
+                }
+            }
+
+            return Group.NONMEMBERS;
+        }
+
+        public List<uint> GetAllMembers()
+        {
+            var allMembers = Owners;
+            allMembers.AddRange(Members);
+            return allMembers;
+        } 
+
+        public void SetFlag(string name, object value, Dictionary<string,object> groupValues, bool save = true)
         {
             System.Type flagType = Flag.Flag.GetFlagType(name);
             if (flagType == null)
@@ -71,7 +93,7 @@ namespace Safezone.Model.Safezone
                 break;
             }
 
-            SerializableFlag flag = new SerializableFlag {Name = name, Value = value};
+            SerializableFlag flag = new SerializableFlag {Name = name, Value = value, GroupValues = groupValues};
             Flags.Add(flag);
             if (save)
             {
@@ -90,7 +112,14 @@ namespace Safezone.Model.Safezone
 
         public bool IsOwner(uint id)
         {
-            return Owner == id;
+            foreach (uint owner in Owners)
+            {
+                if (owner == id)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

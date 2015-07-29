@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Rocket.API;
 using Rocket.Unturned.Chat;
 using Rocket.Unturned.Commands;
@@ -27,7 +28,7 @@ namespace Safezone.Model.Safezone.Type
             SafeZone zone = new SafeZone
             {
                 Name = name,
-                Owner = PlayerUtil.GetId(player),
+                Owners = new List<uint> {PlayerUtil.GetId(player)}, 
                 Type = this
             };
 

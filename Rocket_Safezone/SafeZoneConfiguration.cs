@@ -24,6 +24,4 @@ namespace Safezone
         [XmlArrayItem(ElementName = "ZombieTimerSpeed")] 
         public int ZombieTimerSpeed;
     }
-
- 
 }

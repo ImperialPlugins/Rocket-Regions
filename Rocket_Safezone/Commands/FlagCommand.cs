@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Rocket.API;
 using Rocket.Unturned.Chat;
 using Rocket.Unturned.Commands;
+using Safezone.Model;
 using Safezone.Model.Flag;
 using Safezone.Model.Safezone;
 using Safezone.Util;
@@ -45,7 +46,7 @@ namespace Safezone.Commands
                 return;
             }
             bool hasFlagPermission = PermissionUtil.HasPermission(caller, "flag." + flagName);
-            String usage = "Usage: /sflag " + name + " " + f.Name + " " + f.Usage;
+            String usage = "Usage: /sflag " + name + " " + f.Name + " " + f.Usage + " [group]";
             if (command.Length == 2)
             {
                 String description = f.Description;
@@ -56,10 +57,10 @@ namespace Safezone.Commands
                 UnturnedChat.Say(caller, "Description: " + description, Color.blue);
                 if (hasFlagPermission)
                 {
-                    UnturnedChat.Say(caller, "Usage: " + usage);
+                    UnturnedChat.Say(caller, usage);
                     UnturnedChat.Say(caller, "Value: " + value, Color.blue);
                 }
-                UnturnedChat.Say(caller, "Default: " + defaultValue, Color.blue);
+                UnturnedChat.Say(caller, "Default Value: " + defaultValue, Color.blue);
                 return;
             }
 
@@ -69,18 +70,22 @@ namespace Safezone.Commands
                 return;
             }
 
-            List<String> argsList = new List<string>();
-            for (int i = 2; i <= command.Length -1; i++)
+            Group group = Group.NONE;
+            if (command.Length == 4)
             {
-                argsList.Add(command[i]);
+                group = GroupUtil.GetGroup(command.GetStringParameter(3));
+                if (group == Group.NONE)
+                {
+                    UnturnedChat.Say(caller, "Unknown group: " + command.GetStringParameter(3) + "!", Color.red);
+                    return;
+                }
             }
-            string[] args = argsList.ToArray();
-            if (!f.OnSetValue(caller, zone, args))
+            if (!f.OnSetValue(caller, zone, command.GetStringParameter(2), group))
             {
                 UnturnedChat.Say(caller, usage, Color.red);
                 return;
             }
-            zone.SetFlag(f.Name, f.Value);
+            zone.SetFlag(f.Name, f.Value, f.GroupValues);
         }
 
         public bool AllowFromConsole

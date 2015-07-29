@@ -9,20 +9,20 @@ namespace Safezone.Model.Flag
         {    
         }
 
-        public override bool OnSetValue(IRocketPlayer caller, SafeZone zone, params string[] values)
+        public override bool OnSetValue(IRocketPlayer caller, SafeZone zone, string rawValue, Group group = Group.NONE)
         {
-            switch (values[0])
+            switch (rawValue.ToLower().Trim())
             {
                 case "on":
                 case "true":
                 case "1":
-                    Value = true;
+                    SetValue(true, group);
                     return true;
 
                 case "off":
                 case "false":
                 case "0":
-                    Value = false;
+                    SetValue(false, group);
                     return true;
             }
 

@@ -10,11 +10,11 @@ namespace Safezone.Model.Flag
         {
         }
 
-        public override bool OnSetValue(IRocketPlayer caller, SafeZone zone, params string[] values)
+        public override bool OnSetValue(IRocketPlayer caller, SafeZone zone, string rawValue, Group group)
         {
             try
             {
-                Value = Convert.ToInt32(values[0]);
+                SetValue(Convert.ToInt32(rawValue), group);
                 return true;
             }
             catch (Exception)

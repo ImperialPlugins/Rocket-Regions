@@ -15,5 +15,10 @@
         {
             get { return true; }
         }
+
+        public override bool SupportsGroups
+        {
+            get { return false; }
+        }
     }
 }

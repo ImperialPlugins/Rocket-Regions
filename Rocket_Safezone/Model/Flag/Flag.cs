@@ -15,16 +15,43 @@ namespace Safezone.Model.Flag
         public abstract String Description { get;  }
         public abstract Object DefaultValue { get;  }
 
-        public T GetValue<T>()
+        public virtual bool SupportsGroups
+        {
+            get { return true;  }
+        }
+
+        public Dictionary<string, object> GroupValues = new Dictionary<string, object>(); 
+
+        public virtual T GetValue<T>(Group group)
+        {
+            if (!SupportsGroups)
+            {
+                throw new InvalidOperationException("Flag does not support group specific");
+            }
+            if (!Value.GetType().IsSameOrSubclass(typeof(T)))
+            {
+                throw new InvalidCastException("Can't cast " + Value.GetType().Name + " to " + typeof(T).Name);
+            }
+
+            String name = group.GetInternalGroupName();
+            if (GroupValues != null && GroupValues.ContainsKey(name))
+            {
+                return (T) GroupValues[name];
+            }
+            return (T) Value;
+        }
+
+        public virtual T GetValue<T>()
         {
             if (!Value.GetType().IsSameOrSubclass(typeof(T)))
             {
                 throw new InvalidCastException("Can't cast " + Value.GetType().Name + " to " + typeof(T).Name);
             }
-            return (T) Value;
+
+            return (T)Value;
         }
 
-        public T GetDefaultValue<T>()
+        public virtual T GetDefaultValue<T>()
         {
             if (!DefaultValue.GetType().IsSameOrSubclass(typeof(T)))
             {
@@ -33,8 +60,25 @@ namespace Safezone.Model.Flag
             return (T)DefaultValue;
         }
 
-        public abstract bool OnSetValue(IRocketPlayer caller, SafeZone safeZone, params string[] values);
+        public abstract bool OnSetValue(IRocketPlayer caller, SafeZone safeZone, string rawValue, Group group = Group.NONE);
         public abstract string Usage { get; }
+
+        protected void SetValue(object value, Group group)
+        {
+            if (group == Group.NONE)
+            {
+                Value = value;
+                return;
+            }
+
+            String groupName = group.GetInternalGroupName();
+            if (GroupValues.ContainsKey(groupName))
+            {
+                GroupValues[groupName] = value;
+                return;
+            }
+            GroupValues.Add(groupName, value);
+        }
 
         protected Flag(String name)
         {

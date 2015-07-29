@@ -27,7 +27,7 @@ namespace Safezone.Model.Safezone.Type
             SafeZone zone = new SafeZone
             {
                 Name = name,
-                Owner = PlayerUtil.GetId(player),
+                Owners = new List<uint> { PlayerUtil.GetId(player) },
                 Type = this
             };
 

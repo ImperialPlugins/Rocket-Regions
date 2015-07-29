@@ -162,7 +162,7 @@ namespace Safezone
             {
                 //Left a safezone
                 safeZone = _safeZonePlayers[id];
-                if (safeZone.GetFlag(typeof (NoLeaveFlag)).GetValue<bool>() && lastPosition != null)
+                if (safeZone.GetFlag(typeof (NoLeaveFlag)).GetValue<bool>(safeZone.GetGroup(player)) && lastPosition != null)
                 {
                     //Todo: send message to player (can't leave safezone)
                     untPlayer.Teleport(new Vector3(lastPosition.X, lastPosition.Y), untPlayer.Rotation);
@@ -173,7 +173,7 @@ namespace Safezone
             else if (bIsInSafeZone && !_safeZonePlayers.ContainsKey(id) && lastPosition != null)
             {
                 //Entered a safezone
-                if (safeZone.GetFlag(typeof (NoEnterFlag)).GetValue<bool>())
+                if (safeZone.GetFlag(typeof (NoEnterFlag)).GetValue<bool>(safeZone.GetGroup(player)))
                 {
                     //Todo: send message to player (can't enter safezone)
                     untPlayer.Teleport(new Vector3(lastPosition.X, lastPosition.Y), untPlayer.Rotation);
@@ -208,7 +208,7 @@ namespace Safezone
 
                 bool wasDriving = _lastVehicleStates[id];
                 
-                if (isInVeh && !wasDriving && !safeZone.GetFlag(typeof (EnterVehiclesFlag)).GetValue<bool>())
+                if (isInVeh && !wasDriving && !safeZone.GetFlag(typeof (EnterVehiclesFlag)).GetValue<bool>(safeZone.GetGroup(player)))
                 {
                     byte seat = 0;
                     foreach (Passenger p in untPlayer.Player.Movement.getVehicle().passengers)
@@ -227,7 +227,7 @@ namespace Safezone
         private void OnPlayerEnteredSafeZone(IRocketPlayer player, SafeZone safeZone, bool bSendMessage)
         {
             uint id = PlayerUtil.GetId(player);
-            if (safeZone.GetFlag(typeof (GodmodeFlag)).GetValue<bool>())
+            if (safeZone.GetFlag(typeof (GodmodeFlag)).GetValue<bool>(safeZone.GetGroup(player)))
             {
                 EnableGodMode(player);
             }
@@ -236,6 +236,7 @@ namespace Safezone
             if (bSendMessage)
             {
                 //Todo: use translation
+                //Todo: add flag for this
                 UnturnedChat.Say(player, "Entered safe zone: " + safeZone.Name, Color.green);
             }
         }
@@ -244,7 +245,7 @@ namespace Safezone
         {
             uint id = PlayerUtil.GetId(player);
 
-            if (safeZone.GetFlag(typeof (GodmodeFlag)).GetValue<bool>())
+            if (safeZone.GetFlag(typeof (GodmodeFlag)).GetValue<bool>(safeZone.GetGroup(player)))
             {
                 DisableGodMode(player);
             }
