@@ -122,11 +122,6 @@ namespace Safezone
         {
             var untPlayer = PlayerUtil.GetUnturnedPlayer(player);
 
-            if (!player.HasPermission("info"))
-            {
-                UnturnedChat.Say(player, "This server is running Safezones by Trojaner", Color.gray);
-            }
-
             SafeZone safeZone = GetSafeZoneAt(untPlayer.Position);
             if (safeZone != null)
             {
