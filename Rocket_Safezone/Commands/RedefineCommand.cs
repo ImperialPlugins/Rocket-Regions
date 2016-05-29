@@ -7,6 +7,7 @@ using Rocket.Unturned.Commands;
 using Safezone.Model.Safezone;
 using Safezone.Util;
 using UnityEngine;
+using Rocket.API.Extensions;
 
 namespace Safezone.Commands
 {
@@ -41,10 +42,10 @@ namespace Safezone.Commands
             if (zone.Type.OnRedefine(PlayerUtil.GetUnturnedPlayer(caller), (string[])args.ToArray(typeof(string))))
             {
                 SafeZonePlugin.Instance.Configuration.Instance.SafeZones.Remove(zone);
-                SafeZonePlugin.Instance.Configuration.Save(SafeZonePlugin.Instance.Configuration.Instance);
+                SafeZonePlugin.Instance.Configuration.Save();
                 SafeZonePlugin.Instance.OnSafeZoneRemoved(zone);
                 SafeZonePlugin.Instance.Configuration.Instance.SafeZones.Add(zone);
-                SafeZonePlugin.Instance.Configuration.Save(SafeZonePlugin.Instance.Configuration.Instance);
+                SafeZonePlugin.Instance.Configuration.Save();
                 SafeZonePlugin.Instance.OnSafeZoneCreated(zone);
 
                 UnturnedChat.Say(caller, "Successfully redefined safezone: " + name, Color.green);
@@ -54,9 +55,13 @@ namespace Safezone.Commands
             UnturnedChat.Say(caller, "Redefine of safezone: " + name + " failed.", Color.red);
         }
 
-        public bool AllowFromConsole
+
+        public AllowedCaller AllowedCaller
         {
-            get { return false; }
+            get
+            {
+                return AllowedCaller.Player;
+            }
         }
 
         public string Name

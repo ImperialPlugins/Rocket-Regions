@@ -5,6 +5,7 @@ using Rocket.Unturned.Chat;
 using Rocket.Unturned.Commands;
 using Safezone.Util;
 using UnityEngine;
+using Rocket.API.Extensions;
 
 namespace Safezone.Model.Safezone.Type
 {

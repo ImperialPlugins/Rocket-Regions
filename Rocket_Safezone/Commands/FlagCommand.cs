@@ -9,6 +9,7 @@ using Safezone.Model.Safezone;
 using Safezone.Util;
 using UnityEngine;
 using Object = System.Object;
+using Rocket.API.Extensions;
 
 namespace Safezone.Commands
 {
@@ -88,9 +89,13 @@ namespace Safezone.Commands
             zone.SetFlag(f.Name, f.Value, f.GroupValues);
         }
 
-        public bool AllowFromConsole
+
+        public AllowedCaller AllowedCaller
         {
-            get { return false; }
+            get
+            {
+                return AllowedCaller.Player;
+            }
         }
 
         public string Name

@@ -17,9 +17,13 @@ namespace Safezone.Commands
             RectangleType.SetPosition2(caller, pos);
         }
 
-        public bool AllowFromConsole
+
+        public AllowedCaller AllowedCaller
         {
-            get { return false; }
+            get
+            {
+                return AllowedCaller.Player;
+            }
         }
 
         public string Name

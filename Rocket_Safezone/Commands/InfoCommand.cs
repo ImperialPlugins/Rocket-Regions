@@ -14,10 +14,13 @@ namespace Safezone.Commands
             UnturnedChat.Say(caller, "Copyright © 2015 http://static-interface.de", Color.cyan);
             UnturnedChat.Say(caller, "Source code available under http://github.com/Trojaner25/Rocket-Safezone", Color.cyan);
         }
-
-        public bool AllowFromConsole
+        
+        public AllowedCaller AllowedCaller
         {
-            get { return false; }
+            get
+            {
+                return AllowedCaller.Player;
+            }
         }
 
         public string Name
