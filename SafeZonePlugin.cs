@@ -45,14 +45,12 @@ namespace Safezone
 
             // 0 is invalid, reset it
             Configuration.Load();
-            int timerspeed = Configuration.Instance.ZombieTimerSpeed;
-            if (timerspeed == 0)
+            if (Configuration.Instance.ZombieTimerSpeed == 0)
             {
-                Configuration.Instance.ZombieTimerSpeed = ((SafeZoneConfiguration)Configuration.Instance.DefaultConfiguration).ZombieTimerSpeed;
-                timerspeed = ((SafeZoneConfiguration)Configuration.Instance.DefaultConfiguration).ZombieTimerSpeed;
-                Configuration.Save(Configuration.Instance);
+                Configuration.Instance.ZombieTimerSpeed = 5;
+                Configuration.Save();
             }
-            _zombieTimer = new Timer(timerspeed * 1000);
+            _zombieTimer = new Timer(Configuration.Instance.ZombieTimerSpeed * 1000);
             _zombieTimer.Elapsed += delegate { OnRemoveZombies(); };
             if (Configuration.Instance.SafeZones.Count < 1) return;
             StartListening();

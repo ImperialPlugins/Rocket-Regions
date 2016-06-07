@@ -7,6 +7,7 @@ using Rocket.Unturned.Commands;
 using Safezone.Model.Safezone;
 using Safezone.Model.Safezone.Type;
 using UnityEngine;
+using Rocket.API.Extensions;
 
 namespace Safezone.Commands
 {
@@ -58,15 +59,18 @@ namespace Safezone.Commands
             }
 
             SafeZonePlugin.Instance.Configuration.Instance.SafeZones.Add(safeZone);
-            SafeZonePlugin.Instance.Configuration.Save(SafeZonePlugin.Instance.Configuration.Instance);
+            SafeZonePlugin.Instance.Configuration.Save();
             SafeZonePlugin.Instance.OnSafeZoneCreated(safeZone);
 
             UnturnedChat.Say(caller, "Successfully created safezone: " + name, Color.green);
         }
-
-        public bool AllowFromConsole
+        
+        public AllowedCaller AllowedCaller
         {
-            get { return false; }
+            get
+            {
+                return AllowedCaller.Player;
+            }
         }
 
         public string Name

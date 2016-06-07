@@ -6,6 +6,7 @@ using Rocket.Unturned.Commands;
 using Safezone.Model.Safezone;
 using Safezone.Util;
 using UnityEngine;
+using Rocket.API.Extensions;
 
 namespace Safezone.Commands
 {
@@ -34,15 +35,10 @@ namespace Safezone.Commands
             }
 
             SafeZonePlugin.Instance.Configuration.Instance.SafeZones.Remove(zone);
-            SafeZonePlugin.Instance.Configuration.Save(SafeZonePlugin.Instance.Configuration.Instance);
+            SafeZonePlugin.Instance.Configuration.Save();
             SafeZonePlugin.Instance.OnSafeZoneRemoved(zone);
 
             UnturnedChat.Say(caller, "Successfully removed safezone: " + name, Color.green);
-        }
-
-        public bool AllowFromConsole
-        {
-            get { return false; }
         }
 
         public string Name
@@ -68,6 +64,14 @@ namespace Safezone.Commands
         public List<string> Permissions
         {
             get { return new List<string> { "safezones.remove" }; }
+        }
+
+        public AllowedCaller AllowedCaller
+        {
+            get
+            {
+                return AllowedCaller.Player;
+            }
         }
     }
 }
