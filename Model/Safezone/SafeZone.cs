@@ -23,6 +23,7 @@ namespace Safezone.Model.Safezone
         public List<SerializableFlag> Flags;
 
         [XmlArray] public List<uint> Members; 
+
         public Flag.Flag GetFlag(System.Type t, bool createIfNotFound = true)
         {
             if (!t.IsSameOrSubclass(typeof(Flag.Flag)))
@@ -44,7 +45,7 @@ namespace Safezone.Model.Safezone
 
                     Flag.Flag deserializedFlag = (Flag.Flag) Activator.CreateInstance(type);
                     deserializedFlag.Value = serializedFlag.Value;
-                    deserializedFlag.GroupValues = serializedFlag.GroupValues ?? new Dictionary<string, object>(); 
+                    deserializedFlag.GroupValues = serializedFlag.GroupValues ?? new List<GroupValue>(); 
                     return deserializedFlag;
                 }
             }
@@ -74,7 +75,7 @@ namespace Safezone.Model.Safezone
             return allMembers;
         } 
 
-        public void SetFlag(string name, object value, Dictionary<string,object> groupValues, bool save = true)
+        public void SetFlag(string name, object value,List<GroupValue> groupValues, bool save = true)
         {
             System.Type flagType = Flag.Flag.GetFlagType(name);
             if (flagType == null)

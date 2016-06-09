@@ -7,6 +7,7 @@ using Safezone.Model.Safezone;
 
 namespace Safezone
 {
+    [Serializable]
     public class SafeZoneConfiguration : IRocketPluginConfiguration
     {
         [XmlArrayItem(ElementName = "SafeZones")]

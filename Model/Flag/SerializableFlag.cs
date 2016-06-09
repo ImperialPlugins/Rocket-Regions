@@ -13,6 +13,15 @@ namespace Safezone.Model.Flag
         [XmlAttribute("value")]
         public Object Value; 
         [XmlAttribute("groupvalues")]
-        public Dictionary<string, object> GroupValues; 
+        public List<GroupValue> GroupValues; 
     }
+
+    public class GroupValue
+    {
+        [XmlAttribute]
+        public string Key;
+        [XmlAttribute]
+        public object Value;
+    }
+
 }

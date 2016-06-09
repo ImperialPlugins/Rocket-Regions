@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Rocket.API;
 using Safezone.Model.Safezone;
 using Safezone.Util;
+using System.Linq;
 
 namespace Safezone.Model.Flag
 {
@@ -20,7 +21,7 @@ namespace Safezone.Model.Flag
             get { return true;  }
         }
 
-        public Dictionary<string, object> GroupValues = new Dictionary<string, object>(); 
+        public List<GroupValue> GroupValues = new List<GroupValue>(); 
 
         public virtual T GetValue<T>(Group group)
         {
@@ -34,9 +35,10 @@ namespace Safezone.Model.Flag
             }
 
             String name = group.GetInternalGroupName();
-            if (GroupValues != null && GroupValues.ContainsKey(name))
+            GroupValue v = GroupValues.Where(g => g.Key == name).FirstOrDefault();
+            if (GroupValues != null && v != null)
             {
-                return (T) GroupValues[name];
+                return (T) v.Value;
             }
             return (T) Value;
         }
@@ -72,12 +74,15 @@ namespace Safezone.Model.Flag
             }
 
             String groupName = group.GetInternalGroupName();
-            if (GroupValues.ContainsKey(groupName))
+
+            GroupValue v = GroupValues.Where(g => g.Key == groupName).FirstOrDefault();
+            if (v != null)
             {
-                GroupValues[groupName] = value;
-                return;
+                v.Value = value;
+            }else
+            {
+                GroupValues.Add(new GroupValue() { Key=groupName,Value = value });
             }
-            GroupValues.Add(groupName, value);
         }
 
         protected Flag(String name)
