@@ -105,7 +105,8 @@ namespace Safezone
             foreach (Zombie zombie in ZombieManager.ZombieRegions.SelectMany(t => (from zombie in t.Zombies let safeZone = GetSafeZoneAt(zombie.transform.position) where safeZone != null && safeZone.GetFlag(typeof (NoZombieFlag)).GetValue<bool>() select zombie)))
             {
                 EPlayerKill pKill;
-                zombie.askDamage(255, zombie.transform.up, out pKill);
+                uint xp;
+                zombie.askDamage(255, zombie.transform.up, out pKill,out xp);
             }
         }
 
