@@ -25,7 +25,7 @@ namespace Safezone
     {
         public static SafeZonePlugin Instance;
         private readonly Dictionary<uint, SafeZone> _safeZonePlayers = new Dictionary<uint, SafeZone>();
-        private readonly Dictionary<uint, Boolean> _godModeStates = new Dictionary<uint, bool>();
+        private readonly Dictionary<uint, bool> _godModeStates = new Dictionary<uint, bool>();
         private readonly Dictionary<uint, SerializablePosition> _lastPositions = new Dictionary<uint, SerializablePosition>();
         private readonly Dictionary<uint, bool> _lastVehicleStates = new Dictionary<uint, bool>();
  
@@ -91,7 +91,7 @@ namespace Safezone
         internal void OnSafeZoneRemoved(SafeZone safeZone)
         {
             //Update players in safezones
-            foreach (uint id in GetUidsInSafeZone(safeZone))
+            foreach (var id in GetUidsInSafeZone(safeZone))
             {
                 OnPlayerLeftSafeZone(UnturnedPlayer.FromCSteamID(new CSteamID(id)), safeZone, false);
             }
@@ -102,7 +102,7 @@ namespace Safezone
 
         private void OnRemoveZombies()
         {
-            foreach (Zombie zombie in ZombieManager.ZombieRegions.SelectMany(t => (from zombie in t.Zombies let safeZone = GetSafeZoneAt(zombie.transform.position) where safeZone != null && safeZone.GetFlag(typeof (NoZombieFlag)).GetValue<bool>() select zombie)))
+            foreach (var zombie in ZombieManager.ZombieRegions.SelectMany(t => (from zombie in t.Zombies let safeZone = GetSafeZoneAt(zombie.transform.position) where safeZone != null && safeZone.GetFlag(typeof (NoZombieFlag)).GetValue<bool>() select zombie)))
             {
                 EPlayerKill pKill;
                 uint xp;
@@ -124,7 +124,7 @@ namespace Safezone
         {
             var untPlayer = PlayerUtil.GetUnturnedPlayer(player);
 
-            SafeZone safeZone = GetSafeZoneAt(untPlayer.Position);
+            var safeZone = GetSafeZoneAt(untPlayer.Position);
             if (safeZone != null)
             {
                 OnPlayerEnteredSafeZone(player, safeZone, true);    
@@ -145,11 +145,11 @@ namespace Safezone
                 throw new NotSupportedException();
             }
 
-            uint id = PlayerUtil.GetId(player);
+            var id = PlayerUtil.GetId(player);
             var untPlayer = PlayerUtil.GetUnturnedPlayer(player);
 
-            SafeZone safeZone = GetSafeZoneAt(position);
-            bool bIsInSafeZone = safeZone != null;
+            var safeZone = GetSafeZoneAt(position);
+            var bIsInSafeZone = safeZone != null;
 
             SerializablePosition lastPosition = null;
             if (_lastPositions.ContainsKey(id))
@@ -197,20 +197,20 @@ namespace Safezone
             //Todo: move this codeblock somewhere else?
             if (safeZone != null)
             {
-                InteractableVehicle veh = untPlayer.Player.Movement.getVehicle();
-                bool isInVeh = veh != null;
+                var veh = untPlayer.Player.Movement.getVehicle();
+                var isInVeh = veh != null;
 
                 if (!_lastVehicleStates.ContainsKey(id))
                 {
                     _lastVehicleStates.Add(id, veh);
                 }
 
-                bool wasDriving = _lastVehicleStates[id];
+                var wasDriving = _lastVehicleStates[id];
                 
                 if (isInVeh && !wasDriving && !safeZone.GetFlag(typeof (EnterVehiclesFlag)).GetValue<bool>(safeZone.GetGroup(player)))
                 {
                     byte seat = 0;
-                    foreach (Passenger p in untPlayer.Player.Movement.getVehicle().passengers)
+                    foreach (var p in untPlayer.Player.Movement.getVehicle().passengers)
                     {
                         if (PlayerUtil.GetId(p.player) == id)
                         {
@@ -225,7 +225,7 @@ namespace Safezone
 
         private void OnPlayerEnteredSafeZone(IRocketPlayer player, SafeZone safeZone, bool bSendMessage)
         {
-            uint id = PlayerUtil.GetId(player);
+            var id = PlayerUtil.GetId(player);
             if (safeZone.GetFlag(typeof (GodmodeFlag)).GetValue<bool>(safeZone.GetGroup(player)))
             {
                 EnableGodMode(player);
@@ -242,7 +242,7 @@ namespace Safezone
 
         internal void OnPlayerLeftSafeZone(IRocketPlayer player, SafeZone safeZone, bool bSendMessage)
         {
-            uint id = PlayerUtil.GetId(player);
+            var id = PlayerUtil.GetId(player);
 
             if (safeZone.GetFlag(typeof (GodmodeFlag)).GetValue<bool>(safeZone.GetGroup(player)))
             {
@@ -262,7 +262,7 @@ namespace Safezone
             {
                 throw new NotSupportedException();
             }
-            uint id = PlayerUtil.GetId(player);
+            var id = PlayerUtil.GetId(player);
             var unturnedPlayer = (UnturnedPlayer) player;
             //Safe current godmode state and restore it later when the player leaves the safezone
             //this is for e.g. players who enter with /god safezones
@@ -276,7 +276,7 @@ namespace Safezone
             {
                 throw new NotSupportedException();
             }
-            uint id = PlayerUtil.GetId(player);
+            var id = PlayerUtil.GetId(player);
 
             var unturnedPlayer = (UnturnedPlayer)player;
             try
@@ -303,11 +303,11 @@ namespace Safezone
             return Configuration.Instance.SafeZones.FirstOrDefault(safeZone => IsInSafeZone(pos, safeZone));
         }
 
-        public SafeZone GetSafeZone(String safeZoneName, bool exact = false)
+        public SafeZone GetSafeZone(string safeZoneName, bool exact = false)
         {
             if (Configuration.Instance.SafeZones == null || Configuration.Instance.SafeZones.Count == 0) return null;
 
-            foreach (SafeZone safeZone in Configuration.Instance.SafeZones)
+            foreach (var safeZone in Configuration.Instance.SafeZones)
             {
                 if (exact)
                 {

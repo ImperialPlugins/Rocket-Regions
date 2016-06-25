@@ -12,43 +12,22 @@ namespace Safezone.Commands
         public void Execute(IRocketPlayer caller, string[] command)
         {
             var rawpos = PlayerUtil.GetUnturnedPlayer(caller).Position;
-            SerializablePosition pos = new SerializablePosition(rawpos);
+            var pos = new SerializablePosition(rawpos);
             UnturnedChat.Say(caller, "Second position set to: X:" + pos.X + ", Z: " + pos.Y);
             RectangleType.SetPosition2(caller, pos);
         }
 
 
-        public AllowedCaller AllowedCaller
-        {
-            get
-            {
-                return AllowedCaller.Player;
-            }
-        }
+        public AllowedCaller AllowedCaller => AllowedCaller.Player;
 
-        public string Name
-        {
-            get { return "safezonepos2"; }
-        }
+        public string Name => "safezonepos2";
 
-        public string Help
-        {
-            get { return "Set second positon for safezones"; }
-        }
+        public string Help => "Set second positon for safezones";
 
-        public string Syntax
-        {
-            get { return ""; }
-        }
+        public string Syntax => "";
 
-        public List<string> Aliases
-        {
-            get { return new List<string> {"spos2"};  }
-        }
+        public List<string> Aliases => new List<string> {"spos2"};
 
-        public List<string> Permissions
-        {
-            get { return new List<string> { "safezones.pos" }; }
-        }
+        public List<string> Permissions => new List<string> { "safezones.pos" };
     }
 }

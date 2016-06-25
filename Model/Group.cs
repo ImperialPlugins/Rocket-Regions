@@ -12,7 +12,7 @@ namespace Safezone.Model
 
     public static class GroupUtil
     {
-        public static Group GetGroup(String name)
+        public static Group GetGroup(string name)
         {
             name = name.Trim().ToLower();
             switch (name)

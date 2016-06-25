@@ -15,37 +15,16 @@ namespace Safezone.Commands
             UnturnedChat.Say(caller, "Source code available under http://github.com/Trojaner25/Rocket-Safezone", Color.cyan);
         }
         
-        public AllowedCaller AllowedCaller
-        {
-            get
-            {
-                return AllowedCaller.Player;
-            }
-        }
+        public AllowedCaller AllowedCaller => AllowedCaller.Player;
 
-        public string Name
-        {
-            get { return "safezoneinfo"; }
-        }
+        public string Name => "safezoneinfo";
 
-        public string Help
-        {
-            get { return "Show license info and link to source code of the SafeZone Plugin"; }
-        }
+        public string Help => "Show license info and link to source code of the SafeZone Plugin";
 
-        public string Syntax
-        {
-            get { return ""; }
-        }
+        public string Syntax => "";
 
-        public List<string> Aliases
-        {
-            get { return new List<string> { "sinfo" }; }
-        }
+        public List<string> Aliases => new List<string> { "sinfo" };
 
-        public List<string> Permissions
-        {
-            get { return new List<string>(); }
-        }
+        public List<string> Permissions => new List<string>();
     }
 }

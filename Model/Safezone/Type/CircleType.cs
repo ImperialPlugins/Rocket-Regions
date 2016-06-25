@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Rocket.API;
 using Rocket.Unturned.Chat;
-using Rocket.Unturned.Commands;
 using Safezone.Util;
 using UnityEngine;
 using Rocket.API.Extensions;
@@ -26,7 +25,7 @@ namespace Safezone.Model.Safezone.Type
 
             Center = new SerializablePosition(pos);
 
-            SafeZone zone = new SafeZone
+            var zone = new SafeZone
             {
                 Name = name,
                 Owners = new List<uint> {PlayerUtil.GetId(player)}, 

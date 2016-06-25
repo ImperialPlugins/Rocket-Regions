@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Rocket.API;
 using Rocket.Unturned.Chat;
 using Safezone.Util;
@@ -12,41 +11,20 @@ namespace Safezone.Commands
         public void Execute(IRocketPlayer caller, string[] command)
         {
             var player = PlayerUtil.GetUnturnedPlayer(caller);
-            Vector3 pos = player.Position;
-            UnturnedChat.Say(caller, "Position: X: " + pos.x + ", Y: " + pos.y + ", Z: " + pos.z + " - Rotation: " + player.Rotation, Color.green);
+            var pos = player.Position;
+            UnturnedChat.Say(caller, $"Position: X: {pos.x}, Y: {pos.y}, Z: {pos.z}; + Rotation: {player.Player.transform.rotation.eulerAngles.y}", Color.green);
         }
 
-        public string Name
-        {
-            get { return "coords"; }
-        }
+        public string Name => "coords";
 
-        public string Help
-        {
-            get { return "Shows your current position";  }
-        }
+        public string Help => "Shows your current position";
 
-        public string Syntax
-        {
-            get { return "";  }
-        }
+        public string Syntax => "";
 
-        public List<string> Aliases
-        {
-            get { return new List<string>(); }
-        }
+        public List<string> Aliases => new List<string>();
 
-        public List<string> Permissions
-        {
-            get { return new List<string> { "safezones.coords" }; }
-        }
+        public List<string> Permissions => new List<string> { "safezones.coords" };
 
-        public AllowedCaller AllowedCaller
-        {
-            get
-            {
-                return AllowedCaller.Player;
-            }
-        }
+        public AllowedCaller AllowedCaller => AllowedCaller.Player;
     }
 }

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Rocket.API;
 using Rocket.Unturned.Chat;
-using Rocket.Unturned.Commands;
-using Safezone.Model.Safezone;
 using Safezone.Util;
 using UnityEngine;
 using Rocket.API.Extensions;
@@ -20,8 +17,8 @@ namespace Safezone.Commands
                 return;
             }
 
-            String name = command.GetStringParameter(0);
-            SafeZone zone = SafeZonePlugin.Instance.GetSafeZone(name, false);
+            var name = command.GetStringParameter(0);
+            var zone = SafeZonePlugin.Instance.GetSafeZone(name);
             if (zone == null)
             {
                 UnturnedChat.Say(caller, "Safezone \"" + name + "\" not found", Color.red);
@@ -41,37 +38,16 @@ namespace Safezone.Commands
             UnturnedChat.Say(caller, "Successfully removed safezone: " + name, Color.green);
         }
 
-        public string Name
-        {
-            get { return "safezoneremove"; }
-        }
+        public string Name => "safezoneremove";
 
-        public string Help
-        {
-            get { return "Remove a safezone"; }
-        }
+        public string Help => "Remove a safezone";
 
-        public string Syntax
-        {
-            get { return "<name>"; }
-        }
+        public string Syntax => "<name>";
 
-        public List<string> Aliases
-        {
-            get { return new List<string> { "sremove" }; }
-        }
+        public List<string> Aliases => new List<string> { "sremove" };
 
-        public List<string> Permissions
-        {
-            get { return new List<string> { "safezones.remove" }; }
-        }
+        public List<string> Permissions => new List<string> { "safezones.remove" };
 
-        public AllowedCaller AllowedCaller
-        {
-            get
-            {
-                return AllowedCaller.Player;
-            }
-        }
+        public AllowedCaller AllowedCaller => AllowedCaller.Player;
     }
 }

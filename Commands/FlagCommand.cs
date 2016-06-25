@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Rocket.API;
 using Rocket.Unturned.Chat;
-using Rocket.Unturned.Commands;
 using Safezone.Model;
 using Safezone.Model.Flag;
-using Safezone.Model.Safezone;
 using Safezone.Util;
 using UnityEngine;
-using Object = System.Object;
 using Rocket.API.Extensions;
 
 namespace Safezone.Commands
@@ -17,8 +13,8 @@ namespace Safezone.Commands
     {
         public void Execute(IRocketPlayer caller, string[] command)
         {
-            String name = command.GetStringParameter(0);
-            SafeZone zone = SafeZonePlugin.Instance.GetSafeZone(name, true);
+            var name = command.GetStringParameter(0);
+            var zone = SafeZonePlugin.Instance.GetSafeZone(name, true);
             if (zone == null)
             {
                 UnturnedChat.Say(caller, "Safezone \"" + name + "\" not found", Color.red);
@@ -31,28 +27,28 @@ namespace Safezone.Commands
                 return;
             }
             
-            String flagName = command.GetStringParameter(1);
+            var flagName = command.GetStringParameter(1);
 
-            Type t = Flag.GetFlagType(flagName);
+            var t = Flag.GetFlagType(flagName);
             if (t == null)
             {
                 UnturnedChat.Say(caller, "Unknown flag: \"" + flagName + "\"", Color.red);
                 return;
             }
 
-            Flag f = zone.GetFlag(t);
+            var f = zone.GetFlag(t);
             if (f == null)
             {
                 UnturnedChat.Say(caller, "An unexpected error occurred: flag instance equals null but type was registered. Please report this", Color.red);
                 return;
             }
-            bool hasFlagPermission = PermissionUtil.HasPermission(caller, "flag." + flagName);
-            String usage = "Usage: /sflag " + name + " " + f.Name + " " + f.Usage + " [group]";
+            var hasFlagPermission = PermissionUtil.HasPermission(caller, "flag." + flagName);
+            var usage = "Usage: /sflag " + name + " " + f.Name + " " + f.Usage + " [group]";
             if (command.Length == 2)
             {
-                String description = f.Description;
-                Object defaultValue = f.DefaultValue;
-                Object value = f.Value;
+                var description = f.Description;
+                var defaultValue = f.DefaultValue;
+                var value = f.Value;
 
                 UnturnedChat.Say(caller, "Flag: " + f.Name, Color.blue);
                 UnturnedChat.Say(caller, "Description: " + description, Color.blue);
@@ -71,7 +67,7 @@ namespace Safezone.Commands
                 return;
             }
 
-            Group group = Group.NONE;
+            var group = Group.NONE;
             if (command.Length == 4)
             {
                 group = GroupUtil.GetGroup(command.GetStringParameter(3));
@@ -90,37 +86,16 @@ namespace Safezone.Commands
         }
 
 
-        public AllowedCaller AllowedCaller
-        {
-            get
-            {
-                return AllowedCaller.Player;
-            }
-        }
+        public AllowedCaller AllowedCaller => AllowedCaller.Player;
 
-        public string Name
-        {
-            get { return "safezoneflag"; }
-        }
+        public string Name => "safezoneflag";
 
-        public string Help
-        {
-            get { return "Modify flags for safezones"; }
-        }
+        public string Help => "Modify flags for safezones";
 
-        public string Syntax
-        {
-            get { return "<region> <flag> <value>"; }
-        }
+        public string Syntax => "<region> <flag> <value>";
 
-        public List<string> Aliases
-        {
-            get { return new List<string> { "sflag" }; }
-        }
+        public List<string> Aliases => new List<string> { "sflag" };
 
-        public List<string> Permissions
-        {
-            get { return new List<string> { "safezones.flag" }; }
-        }
+        public List<string> Permissions => new List<string> { "safezones.flag" };
     }
 }

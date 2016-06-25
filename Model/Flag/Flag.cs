@@ -9,12 +9,12 @@ namespace Safezone.Model.Flag
 {
     public abstract class Flag
     {
-        private static readonly Dictionary<String, Type> RegisteredFlags = new Dictionary<String, Type>();
-        public String Name;
-        public Object Value;
+        private static readonly Dictionary<string, Type> RegisteredFlags = new Dictionary<string, Type>();
+        public string Name;
+        public object Value;
 
-        public abstract String Description { get;  }
-        public abstract Object DefaultValue { get;  }
+        public abstract string Description { get;  }
+        public abstract object DefaultValue { get;  }
 
         public virtual bool SupportsGroups
         {
@@ -34,8 +34,8 @@ namespace Safezone.Model.Flag
                 throw new InvalidCastException("Can't cast " + Value.GetType().Name + " to " + typeof(T).Name);
             }
 
-            String name = group.GetInternalGroupName();
-            GroupValue v = GroupValues.Where(g => g.Key == name).FirstOrDefault();
+            var name = group.GetInternalGroupName();
+            var v = GroupValues.Where(g => g.Key == name).FirstOrDefault();
             if (GroupValues != null && v != null)
             {
                 return (T) v.Value;
@@ -73,9 +73,9 @@ namespace Safezone.Model.Flag
                 return;
             }
 
-            String groupName = group.GetInternalGroupName();
+            var groupName = group.GetInternalGroupName();
 
-            GroupValue v = GroupValues.Where(g => g.Key == groupName).FirstOrDefault();
+            var v = GroupValues.Where(g => g.Key == groupName).FirstOrDefault();
             if (v != null)
             {
                 v.Value = value;
@@ -85,13 +85,13 @@ namespace Safezone.Model.Flag
             }
         }
 
-        protected Flag(String name)
+        protected Flag(string name)
         {
             Name = name;
             Value = DefaultValue;
         }
         
-        public static void RegisterFlag(String name, Type type)
+        public static void RegisterFlag(string name, Type type)
         {
             name = name.ToLower();
             if (!type.IsSameOrSubclass(typeof(Flag)))
@@ -107,7 +107,7 @@ namespace Safezone.Model.Flag
             RegisteredFlags.Add(name, type);
         }
 
-        public static Type GetFlagType(String name)
+        public static Type GetFlagType(string name)
         {
             name = name.ToLower();
             return !RegisteredFlags.ContainsKey(name) ? null : RegisteredFlags[name];

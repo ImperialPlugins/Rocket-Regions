@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Rocket.API;
 using Rocket.Unturned.Chat;
-using Safezone.Model.Safezone;
 using UnityEngine;
 
 namespace Safezone.Commands
@@ -12,8 +11,8 @@ namespace Safezone.Commands
         {
             UnturnedChat.Say(caller, "Safezones:", Color.green);
 
-            bool bZonesFound = false;
-            foreach (SafeZone zone in SafeZonePlugin.Instance.Configuration.Instance.SafeZones)
+            var bZonesFound = false;
+            foreach (var zone in SafeZonePlugin.Instance.Configuration.Instance.SafeZones)
             {
                 UnturnedChat.Say(caller, "• " + zone.Name, Color.green);
                 bZonesFound = true;
@@ -26,37 +25,16 @@ namespace Safezone.Commands
         }
 
 
-        public AllowedCaller AllowedCaller
-        {
-            get
-            {
-                return AllowedCaller.Player;
-            }
-        }
+        public AllowedCaller AllowedCaller => AllowedCaller.Player;
 
-        public string Name
-        {
-            get { return "safezonelist"; }
-        }
+        public string Name => "safezonelist";
 
-        public string Help
-        {
-            get { return "List all safezones"; }
-        }
+        public string Help => "List all safezones";
 
-        public string Syntax
-        {
-            get { return ""; }
-        }
+        public string Syntax => "";
 
-        public List<string> Aliases
-        {
-            get { return new List<string> { "slist" }; }
-        }
+        public List<string> Aliases => new List<string> { "slist" };
 
-        public List<string> Permissions
-        {
-            get { return new List<string> { "safezones.list" }; }
-        }
+        public List<string> Permissions => new List<string> { "safezones.list" };
     }
 }

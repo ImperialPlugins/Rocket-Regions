@@ -14,7 +14,7 @@ namespace Safezone.Model.Safezone.Type
         private static readonly Dictionary<uint, SerializablePosition> FirstPositions = new Dictionary<uint, SerializablePosition>();
         private static readonly Dictionary<uint, SerializablePosition> SecondsPositions = new Dictionary<uint, SerializablePosition>();
 
-        public override SafeZone OnCreate(IRocketPlayer player, String name, string[] args)
+        public override SafeZone OnCreate(IRocketPlayer player, string name, string[] args)
         {
             if (!HasPositionSet(player))
             {
@@ -24,7 +24,7 @@ namespace Safezone.Model.Safezone.Type
 
             Position1 = GetPosition1(player);
             Position2 = GetPosition2(player);
-            SafeZone zone = new SafeZone
+            var zone = new SafeZone
             {
                 Name = name,
                 Owners = new List<uint> { PlayerUtil.GetId(player) },
@@ -38,22 +38,22 @@ namespace Safezone.Model.Safezone.Type
         {
             // http://wiki.unity3d.com/index.php/Distance_from_a_point_to_a_rectangle
 
-            float xMin = Math.Min(Position1.X, Position2.X);
-            float xMax = Math.Max(Position1.X, Position2.X); 
-            float yMin = Math.Min(Position1.Y, Position2.Y);
-            float yMax = Math.Max(Position1.Y, Position2.Y);
-            Vector2 point = new Vector2(pos.X, pos.Y);
+            var xMin = Math.Min(Position1.X, Position2.X);
+            var xMax = Math.Max(Position1.X, Position2.X); 
+            var yMin = Math.Min(Position1.Y, Position2.Y);
+            var yMax = Math.Max(Position1.Y, Position2.Y);
+            var point = new Vector2(pos.X, pos.Y);
 
             if (pos.X < xMin)
             {
                 if (pos.Y < yMin)
                 { 
-                    Vector2 diff = point - new Vector2(xMin, yMin);
+                    var diff = point - new Vector2(xMin, yMin);
                     return diff.magnitude;
                 }
                 if (pos.Y > yMax)
                 { 
-                    Vector2 diff = point - new Vector2(xMin, yMax);
+                    var diff = point - new Vector2(xMin, yMax);
                     return diff.magnitude;
                 }
                 return xMin - pos.X;
@@ -62,12 +62,12 @@ namespace Safezone.Model.Safezone.Type
             {
                 if (pos.Y < yMin)
                 { 
-                    Vector2 diff = point - new Vector2(xMax, yMin);
+                    var diff = point - new Vector2(xMax, yMin);
                     return diff.magnitude;
                 }
                 if (pos.Y > yMax)
                 { 
-                    Vector2 diff = point - new Vector2(xMax, yMax);
+                    var diff = point - new Vector2(xMax, yMax);
                     return diff.magnitude;
                 }
                 return pos.X - xMax;

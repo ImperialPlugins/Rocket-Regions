@@ -6,7 +6,7 @@ namespace Safezone.Util
 {
     public static class PermissionUtil
     {
-        public static bool HasPermission(IRocketPlayer player, String permission)
+        public static bool HasPermission(IRocketPlayer player, string permission)
         {
             var unturnedPlayer = player as UnturnedPlayer;
             if (unturnedPlayer != null && unturnedPlayer.IsAdmin)

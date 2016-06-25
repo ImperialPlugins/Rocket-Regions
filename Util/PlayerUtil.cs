@@ -27,13 +27,13 @@ namespace Safezone.Util
 
         public static uint GetId(IRocketPlayer player)
         {
-            CSteamID id = PlayerUtil.GetCSteamId(player);
+            var id = GetCSteamId(player);
             return id.GetAccountID().m_AccountID;
         }
 
         public static ulong GetId(SteamPlayer player)
         {
-            CSteamID id = player.playerID.CSteamID;
+            var id = player.playerID.CSteamID;
             return id.GetAccountID().m_AccountID;
         }
     }

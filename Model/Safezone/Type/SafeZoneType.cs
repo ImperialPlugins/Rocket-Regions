@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 using Rocket.API;
-using Rocket.Unturned.Player;
 using Safezone.Util;
 
 namespace Safezone.Model.Safezone.Type
@@ -14,9 +13,9 @@ namespace Safezone.Model.Safezone.Type
     [XmlType(TypeName = "Type")]
     public abstract class SafeZoneType
     {
-        private static readonly Dictionary<String, System.Type> RegistereTypes = new Dictionary<String, System.Type>();
+        private static readonly Dictionary<string, System.Type> RegistereTypes = new Dictionary<string, System.Type>();
 
-        public static SafeZoneType RegisterSafeZoneType(String name)
+        public static SafeZoneType RegisterSafeZoneType(string name)
         {
             if (name == null)
             {
@@ -29,11 +28,11 @@ namespace Safezone.Model.Safezone.Type
             {
                 return null;
             }
-            System.Type t = RegistereTypes[name];
+            var t = RegistereTypes[name];
             return (SafeZoneType)Activator.CreateInstance(t);
         }
 
-        public static void RegisterSafeZoneType(String name, System.Type t)
+        public static void RegisterSafeZoneType(string name, System.Type t)
         {
             if(!t.IsSameOrSubclass(typeof(SafeZoneType)))
             {
@@ -48,13 +47,13 @@ namespace Safezone.Model.Safezone.Type
             RegistereTypes.Add(name, t);
         }
 
-        public abstract SafeZone OnCreate(IRocketPlayer player, String name, string[] args);
+        public abstract SafeZone OnCreate(IRocketPlayer player, string name, string[] args);
         public abstract bool OnRedefine(IRocketPlayer player, string[] args);
         public abstract double GetDistance(SerializablePosition pos);
 
         public abstract bool IsInSafeZone(SerializablePosition p);
 
-        public static ReadOnlyCollection<String> GetTypes()
+        public static ReadOnlyCollection<string> GetTypes()
         {
             return new ReadOnlyCollection<string>(new List<string>(RegistereTypes.Keys));
         }

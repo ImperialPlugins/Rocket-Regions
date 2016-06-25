@@ -33,17 +33,17 @@ namespace Safezone.Model.Safezone
 
             if (Flags != null && Flags.Count > 0)
             {
-                foreach (SerializableFlag serializedFlag in Flags)
+                foreach (var serializedFlag in Flags)
                 {
                     if (serializedFlag == null)
                     {
-                        Flags.Remove(serializedFlag);
+                        Flags.Remove(null);
                         continue;
                     }
-                    System.Type type = Flag.Flag.GetFlagType(serializedFlag.Name);
+                    var type = Flag.Flag.GetFlagType(serializedFlag.Name);
                     if (type != t || type == null) continue;
 
-                    Flag.Flag deserializedFlag = (Flag.Flag) Activator.CreateInstance(type);
+                    var deserializedFlag = (Flag.Flag) Activator.CreateInstance(type);
                     deserializedFlag.Value = serializedFlag.Value;
                     deserializedFlag.GroupValues = serializedFlag.GroupValues ?? new List<GroupValue>(); 
                     return deserializedFlag;
@@ -56,7 +56,7 @@ namespace Safezone.Model.Safezone
 
         public Group GetGroup(IRocketPlayer player)
         {
-            uint id = PlayerUtil.GetId(player);
+            var id = PlayerUtil.GetId(player);
             foreach (var member in GetAllMembers())
             {
                 if (member == id)
@@ -77,7 +77,7 @@ namespace Safezone.Model.Safezone
 
         public void SetFlag(string name, object value,List<GroupValue> groupValues, bool save = true)
         {
-            System.Type flagType = Flag.Flag.GetFlagType(name);
+            var flagType = Flag.Flag.GetFlagType(name);
             if (flagType == null)
             {
                 throw new ArgumentException("Unknown flag: " + name);
@@ -88,14 +88,14 @@ namespace Safezone.Model.Safezone
                 Flags = new List<SerializableFlag>();
             }
 
-            foreach (SerializableFlag f in Flags)
+            foreach (var f in Flags)
             {
                 if (f.Name != name) continue;
                 Flags.Remove(f);
                 break;
             }
 
-            SerializableFlag flag = new SerializableFlag {Name = name, Value = value, GroupValues = groupValues};
+            var flag = new SerializableFlag {Name = name, Value = value, GroupValues = groupValues};
             Flags.Add(flag);
             if (save)
             {
@@ -114,7 +114,7 @@ namespace Safezone.Model.Safezone
 
         public bool IsOwner(uint id)
         {
-            foreach (uint owner in Owners)
+            foreach (var owner in Owners)
             {
                 if (owner == id)
                 {

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Rocket.API;
 using Rocket.Unturned.Chat;
-using Rocket.Unturned.Commands;
-using Safezone.Model.Safezone;
 using Safezone.Util;
 using UnityEngine;
 using Rocket.API.Extensions;
@@ -21,9 +18,9 @@ namespace Safezone.Commands
                 return;
             }
 
-            String name = command.GetStringParameter(0);
+            var name = command.GetStringParameter(0);
 
-            SafeZone zone = SafeZonePlugin.Instance.GetSafeZone(name, true);
+            var zone = SafeZonePlugin.Instance.GetSafeZone(name, true);
             if (zone == null)
             {
                 UnturnedChat.Say(caller, "Safezone \"" + name + "\" not found", Color.red);
@@ -36,7 +33,7 @@ namespace Safezone.Commands
                 return;
             }
 
-            ArrayList args = new ArrayList(command);
+            var args = new ArrayList(command);
             args.RemoveAt(0);
 
             if (zone.Type.OnRedefine(PlayerUtil.GetUnturnedPlayer(caller), (string[])args.ToArray(typeof(string))))
@@ -56,37 +53,16 @@ namespace Safezone.Commands
         }
 
 
-        public AllowedCaller AllowedCaller
-        {
-            get
-            {
-                return AllowedCaller.Player;
-            }
-        }
+        public AllowedCaller AllowedCaller => AllowedCaller.Player;
 
-        public string Name
-        {
-            get { return "safezoneredefine"; }
-        }
+        public string Name => "safezoneredefine";
 
-        public string Help
-        {
-            get { return "Redefine a safezone"; }
-        }
+        public string Help => "Redefine a safezone";
 
-        public string Syntax
-        {
-            get { return "<name>"; }
-        }
+        public string Syntax => "<name>";
 
-        public List<string> Aliases
-        {
-            get { return new List<string> { "sredefine" }; }
-        }
+        public List<string> Aliases => new List<string> { "sredefine" };
 
-        public List<string> Permissions
-        {
-            get { return new List<string> { "safezones.redefine" }; }
-        }
+        public List<string> Permissions => new List<string> { "safezones.redefine" };
     }
 }

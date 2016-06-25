@@ -9,9 +9,9 @@ namespace Safezone.Model.Flag
     public class SerializableFlag
     {
         [XmlAttribute("name")]
-        public String Name;
+        public string Name;
         [XmlAttribute("value")]
-        public Object Value; 
+        public object Value; 
         [XmlAttribute("groupvalues")]
         public List<GroupValue> GroupValues; 
     }

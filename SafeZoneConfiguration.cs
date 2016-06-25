@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using Rocket.API;
-using Rocket.Core.Assets;
 using Safezone.Model.Safezone;
 
 namespace Safezone
