@@ -42,6 +42,7 @@ namespace Safezone.Commands
                 UnturnedChat.Say(caller, "An unexpected error occurred: flag instance equals null but type was registered. Please report this", Color.red);
                 return;
             }
+
             var hasFlagPermission = PermissionUtil.HasPermission(caller, "flag." + flagName);
             var usage = "Usage: /sflag " + name + " " + f.Name + " " + f.Usage + " [group]";
             if (command.Length == 2)
@@ -83,9 +84,9 @@ namespace Safezone.Commands
                 return;
             }
             zone.SetFlag(f.Name, f.Value, f.GroupValues);
+            UnturnedChat.Say(caller, $"Flag has been set to: {f.Value}!", Color.green);
         }
-
-
+        
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
 
         public string Name => "safezoneflag";

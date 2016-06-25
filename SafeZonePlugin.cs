@@ -42,7 +42,7 @@ namespace Safezone
             Flag.RegisterFlag("Godmode", typeof(GodmodeFlag));
             Flag.RegisterFlag("NoEnter", typeof(NoEnterFlag));
             Flag.RegisterFlag("NoLeave", typeof(NoLeaveFlag));
-            Flag.RegisterFlag("NoZombie", typeof(NoZombieFlag));
+            Flag.RegisterFlag("NoZombie", typeof(NoZombiesFlag));
 
             // 0 is invalid, reset it
             Configuration.Load();
@@ -103,7 +103,7 @@ namespace Safezone
 
         private void OnRemoveZombies()
         {
-            foreach (var zombie in ZombieManager.ZombieRegions.SelectMany(t => (from zombie in t.Zombies let safeZone = GetSafeZoneAt(zombie.transform.position) where safeZone != null && safeZone.GetFlag(typeof (NoZombieFlag)).GetValue<bool>() select zombie)))
+            foreach (var zombie in ZombieManager.ZombieRegions.SelectMany(t => (from zombie in t.Zombies let safeZone = GetSafeZoneAt(zombie.transform.position) where safeZone != null && safeZone.GetFlag(typeof (NoZombiesFlag)).GetValue<bool>() select zombie)))
             {
                 EPlayerKill pKill;
                 uint xp;

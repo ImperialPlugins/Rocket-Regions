@@ -32,7 +32,7 @@ namespace Safezone.Model.Flag
             }
 
             var name = group.GetInternalGroupName();
-            var v = GroupValues.Where(g => g.Key == name).FirstOrDefault();
+            var v = GroupValues.FirstOrDefault(g => g.Key == name);
             if (GroupValues != null && v != null)
             {
                 return (T) v.Value;
@@ -72,7 +72,7 @@ namespace Safezone.Model.Flag
 
             var groupName = group.GetInternalGroupName();
 
-            var v = GroupValues.Where(g => g.Key == groupName).FirstOrDefault();
+            var v = GroupValues.FirstOrDefault(g => g.Key == groupName);
             if (v != null)
             {
                 v.Value = value;
@@ -106,8 +106,7 @@ namespace Safezone.Model.Flag
 
         public static Type GetFlagType(string name)
         {
-            name = name.ToLower();
-            return !RegisteredFlags.ContainsKey(name) ? null : RegisteredFlags[name];
+            return (from f in RegisteredFlags where f.Key.Equals(name, StringComparison.CurrentCultureIgnoreCase) select f.Value).FirstOrDefault();
         }
     }
 }

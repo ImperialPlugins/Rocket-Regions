@@ -1,8 +1,8 @@
 ﻿namespace Safezone.Model.Flag.Impl
 {
-    public class NoZombieFlag : BoolFlag
+    public class NoZombiesFlag : BoolFlag
     {
-        public NoZombieFlag() : base("NoZombie")
+        public NoZombiesFlag() : base("NoZombies")
         {
         }
 

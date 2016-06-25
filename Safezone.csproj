@@ -84,7 +84,7 @@
     <Compile Include="Model\Flag\Impl\GodmodeFlag.cs" />
     <Compile Include="Model\Flag\Impl\NoEnterFlag.cs" />
     <Compile Include="Model\Flag\Impl\NoLeaveFlag.cs" />
-    <Compile Include="Model\Flag\Impl\NoZombieFlag.cs" />
+    <Compile Include="Model\Flag\Impl\NoZombiesFlag.cs" />
     <Compile Include="Model\Flag\IntFlag.cs" />
     <Compile Include="Model\Flag\SerializableFlag.cs" />
     <Compile Include="Model\Flag\StringFlag.cs" />

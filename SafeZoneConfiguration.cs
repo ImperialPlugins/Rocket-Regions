@@ -6,10 +6,8 @@ using Safezone.Model.Safezone;
 
 namespace Safezone
 {
-    [Serializable]
     public class SafeZoneConfiguration : IRocketPluginConfiguration
     {
-        [XmlArrayItem(ElementName = "SafeZones")]
         public List<SafeZone> SafeZones = new List<SafeZone>();
 
         public void LoadDefaults()
@@ -18,8 +16,6 @@ namespace Safezone
             ZombieTimerSpeed = 5;
         }
 
-        [XmlArrayItem(ElementName = "ZombieTimerSpeed")] 
         public int ZombieTimerSpeed = 5;
-
     }
 }

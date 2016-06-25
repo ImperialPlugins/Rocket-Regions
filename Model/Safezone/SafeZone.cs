@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
 using Rocket.API;
 using Safezone.Model.Flag;
@@ -57,12 +58,9 @@ namespace Safezone.Model.Safezone
         public Group GetGroup(IRocketPlayer player)
         {
             var id = PlayerUtil.GetId(player);
-            foreach (var member in GetAllMembers())
+            if (GetAllMembers().Any(member => member == id))
             {
-                if (member == id)
-                {
-                    return Group.MEMBERS;
-                }
+                return Group.MEMBERS;
             }
 
             return Group.NONMEMBERS;
@@ -71,11 +69,12 @@ namespace Safezone.Model.Safezone
         public List<uint> GetAllMembers()
         {
             var allMembers = Owners;
+            if(Members == null) Members = new List<uint>();
             allMembers.AddRange(Members);
             return allMembers;
         } 
 
-        public void SetFlag(string name, object value,List<GroupValue> groupValues, bool save = true)
+        public void SetFlag(string name, object value, List<GroupValue> groupValues, bool save = true)
         {
             var flagType = Flag.Flag.GetFlagType(name);
             if (flagType == null)
@@ -95,7 +94,13 @@ namespace Safezone.Model.Safezone
                 break;
             }
 
-            var flag = new SerializableFlag {Name = name, Value = value, GroupValues = groupValues};
+            var flag = new SerializableFlag
+            {
+                Name = name,
+                Value = value,
+                GroupValues = groupValues
+            };
+
             Flags.Add(flag);
             if (save)
             {
@@ -114,14 +119,7 @@ namespace Safezone.Model.Safezone
 
         public bool IsOwner(uint id)
         {
-            foreach (var owner in Owners)
-            {
-                if (owner == id)
-                {
-                    return true;
-                }
-            }
-            return false;
+            return Owners.Any(owner => owner == id);
         }
     }
 }
