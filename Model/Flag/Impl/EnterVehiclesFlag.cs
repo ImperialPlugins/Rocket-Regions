@@ -1,4 +1,4 @@
-﻿namespace Safezone.Model.Flag
+﻿namespace Safezone.Model.Flag.Impl
 {
     public class EnterVehiclesFlag : BoolFlag
     {
@@ -6,14 +6,8 @@
         {
         }
 
-        public override string Description
-        {
-            get { return "Allows entering vehicles in a safezone"; }
-        }
+        public override string Description => "Allows entering vehicles in a safezone";
 
-        public override object DefaultValue
-        {
-            get { return true; }
-        }
+        public override object DefaultValue => true;
     }
 }

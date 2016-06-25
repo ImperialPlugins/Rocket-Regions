@@ -11,6 +11,7 @@ using Rocket.Unturned.Events;
 using Rocket.Unturned.Player;
 using Safezone.Model;
 using Safezone.Model.Flag;
+using Safezone.Model.Flag.Impl;
 using Safezone.Model.Safezone;
 using Safezone.Model.Safezone.Type;
 using Safezone.Util;

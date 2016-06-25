@@ -1,4 +1,4 @@
-﻿namespace Safezone.Model.Flag
+﻿namespace Safezone.Model.Flag.Impl
 {
     public class NoLeaveFlag : BoolFlag
     {
@@ -6,14 +6,8 @@
         {
         }
 
-        public override string Description
-        {
-            get { return "Disallows leaving a safezone after entering it"; }
-        }
+        public override string Description => "Disallows leaving a safezone after entering it";
 
-        public override object DefaultValue
-        {
-            get { return false; }
-        }
+        public override object DefaultValue => false;
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Safezone.Model.Flag
+﻿namespace Safezone.Model.Flag.Impl
 {
     public class GodmodeFlag : BoolFlag
     {
@@ -6,14 +6,8 @@
         {
         }
 
-        public override string Description
-        {
-            get { return "Gives players in safezone godmode";  }
-        }
+        public override string Description => "Gives players in safezone godmode";
 
-        public override object DefaultValue
-        {
-            get { return true; }
-        }
+        public override object DefaultValue => true;
     }
 }

@@ -29,9 +29,6 @@ namespace Safezone.Model.Flag
             return false;
         }
 
-        public override string Usage
-        {
-            get { return "<on/off/true/false/1/0>"; }
-        }
+        public override string Usage => "<on/off/true/false/1/0>";
     }
 }

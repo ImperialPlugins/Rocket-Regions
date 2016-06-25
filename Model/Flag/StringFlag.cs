@@ -16,9 +16,6 @@ namespace Safezone.Model.Flag
             return true;
         }
 
-        public override string Usage
-        {
-            get { return "<String>"; }
-        }
+        public override string Usage => "<String>";
     }
 }

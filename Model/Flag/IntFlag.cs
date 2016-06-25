@@ -23,9 +23,6 @@ namespace Safezone.Model.Flag
             }
         }
 
-        public override string Usage
-        {
-            get { return "<Number>"; }
-        }
+        public override string Usage => "<Number>";
     }
 }

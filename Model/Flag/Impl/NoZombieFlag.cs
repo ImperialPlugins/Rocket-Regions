@@ -1,4 +1,4 @@
-﻿namespace Safezone.Model.Flag
+﻿namespace Safezone.Model.Flag.Impl
 {
     public class NoZombieFlag : BoolFlag
     {
@@ -6,19 +6,10 @@
         {
         }
 
-        public override string Description
-        {
-            get { return "Prevents spawning of zombies"; }
-        }
+        public override string Description => "Prevents spawning of zombies";
 
-        public override object DefaultValue
-        {
-            get { return true; }
-        }
+        public override object DefaultValue => true;
 
-        public override bool SupportsGroups
-        {
-            get { return false; }
-        }
+        public override bool SupportsGroups => false;
     }
 }

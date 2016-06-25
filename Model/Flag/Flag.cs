@@ -16,10 +16,7 @@ namespace Safezone.Model.Flag
         public abstract string Description { get;  }
         public abstract object DefaultValue { get;  }
 
-        public virtual bool SupportsGroups
-        {
-            get { return true;  }
-        }
+        public virtual bool SupportsGroups => true;
 
         public List<GroupValue> GroupValues = new List<GroupValue>(); 
 
