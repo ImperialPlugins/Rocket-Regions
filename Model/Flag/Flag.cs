@@ -4,14 +4,17 @@ using Rocket.API;
 using Safezone.Model.Safezone;
 using Safezone.Util;
 using System.Linq;
+using Rocket.Unturned.Player;
+using UnityEngine;
 
 namespace Safezone.Model.Flag
 {
     public abstract class Flag
     {
+        public SafeZone SafeZone { get; internal set; }
         private static readonly Dictionary<string, Type> RegisteredFlags = new Dictionary<string, Type>();
         public string Name;
-        public object Value;
+        public virtual object Value { get; protected internal set; }
 
         public abstract string Description { get;  }
         public abstract object DefaultValue { get;  }
@@ -62,7 +65,7 @@ namespace Safezone.Model.Flag
         public abstract bool OnSetValue(IRocketPlayer caller, SafeZone safeZone, string rawValue, Group group = Group.NONE);
         public abstract string Usage { get; }
 
-        protected void SetValue(object value, Group group)
+        public void SetValue(object value, Group group)
         {
             if (group == Group.NONE)
             {
@@ -82,9 +85,8 @@ namespace Safezone.Model.Flag
             }
         }
 
-        protected Flag(string name)
+        protected Flag()
         {
-            Name = name;
             Value = DefaultValue;
         }
         
@@ -107,6 +109,20 @@ namespace Safezone.Model.Flag
         public static Type GetFlagType(string name)
         {
             return (from f in RegisteredFlags where f.Key.Equals(name, StringComparison.CurrentCultureIgnoreCase) select f.Value).FirstOrDefault();
+        }
+
+        public abstract void UpdateState(List<UnturnedPlayer> players);
+        public abstract void OnSafeZoneEnter(UnturnedPlayer player);
+        public abstract void OnSafeZoneLeave(UnturnedPlayer player);
+
+        public static string GetFlagName(Type type)
+        {
+            return RegisteredFlags.FirstOrDefault(c => c.Value == type).Key;
+        }
+
+        public virtual void OnPlayerUpdatePosition(UnturnedPlayer player, Vector3 position)
+        {
+            
         }
     }
 }

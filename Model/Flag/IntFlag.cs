@@ -6,11 +6,7 @@ namespace Safezone.Model.Flag
 {
     public abstract class IntFlag : Flag
     {
-        protected IntFlag(string name) : base(name)
-        {
-        }
-
-        public override bool OnSetValue(IRocketPlayer caller, SafeZone zone, string rawValue, Group group)
+        public override bool OnSetValue(IRocketPlayer caller, SafeZone zone, string rawValue, Group group = Group.NONE)
         {
             try
             {

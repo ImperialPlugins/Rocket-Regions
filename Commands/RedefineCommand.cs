@@ -38,10 +38,10 @@ namespace Safezone.Commands
 
             if (zone.Type.OnRedefine(PlayerUtil.GetUnturnedPlayer(caller), (string[])args.ToArray(typeof(string))))
             {
-                SafeZonePlugin.Instance.Configuration.Instance.SafeZones.Remove(zone);
+                SafeZonePlugin.Instance.SafeZones.Remove(zone);
                 SafeZonePlugin.Instance.Configuration.Save();
                 SafeZonePlugin.Instance.OnSafeZoneRemoved(zone);
-                SafeZonePlugin.Instance.Configuration.Instance.SafeZones.Add(zone);
+                SafeZonePlugin.Instance.SafeZones.Add(zone);
                 SafeZonePlugin.Instance.Configuration.Save();
                 SafeZonePlugin.Instance.OnSafeZoneCreated(zone);
 

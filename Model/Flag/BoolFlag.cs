@@ -5,10 +5,6 @@ namespace Safezone.Model.Flag
 {
     public abstract class BoolFlag : Flag
     {
-        protected BoolFlag(string name) : base(name)
-        {    
-        }
-
         public override bool OnSetValue(IRocketPlayer caller, SafeZone zone, string rawValue, Group group = Group.NONE)
         {
             switch (rawValue.ToLower().Trim())

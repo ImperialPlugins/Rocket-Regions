@@ -31,7 +31,7 @@ namespace Safezone.Commands
                 return;
             }
 
-            SafeZonePlugin.Instance.Configuration.Instance.SafeZones.Remove(zone);
+            SafeZonePlugin.Instance.SafeZones.Remove(zone);
             SafeZonePlugin.Instance.Configuration.Save();
             SafeZonePlugin.Instance.OnSafeZoneRemoved(zone);
 

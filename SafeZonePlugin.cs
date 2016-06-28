@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Timers;
 using Rocket.API;
-using Rocket.Core.Logging;
 using Rocket.Core.Plugins;
 using Rocket.Unturned;
 using Rocket.Unturned.Chat;
 using Rocket.Unturned.Events;
 using Rocket.Unturned.Player;
 using Safezone.Model;
-using Safezone.Model.Flag;
 using Safezone.Model.Flag.Impl;
 using Safezone.Model.Safezone;
 using Safezone.Model.Safezone.Type;
@@ -26,13 +23,16 @@ namespace Safezone
     {
         public static SafeZonePlugin Instance;
         private readonly Dictionary<uint, SafeZone> _safeZonePlayers = new Dictionary<uint, SafeZone>();
-        private readonly Dictionary<uint, bool> _godModeStates = new Dictionary<uint, bool>();
         private readonly Dictionary<uint, SerializablePosition> _lastPositions = new Dictionary<uint, SerializablePosition>();
-        private readonly Dictionary<uint, bool> _lastVehicleStates = new Dictionary<uint, bool>();
- 
-        private Timer _zombieTimer;
+        internal List<SafeZone> SafeZones => Configuration.Instance.SafeZones;
+         
         protected override void Load()
         {
+            foreach (var untPlayer in Provider.clients.Select(p => UnturnedPlayer.FromCSteamID(p.SteamPlayerID.CSteamID)))
+            {
+                OnPlayerConnect(untPlayer);
+            }
+
             Instance = this;
 
             SafeZoneType.RegisterSafeZoneType("rectangle", typeof(RectangleType));
@@ -43,6 +43,7 @@ namespace Safezone
             Flag.RegisterFlag("NoEnter", typeof(NoEnterFlag));
             Flag.RegisterFlag("NoLeave", typeof(NoLeaveFlag));
             Flag.RegisterFlag("NoZombies", typeof(NoZombiesFlag));
+            Flag.RegisterFlag("PlaceAllowed", typeof(PlaceAllowedFlag));
 
             // 0 is invalid, reset it
             Configuration.Load();
@@ -51,20 +52,31 @@ namespace Safezone
                 Configuration.Instance.ZombieTimerSpeed = 5;
                 Configuration.Save();
             }
-            _zombieTimer = new Timer(Configuration.Instance.ZombieTimerSpeed * 1000);
-            _zombieTimer.Elapsed += delegate { OnRemoveZombies(); };
-            if (Configuration.Instance.SafeZones.Count < 1) return;
+
+            if (SafeZones.Count < 1) return;
             StartListening();
 
             //Todo: loop all players and check if they are in safezones (for the case that this plugin was loaded after the start)
         }
 
+        protected override void Unload()
+        {
+            foreach (var untPlayer in Provider.clients.Select(p => UnturnedPlayer.FromCSteamID(p.SteamPlayerID.CSteamID)))
+            {
+                OnPlayerDisconnect(untPlayer);
+            }
+
+            foreach (var safeZone in SafeZones)
+            {
+                OnSafeZoneRemoved(safeZone);
+            }
+            StopListening();
+            Instance = null;
+        }
+
+
         public void StartListening()
         {
-            if (_zombieTimer != null)
-            {
-                _zombieTimer.Start();
-            }
             //Start listening to events
             UnturnedPlayerEvents.OnPlayerUpdatePosition += OnPlayerUpdatePosition;
             U.Events.OnPlayerConnected += OnPlayerConnect;
@@ -73,10 +85,6 @@ namespace Safezone
 
         public void StopListening()
         {
-            if (_zombieTimer != null)
-            {
-                _zombieTimer.Stop();
-            }
             //Stop listening to events
             UnturnedPlayerEvents.OnPlayerUpdatePosition -= OnPlayerUpdatePosition;
             U.Events.OnPlayerConnected -= OnPlayerConnect;
@@ -85,7 +93,7 @@ namespace Safezone
 
         internal void OnSafeZoneCreated(SafeZone safeZone)
         {
-            if (Configuration.Instance.SafeZones.Count != 1) return;
+            if (SafeZones.Count != 1) return;
             StartListening();
         }
 
@@ -97,34 +105,13 @@ namespace Safezone
                 OnPlayerLeftSafeZone(UnturnedPlayer.FromCSteamID(new CSteamID(id)), safeZone, false);
             }
 
-            if (Configuration.Instance.SafeZones.Count != 0) return;
+            if (SafeZones.Count != 0) return;
             StopListening();
-        }
-
-        private void OnRemoveZombies()
-        {
-            foreach (var zombie in ZombieManager.ZombieRegions.SelectMany(t => (from zombie in t.Zombies let safeZone = GetSafeZoneAt(zombie.transform.position) where safeZone != null && safeZone.GetFlag(typeof (NoZombiesFlag)).GetValue<bool>() select zombie)))
-            {
-                EPlayerKill pKill;
-                uint xp;
-                zombie.askDamage(255, zombie.transform.up, out pKill,out xp);
-            }
-        }
-
-        protected override void Unload()
-        {
-            foreach (var safeZone in Configuration.Instance.SafeZones)
-            {
-                OnSafeZoneRemoved(safeZone);
-            }
-            StopListening();
-            Instance = null;
         }
 
         private void OnPlayerConnect(IRocketPlayer player)
         {
             var untPlayer = PlayerUtil.GetUnturnedPlayer(player);
-
             var safeZone = GetSafeZoneAt(untPlayer.Position);
             if (safeZone != null)
             {
@@ -183,7 +170,16 @@ namespace Safezone
             }
             else
             {
-                //Player is still inside or outside a safezone, don't update anything
+                //Player is still inside or outside a safezone
+            }
+
+
+            if (safeZone != null)
+            {
+                foreach (Flag f in safeZone.ParsedFlags)
+                {
+                    f.OnPlayerUpdatePosition(untPlayer, position);
+                }
             }
 
             if (lastPosition == null)
@@ -194,44 +190,17 @@ namespace Safezone
             {
                 _lastPositions[id] = new SerializablePosition(untPlayer.Position);
             }
-
-            //Todo: move this codeblock somewhere else?
-            if (safeZone != null)
-            {
-                var veh = untPlayer.Player.Movement.getVehicle();
-                var isInVeh = veh != null;
-
-                if (!_lastVehicleStates.ContainsKey(id))
-                {
-                    _lastVehicleStates.Add(id, veh);
-                }
-
-                var wasDriving = _lastVehicleStates[id];
-                
-                if (isInVeh && !wasDriving && !safeZone.GetFlag(typeof (EnterVehiclesFlag)).GetValue<bool>(safeZone.GetGroup(player)))
-                {
-                    byte seat = 0;
-                    foreach (var p in untPlayer.Player.Movement.getVehicle().passengers)
-                    {
-                        if (PlayerUtil.GetId(p?.player) == id)
-                        {
-                            break;
-                        }
-                        seat++;
-                    }  
-                    veh.kickPlayer(seat);
-                }
-             }
         }
 
         private void OnPlayerEnteredSafeZone(IRocketPlayer player, SafeZone safeZone, bool bSendMessage)
         {
             var id = PlayerUtil.GetId(player);
-            if (safeZone.GetFlag(typeof (GodmodeFlag)).GetValue<bool>(safeZone.GetGroup(player)))
-            {
-                EnableGodMode(player);
-            }
             _safeZonePlayers.Add(id, safeZone);
+
+            foreach (var flag in safeZone.ParsedFlags)
+            {
+                flag.OnSafeZoneEnter((UnturnedPlayer)player);
+            }
 
             if (bSendMessage)
             {
@@ -244,54 +213,17 @@ namespace Safezone
         internal void OnPlayerLeftSafeZone(IRocketPlayer player, SafeZone safeZone, bool bSendMessage)
         {
             var id = PlayerUtil.GetId(player);
-
-            if (safeZone.GetFlag(typeof (GodmodeFlag)).GetValue<bool>(safeZone.GetGroup(player)))
-            {
-                DisableGodMode(player);
-            }
             _safeZonePlayers.Remove(id);
+
+            foreach (var flag in safeZone.ParsedFlags)
+            {
+                flag.OnSafeZoneLeave((UnturnedPlayer)player);
+            }
 
             if (bSendMessage)
             {
                 UnturnedChat.Say(player, "Left safe zone: " + safeZone.Name, Color.red);
             }
-        }
-
-        private void EnableGodMode(IRocketPlayer player)
-        {
-            if (!(player is UnturnedPlayer))
-            {
-                throw new NotSupportedException();
-            }
-            var id = PlayerUtil.GetId(player);
-            var unturnedPlayer = (UnturnedPlayer) player;
-            //Safe current godmode state and restore it later when the player leaves the safezone
-            //this is for e.g. players who enter with /god safezones
-            _godModeStates.Add(id, unturnedPlayer.Features.GodMode);
-            unturnedPlayer.Features.GodMode = true;
-        }
-
-        private void DisableGodMode(IRocketPlayer player)
-        {
-            if (!(player is UnturnedPlayer))
-            {
-                throw new NotSupportedException();
-            }
-            var id = PlayerUtil.GetId(player);
-
-            var unturnedPlayer = (UnturnedPlayer)player;
-            try
-            {
-                //Try to restore previous godmode state
-                unturnedPlayer.Features.GodMode = _godModeStates[id];
-            }
-            catch (Exception ex)
-            {
-                //Something went wrong??
-                Logger.LogException(ex);
-                unturnedPlayer.Features.GodMode = false;
-            }
-            _godModeStates.Remove(id);
         }
 
         private static bool IsInSafeZone(Vector3 pos, SafeZone zone)
@@ -301,18 +233,18 @@ namespace Safezone
 
         public SafeZone GetSafeZoneAt(Vector3 pos)
         {
-            return Configuration.Instance.SafeZones.FirstOrDefault(safeZone => IsInSafeZone(pos, safeZone));
+            return SafeZones.FirstOrDefault(safeZone => IsInSafeZone(pos, safeZone));
         }
 
         public SafeZone GetSafeZone(string safeZoneName, bool exact = false)
         {
-            if (Configuration.Instance.SafeZones == null || Configuration.Instance.SafeZones.Count == 0) return null;
+            if (SafeZones == null || SafeZones.Count == 0) return null;
 
-            foreach (var safeZone in Configuration.Instance.SafeZones)
+            foreach (var safeZone in SafeZones)
             {
                 if (exact)
                 {
-                    if (safeZone.Name.ToLower() == safeZoneName.ToLower())
+                    if (safeZone.Name.Equals(safeZoneName, StringComparison.CurrentCultureIgnoreCase))
                     {
                         return safeZone;
                     }
@@ -332,5 +264,18 @@ namespace Safezone
             return _safeZonePlayers.Keys.Where(id => _safeZonePlayers[id] == zone).ToList();
         }
 
+        private void Update()
+        {
+            foreach (var safezone in SafeZones)
+            {
+                var flags = safezone.ParsedFlags;
+                var players = _safeZonePlayers.Where(c => c.Value == safezone).
+                    Select(player => UnturnedPlayer.FromCSteamID(new CSteamID(player.Key))).ToList();
+                foreach (var flag in flags)
+                {
+                    flag.UpdateState(players);
+                }
+            }
+        }
     }
 }

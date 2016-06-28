@@ -55,7 +55,7 @@ namespace Safezone.Commands
                 return;
             }
 
-            SafeZonePlugin.Instance.Configuration.Instance.SafeZones.Add(safeZone);
+            SafeZonePlugin.Instance.SafeZones.Add(safeZone);
             SafeZonePlugin.Instance.Configuration.Save();
             SafeZonePlugin.Instance.OnSafeZoneCreated(safeZone);
 

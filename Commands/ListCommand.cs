@@ -12,7 +12,7 @@ namespace Safezone.Commands
             UnturnedChat.Say(caller, "Safezones:", Color.green);
 
             var bZonesFound = false;
-            foreach (var zone in SafeZonePlugin.Instance.Configuration.Instance.SafeZones)
+            foreach (var zone in SafeZonePlugin.Instance.SafeZones)
             {
                 UnturnedChat.Say(caller, "• " + zone.Name, Color.green);
                 bZonesFound = true;

@@ -23,5 +23,4 @@ namespace Safezone.Model.Flag
         [XmlAttribute]
         public object Value;
     }
-
 }
