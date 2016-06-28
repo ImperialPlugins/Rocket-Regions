@@ -42,7 +42,7 @@ namespace Safezone
             Flag.RegisterFlag("Godmode", typeof(GodmodeFlag));
             Flag.RegisterFlag("NoEnter", typeof(NoEnterFlag));
             Flag.RegisterFlag("NoLeave", typeof(NoLeaveFlag));
-            Flag.RegisterFlag("NoZombie", typeof(NoZombiesFlag));
+            Flag.RegisterFlag("NoZombies", typeof(NoZombiesFlag));
 
             // 0 is invalid, reset it
             Configuration.Load();
@@ -213,7 +213,7 @@ namespace Safezone
                     byte seat = 0;
                     foreach (var p in untPlayer.Player.Movement.getVehicle().passengers)
                     {
-                        if (PlayerUtil.GetId(p.player) == id)
+                        if (PlayerUtil.GetId(p?.player) == id)
                         {
                             break;
                         }

@@ -33,6 +33,7 @@ namespace Safezone.Util
 
         public static ulong GetId(SteamPlayer player)
         {
+            if (player == null) return CSteamID.Nil.m_SteamID;
             var id = player.playerID.CSteamID;
             return id.GetAccountID().m_AccountID;
         }
