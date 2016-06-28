@@ -14,10 +14,16 @@ namespace Safezone.Model
             Y = 0;
         }
 
-        public SerializablePosition(Vector3 vec)
+        public SerializablePosition(Vector2 vec)
         {
             X = vec.x;
             Y = vec.y;
+        }
+        
+        public SerializablePosition(Vector3 vec)
+        {
+            X = vec.x;
+            Y = vec.z;
         }
 
         [XmlAttribute("x")]
