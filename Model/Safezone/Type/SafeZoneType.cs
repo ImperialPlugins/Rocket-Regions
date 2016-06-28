@@ -13,13 +13,13 @@ namespace Safezone.Model.Safezone.Type
     [XmlType(TypeName = "Type")]
     public abstract class SafeZoneType
     {
-        private static readonly Dictionary<string, System.Type> RegistereTypes = new Dictionary<string, System.Type>();
+        internal static readonly Dictionary<string, System.Type> RegistereTypes = new Dictionary<string, System.Type>();
 
         public static SafeZoneType RegisterSafeZoneType(string name)
         {
             if (name == null)
             {
-                throw new ArgumentNullException("name");
+                throw new ArgumentNullException(nameof(name));
             }
 
             name = name.ToLower();

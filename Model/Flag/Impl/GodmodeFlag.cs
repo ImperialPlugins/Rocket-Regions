@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Rocket.API;
 using Rocket.Core.Logging;
 using Rocket.Unturned.Player;
-using Safezone.Model.Safezone;
 using Safezone.Util;
 
 namespace Safezone.Model.Flag.Impl

@@ -11,7 +11,7 @@ namespace Safezone.Model.Flag.Impl
     {
         public override string Description => "Prevents spawning of zombies";
 
-        public override object DefaultValue => true;
+        public override object DefaultValue => false;
 
         public override bool SupportsGroups => false;
         public override void UpdateState(List<UnturnedPlayer> players)

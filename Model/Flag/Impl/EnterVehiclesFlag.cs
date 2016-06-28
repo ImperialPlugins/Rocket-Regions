@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Rocket.Unturned.Player;
-using Safezone.Model.Safezone;
 using Safezone.Util;
 
 namespace Safezone.Model.Flag.Impl
@@ -30,7 +29,7 @@ namespace Safezone.Model.Flag.Impl
                 var wasDriving = _lastVehicleStates[id];
 
                 if (!isInVeh || wasDriving ||
-                    SafeZone.GetFlag(typeof (EnterVehiclesFlag)).GetValue<bool>(SafeZone.GetGroup(player))) continue;
+                    GetValue<bool>(SafeZone.GetGroup(player))) continue;
                 byte seat = 0;
                 foreach (var p in player.Player.Movement.getVehicle().passengers.TakeWhile(p => PlayerUtil.GetId(p?.player) != id))
                 {

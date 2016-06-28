@@ -1,5 +1,4 @@
-﻿using System;
-using Rocket.API;
+﻿using Rocket.API;
 using Rocket.Unturned.Player;
 
 namespace Safezone.Util

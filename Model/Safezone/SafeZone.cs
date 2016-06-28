@@ -38,6 +38,8 @@ namespace Safezone.Model.Safezone
             get
             {
                 if (_flags != null) return _flags.AsReadOnly();
+                if (Flags == null) return new List<Flag.Flag>().AsReadOnly();
+
                 _flags = new List<Flag.Flag>();
 
                 foreach (var serializedFlag in Flags)

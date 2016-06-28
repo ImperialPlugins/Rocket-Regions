@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Safezone.Model
+﻿namespace Safezone.Model
 {
     public enum Group
     {

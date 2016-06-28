@@ -72,6 +72,7 @@ namespace Safezone
             }
             StopListening();
             Instance = null;
+            SafeZoneType.RegistereTypes.Clear();
         }
 
 
