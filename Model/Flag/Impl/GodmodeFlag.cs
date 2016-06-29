@@ -4,6 +4,9 @@ using Rocket.API;
 using Rocket.Core.Logging;
 using Rocket.Unturned.Player;
 using Safezone.Util;
+using SDG.Unturned;
+using Steamworks;
+using UnityEngine;
 
 namespace Safezone.Model.Flag.Impl
 {
@@ -11,8 +14,9 @@ namespace Safezone.Model.Flag.Impl
     {
         private readonly Dictionary<uint, bool> _godModeStates = new Dictionary<uint, bool>();
         public override string Description => "Gives players in safezone godmode";
-
         public override object DefaultValue => true;
+        private readonly Dictionary<ulong, byte> lastHealth = new Dictionary<ulong, byte>();
+         
         public override void UpdateState(List<UnturnedPlayer> players)
         {
             //do nothing
@@ -20,6 +24,9 @@ namespace Safezone.Model.Flag.Impl
 
         public override void OnSafeZoneEnter(UnturnedPlayer player)
         {
+            var steamId = PlayerUtil.GetCSteamId(player);
+            if (steamId == CSteamID.Nil) return;
+            lastHealth.Add(steamId.m_SteamID, player.Health);
             if (!GetValue<bool>(SafeZone.GetGroup(player))) return;
             EnableGodMode(player);
         }
@@ -28,6 +35,19 @@ namespace Safezone.Model.Flag.Impl
         {
             if (!GetValue<bool>(SafeZone.GetGroup(player))) return;
             DisableGodMode(player);
+            var steamId = PlayerUtil.GetCSteamId(player);
+            if (steamId == CSteamID.Nil) return;
+
+            var health = lastHealth[steamId.m_SteamID];
+            var currentHealth = player.Health;
+            if (currentHealth < health)
+            {
+                player.Heal((byte) (health - currentHealth));
+            }
+            else
+            {
+                player.Damage((byte) (currentHealth-health), Vector3.zero, EDeathCause.KILL, ELimb.SPINE, CSteamID.Nil)
+            }
         }
 
         private void EnableGodMode(IRocketPlayer player)
