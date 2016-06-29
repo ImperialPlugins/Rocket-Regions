@@ -24,7 +24,7 @@ namespace Safezone
         public static SafeZonePlugin Instance;
         private readonly Dictionary<uint, SafeZone> _safeZonePlayers = new Dictionary<uint, SafeZone>();
         private readonly Dictionary<uint, SerializablePosition> _lastPositions = new Dictionary<uint, SerializablePosition>();
-        internal List<SafeZone> SafeZones => Configuration.Instance.SafeZones;
+        internal List<SafeZone> SafeZones => Configuration?.Instance?.SafeZones ?? new List<SafeZone>();
          
         protected override void Load()
         {
