@@ -22,7 +22,9 @@ namespace Safezone.Util
         public static CSteamID GetCSteamId(IRocketPlayer player)
         {
             if (player == null) return CSteamID.Nil;
-            return GetUnturnedPlayer(player).CSteamID;
+            //for some reason one of the fiels below can be null
+            var steamPlayerId= GetUnturnedPlayer(player)?.Player?.SteamChannel?.SteamPlayer?.SteamPlayerID;
+            return steamPlayerId?.CSteamID ?? CSteamID.Nil;
         }
 
         public static uint GetId(IRocketPlayer player)
