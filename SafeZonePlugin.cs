@@ -23,7 +23,7 @@ namespace Safezone
     {
         public static SafeZonePlugin Instance;
         private readonly Dictionary<uint, SafeZone> _safeZonePlayers = new Dictionary<uint, SafeZone>();
-        private readonly Dictionary<uint, SerializablePosition> _lastPositions = new Dictionary<uint, SerializablePosition>();
+        private readonly Dictionary<uint, Vector3> _lastPositions = new Dictionary<uint, Vector3>();
         internal List<SafeZone> SafeZones => Configuration?.Instance?.SafeZones ?? new List<SafeZone>();
          
         protected override void Load()
@@ -140,7 +140,7 @@ namespace Safezone
             var safeZone = GetSafeZoneAt(position);
             var bIsInSafeZone = safeZone != null;
 
-            SerializablePosition lastPosition = null;
+            Vector3? lastPosition = null;
             if (_lastPositions.ContainsKey(id))
             {
                 lastPosition = _lastPositions[id];
@@ -153,7 +153,7 @@ namespace Safezone
                 if (safeZone.GetFlag(typeof (NoLeaveFlag)).GetValue<bool>(safeZone.GetGroup(player)) && lastPosition != null)
                 {
                     //Todo: send message to player (can't leave safezone)
-                    untPlayer.Teleport(new Vector3(lastPosition.X, lastPosition.Y), untPlayer.Rotation);
+                    untPlayer.Teleport(lastPosition.Value, untPlayer.Rotation);
                     return;
                 }
                 OnPlayerLeftSafeZone(player, safeZone, true);
@@ -164,7 +164,7 @@ namespace Safezone
                 if (safeZone.GetFlag(typeof (NoEnterFlag)).GetValue<bool>(safeZone.GetGroup(player)))
                 {
                     //Todo: send message to player (can't enter safezone)
-                    untPlayer.Teleport(new Vector3(lastPosition.X, lastPosition.Y), untPlayer.Rotation);
+                    untPlayer.Teleport(lastPosition.Value, untPlayer.Rotation);
                     return;
                 }
                 OnPlayerEnteredSafeZone(player, safeZone, true);
@@ -185,11 +185,11 @@ namespace Safezone
 
             if (lastPosition == null)
             {
-                _lastPositions.Add(id, new SerializablePosition(untPlayer.Position));
+                _lastPositions.Add(id, untPlayer.Position);
             }
             else
             {
-                _lastPositions[id] = new SerializablePosition(untPlayer.Position);
+                _lastPositions[id] = untPlayer.Position;
             }
         }
 
