@@ -12,8 +12,8 @@ namespace Safezone.Model.Safezone.Type
     {
         public SerializablePosition Position1;
         public SerializablePosition Position2;
-        private static readonly Dictionary<uint, SerializablePosition> FirstPositions = new Dictionary<uint, SerializablePosition>();
-        private static readonly Dictionary<uint, SerializablePosition> SecondsPositions = new Dictionary<uint, SerializablePosition>();
+        private static readonly Dictionary<ulong, SerializablePosition> FirstPositions = new Dictionary<ulong, SerializablePosition>();
+        private static readonly Dictionary<ulong, SerializablePosition> SecondsPositions = new Dictionary<ulong, SerializablePosition>();
 
         public override SafeZone OnCreate(IRocketPlayer player, string name, string[] args)
         {
@@ -28,7 +28,7 @@ namespace Safezone.Model.Safezone.Type
             var zone = new SafeZone
             {
                 Name = name,
-                Owners = new List<uint> { PlayerUtil.GetId(player) },
+                Owners = new List<ulong> { PlayerUtil.GetId(player) },
                 Type = this
             };
 

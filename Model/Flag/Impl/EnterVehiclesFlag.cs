@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Rocket.Unturned.Player;
 using Safezone.Util;
+using SDG.Unturned;
 
 namespace Safezone.Model.Flag.Impl
 {
@@ -9,9 +9,7 @@ namespace Safezone.Model.Flag.Impl
     {
         public override string Description => "Allows entering vehicles in a safezone";
 
-        public override object DefaultValue => true;
-
-        private readonly Dictionary<uint, bool> _lastVehicleStates = new Dictionary<uint, bool>();
+        private readonly Dictionary<ulong, bool> _lastVehicleStates = new Dictionary<ulong, bool>();
 
         public override void UpdateState(List<UnturnedPlayer> players)
         {
@@ -30,12 +28,17 @@ namespace Safezone.Model.Flag.Impl
 
                 if (!isInVeh || wasDriving ||
                     GetValue<bool>(SafeZone.GetGroup(player))) continue;
-                byte seat = 0;
-                foreach (var p in player.Player.Movement.getVehicle().passengers.TakeWhile(p => PlayerUtil.GetId(p?.player) != id))
+                sbyte index = -1;
+                foreach (Passenger p in veh.passengers)
                 {
-                    seat++;
+                    index++;
+                    if (p.player.SteamPlayerID.CSteamID == PlayerUtil.GetCSteamId(player))
+                    {
+                        break;
+                    }
                 }
-                veh.kickPlayer(seat);
+
+                veh.kickPlayer((byte) index);
             }
         }
 

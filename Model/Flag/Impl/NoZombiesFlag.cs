@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using Rocket.Unturned.Player;
 using SDG.Unturned;
+using Steamworks;
 using UnityEngine;
 
 namespace Safezone.Model.Flag.Impl
@@ -10,8 +11,6 @@ namespace Safezone.Model.Flag.Impl
     public class NoZombiesFlag : BoolFlag
     {
         public override string Description => "Prevents spawning of zombies";
-
-        public override object DefaultValue => false;
 
         public override bool SupportsGroups => false;
         public override void UpdateState(List<UnturnedPlayer> players)

@@ -8,7 +8,7 @@
         NONE = 3
     }
 
-    public static class GroupUtil
+    public static class GroupExtensions
     {
         public static Group GetGroup(string name)
         {
@@ -30,7 +30,7 @@
             return Group.NONE;
         }
 
-        public static string GetInternalGroupName(this Group group)
+        public static string GetSerializableName(this Group group)
         {
             return group.ToString().ToLower();
         }

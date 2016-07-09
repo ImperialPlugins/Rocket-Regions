@@ -13,10 +13,10 @@ namespace Safezone.Model.Safezone
     public class SafeZone
     {
         public string Name;
-        public List<uint> Owners;
+        public List<ulong> Owners;
         public SafeZoneType Type;
         public List<SerializableFlag> Flags;
-        public List<uint> Members;
+        public List<ulong> Members;
 
         [XmlIgnore]
         private List<Flag.Flag> _flags;
@@ -46,6 +46,16 @@ namespace Safezone.Model.Safezone
             }
         }
 
+        public void RebuildFlags()
+        {
+            _flags = new List<Flag.Flag>();
+
+            foreach (var serializedFlag in Flags)
+            {
+                _flags.Add(DeserializeFlag(serializedFlag));
+            }
+        }
+
         public Flag.Flag GetFlag(System.Type t, bool createIfNotFound = true)
         {
             if (!t.IsSameOrSubclass(typeof(Flag.Flag)))
@@ -71,10 +81,10 @@ namespace Safezone.Model.Safezone
             return GetAllMembers().Any(member => member == id) ? Group.MEMBERS : Group.NONMEMBERS;
         }
 
-        public List<uint> GetAllMembers()
+        public List<ulong> GetAllMembers()
         {
             var allMembers = Owners;
-            if (Members == null) Members = new List<uint>();
+            if (Members == null) Members = new List<ulong>();
             allMembers.AddRange(Members);
             return allMembers;
         }
@@ -94,9 +104,8 @@ namespace Safezone.Model.Safezone
 
             foreach (var f in Flags.Where(f => f.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)))
             {
-                f.Value = value;
-                f.GroupValues = groupValues;
-                goto save;
+                Flags.Remove(f);
+                break;
             }
 
             var flag = new SerializableFlag
@@ -105,17 +114,22 @@ namespace Safezone.Model.Safezone
                 Value = value,
                 GroupValues = groupValues
             };
-
-            if(_flags == null) _flags = new List<Flag.Flag>();
-            _flags.Add(DeserializeFlag(flag));
-
             Flags.Add(flag);
-            
-        save:
             if (save)
             {
                 SafeZonePlugin.Instance.Configuration.Save();
             }
+
+            if (_flags == null) _flags = new List<Flag.Flag>();
+            foreach (Flag.Flag f in ParsedFlags.Where(f => f.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)))
+            {
+                f.Value = value;
+                return;
+            }
+
+            var deserializedFlag = DeserializeFlag(flag);
+            deserializedFlag.Value = value;
+            _flags.Add(deserializedFlag);
         }
 
         private Flag.Flag DeserializeFlag(SerializableFlag flag)
@@ -128,7 +142,7 @@ namespace Safezone.Model.Safezone
 
             foreach (var value in flag.GroupValues)
             {
-                deserializedFlag.SetValue(value.Value, GroupUtil.GetGroup(value.GroupName));
+                deserializedFlag.SetValue(value.Value, GroupExtensions.GetGroup(value.GroupName));
             }
 
             deserializedFlag.GroupValues = flag.GroupValues ?? new List<GroupValue>();
@@ -145,7 +159,7 @@ namespace Safezone.Model.Safezone
             return IsOwner(PlayerUtil.GetId(player));
         }
 
-        public bool IsOwner(uint id)
+        public bool IsOwner(ulong id)
         {
             return Owners.Any(owner => owner == id);
         }

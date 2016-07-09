@@ -6,6 +6,7 @@ using Safezone.Model.Flag;
 using Safezone.Util;
 using UnityEngine;
 using Rocket.API.Extensions;
+using Rocket.Core.Logging;
 
 namespace Safezone.Commands
 {
@@ -48,17 +49,15 @@ namespace Safezone.Commands
             if (command.Length == 2)
             {
                 var description = f.Description;
-                var defaultValue = f.DefaultValue;
-                var value = f.Value;
+                var value = f.GetValue<object>();
 
                 UnturnedChat.Say(caller, "Flag: " + f.Name, Color.blue);
                 UnturnedChat.Say(caller, "Description: " + description, Color.blue);
                 if (hasFlagPermission)
                 {
                     UnturnedChat.Say(caller, usage);
-                    UnturnedChat.Say(caller, "Value: " + value, Color.blue);
+                    UnturnedChat.Say(caller, "Value: " + (value ?? "null"), Color.blue);
                 }
-                UnturnedChat.Say(caller, "Default Value: " + defaultValue, Color.blue);
                 return;
             }
 
@@ -71,20 +70,21 @@ namespace Safezone.Commands
             var group = Group.NONE;
             if (command.Length == 4)
             {
-                group = GroupUtil.GetGroup(command.GetStringParameter(3));
+                group = GroupExtensions.GetGroup(command.GetStringParameter(3));
                 if (group == Group.NONE)
                 {
                     UnturnedChat.Say(caller, "Unknown group: " + command.GetStringParameter(3) + "!", Color.red);
                     return;
                 }
             }
-            if (!f.OnSetValue(caller, zone, command.GetStringParameter(2), group))
+            if (!f.ParseValue(caller, zone, command.GetStringParameter(2), group))
             {
                 UnturnedChat.Say(caller, usage, Color.red);
                 return;
             }
+
             zone.SetFlag(f.Name, f.Value, f.GroupValues);
-            UnturnedChat.Say(caller, $"Flag has been set to: {f.Value}!", Color.green);
+            UnturnedChat.Say(caller, $"Flag has been set to: {f.GetValue<object>(group)}!", Color.green);
         }
         
         public AllowedCaller AllowedCaller => AllowedCaller.Player;

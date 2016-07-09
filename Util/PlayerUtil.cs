@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Rocket.API;
 using Rocket.Unturned.Player;
 using SDG.Unturned;
@@ -27,10 +28,10 @@ namespace Safezone.Util
             return steamPlayerId?.CSteamID ?? CSteamID.Nil;
         }
 
-        public static uint GetId(IRocketPlayer player)
+        public static ulong GetId(IRocketPlayer player)
         {
             var id = GetCSteamId(player);
-            return id.GetAccountID().m_AccountID;
+            return id.m_SteamID;
         }
 
         public static ulong GetId(SteamPlayer player)

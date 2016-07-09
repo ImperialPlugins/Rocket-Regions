@@ -12,11 +12,10 @@ namespace Safezone.Model.Flag.Impl
 {
     public class GodmodeFlag : BoolFlag
     {
-        private readonly Dictionary<uint, bool> _godModeStates = new Dictionary<uint, bool>();
+        private readonly Dictionary<ulong, bool> _godModeStates = new Dictionary<ulong, bool>();
         public override string Description => "Gives players in safezone godmode";
-        public override object DefaultValue => true;
         private readonly Dictionary<ulong, byte> _lastHealth = new Dictionary<ulong, byte>();
-         
+
         public override void UpdateState(List<UnturnedPlayer> players)
         {
             //do nothing
@@ -24,9 +23,7 @@ namespace Safezone.Model.Flag.Impl
 
         public override void OnSafeZoneEnter(UnturnedPlayer player)
         {
-            var steamId = PlayerUtil.GetCSteamId(player);
-            if (steamId == CSteamID.Nil) return;
-            _lastHealth.Add(steamId.m_SteamID, player.Health);
+            _lastHealth.Add(player.CSteamID.m_SteamID, player.Health);
             if (!GetValue<bool>(SafeZone.GetGroup(player))) return;
             EnableGodMode(player);
         }
@@ -35,18 +32,16 @@ namespace Safezone.Model.Flag.Impl
         {
             if (!GetValue<bool>(SafeZone.GetGroup(player))) return;
             DisableGodMode(player);
-            var steamId = PlayerUtil.GetCSteamId(player);
-            if (steamId == CSteamID.Nil) return;
 
-            var health = _lastHealth[steamId.m_SteamID];
+            var health = _lastHealth[player.CSteamID.m_SteamID];
             var currentHealth = player.Health;
             if (currentHealth < health)
             {
-                player.Heal((byte) (health - currentHealth));
+                player.Heal((byte)(health - currentHealth));
             }
             else
             {
-                player.Damage((byte) (currentHealth - health), Vector3.zero, EDeathCause.KILL, ELimb.SPINE, CSteamID.Nil);
+                player.Damage((byte)(currentHealth - health), Vector3.zero, EDeathCause.KILL, ELimb.SPINE, CSteamID.Nil);
             }
         }
 

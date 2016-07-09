@@ -82,6 +82,8 @@
     <Compile Include="Model\Flag\Impl\EnterVehiclesFlag.cs" />
     <Compile Include="Model\Flag\Flag.cs" />
     <Compile Include="Model\Flag\Impl\GodmodeFlag.cs" />
+    <Compile Include="Model\Flag\Impl\EnterMessageFlag.cs" />
+    <Compile Include="Model\Flag\Impl\LeaveMessageFlag.cs" />
     <Compile Include="Model\Flag\Impl\NoEnterFlag.cs" />
     <Compile Include="Model\Flag\Impl\NoLeaveFlag.cs" />
     <Compile Include="Model\Flag\Impl\NoZombiesFlag.cs" />

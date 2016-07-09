@@ -5,6 +5,7 @@ using Safezone.Model.Safezone;
 using Safezone.Util;
 using System.Linq;
 using Rocket.Unturned.Player;
+using Steamworks;
 using UnityEngine;
 
 namespace Safezone.Model.Flag
@@ -14,14 +15,26 @@ namespace Safezone.Model.Flag
         public SafeZone SafeZone { get; internal set; }
         private static readonly Dictionary<string, Type> RegisteredFlags = new Dictionary<string, Type>();
         public string Name;
-        public virtual object Value { get; protected internal set; }
+        private object _value;
 
-        public abstract string Description { get;  }
-        public abstract object DefaultValue { get;  }
+        public virtual object Value
+        {
+            get
+            {
+                return _value;
+            }
+            internal set
+            {
+                OnValueUpdate(_value, value);
+                _value = value;
+            }
+        }
+
+        public abstract string Description { get; }
 
         public virtual bool SupportsGroups => true;
 
-        public List<GroupValue> GroupValues = new List<GroupValue>(); 
+        public List<GroupValue> GroupValues = new List<GroupValue>();
 
         public virtual T GetValue<T>(Group group)
         {
@@ -29,23 +42,33 @@ namespace Safezone.Model.Flag
             {
                 throw new InvalidOperationException("Flag does not support group specific");
             }
-            if (!Value.GetType().IsSameOrSubclass(typeof(T)))
+            if (Value != null && !Value.GetType().IsSameOrSubclass(typeof(T)))
             {
                 throw new InvalidCastException("Can't cast " + Value.GetType().Name + " to " + typeof(T).Name);
             }
 
-            var name = group.GetInternalGroupName();
-            var v = GroupValues.FirstOrDefault(g => g.GroupName == name);
+            var name = group.GetSerializableName();
+            var v = GroupValues?.FirstOrDefault(g => g?.GroupName == name);
             if (GroupValues != null && v != null)
             {
-                return (T) v.Value;
+                if (v.Value == null)
+                {
+                    return default(T);
+                }
+                return (T)v.Value;
             }
-            return (T) Value;
+
+            if (Value == null)
+            {
+                return default(T);
+            }
+
+            return (T)Value;
         }
 
         public virtual T GetValue<T>()
         {
-            if (!Value.GetType().IsSameOrSubclass(typeof(T)))
+            if (Value != null && !Value.GetType().IsSameOrSubclass(typeof(T)))
             {
                 throw new InvalidCastException("Can't cast " + Value.GetType().Name + " to " + typeof(T).Name);
             }
@@ -53,16 +76,13 @@ namespace Safezone.Model.Flag
             return (T)Value;
         }
 
-        public virtual T GetDefaultValue<T>()
+        public abstract bool ParseValue(IRocketPlayer caller, SafeZone safeZone, string rawValue, Group group = Group.NONE);
+
+        protected virtual void OnValueUpdate(object oldValue, object newValue)
         {
-            if (!DefaultValue.GetType().IsSameOrSubclass(typeof(T)))
-            {
-                throw new InvalidCastException("Can't cast " + Value.GetType().Name + " to " + typeof(T).Name);
-            }
-            return (T)DefaultValue;
+
         }
 
-        public abstract bool OnSetValue(IRocketPlayer caller, SafeZone safeZone, string rawValue, Group group = Group.NONE);
         public abstract string Usage { get; }
 
         public void SetValue(object value, Group group)
@@ -73,23 +93,19 @@ namespace Safezone.Model.Flag
                 return;
             }
 
-            var groupName = group.GetInternalGroupName();
+            var groupName = group.GetSerializableName();
 
             var v = GroupValues.FirstOrDefault(g => g.GroupName == groupName);
             if (v != null)
             {
                 v.Value = value;
-            }else
+            }
+            else
             {
-                GroupValues.Add(new GroupValue() { GroupName=groupName,Value = value });
+                GroupValues.Add(new GroupValue() { GroupName = groupName, Value = value });
             }
         }
 
-        protected Flag()
-        {
-            Value = DefaultValue;
-        }
-        
         public static void RegisterFlag(string name, Type type)
         {
             name = name.ToLower();
@@ -122,7 +138,7 @@ namespace Safezone.Model.Flag
 
         public virtual void OnPlayerUpdatePosition(UnturnedPlayer player, Vector3 position)
         {
-            
+
         }
     }
 }

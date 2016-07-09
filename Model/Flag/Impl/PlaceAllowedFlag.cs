@@ -11,7 +11,6 @@ namespace Safezone.Model.Flag.Impl
     {
         public override string Description => "Allows placing of structures";
 
-        public override object DefaultValue => true;
         public override void UpdateState(List<UnturnedPlayer> players)
         {
             foreach (var p in from p in players

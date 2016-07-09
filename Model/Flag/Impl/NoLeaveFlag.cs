@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Rocket.Unturned.Player;
+using Steamworks;
 
 namespace Safezone.Model.Flag.Impl
 {
@@ -7,7 +8,6 @@ namespace Safezone.Model.Flag.Impl
     {
         public override string Description => "Disallows leaving a safezone after entering it";
 
-        public override object DefaultValue => false;
         public override void UpdateState(List<UnturnedPlayer> players)
         {
             //do nothing

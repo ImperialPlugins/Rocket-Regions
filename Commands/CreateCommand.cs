@@ -5,6 +5,8 @@ using Rocket.Unturned.Chat;
 using Safezone.Model.Safezone.Type;
 using UnityEngine;
 using Rocket.API.Extensions;
+using Safezone.Model.Flag;
+using Safezone.Model.Flag.Impl;
 
 namespace Safezone.Commands
 {
@@ -56,9 +58,12 @@ namespace Safezone.Commands
             }
 
             SafeZonePlugin.Instance.SafeZones.Add(safeZone);
-            SafeZonePlugin.Instance.Configuration.Save();
             SafeZonePlugin.Instance.OnSafeZoneCreated(safeZone);
 
+            safeZone.SetFlag("EnterMessage", "Entered Safezone: {0}", new List<GroupValue>());
+            safeZone.SetFlag("LeaveMessage", "Left Safezone: {0}", new List<GroupValue>());
+
+            SafeZonePlugin.Instance.Configuration.Save();
             UnturnedChat.Say(caller, "Successfully created safezone: " + name, Color.green);
         }
         

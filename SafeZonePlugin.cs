@@ -4,7 +4,6 @@ using System.Linq;
 using Rocket.API;
 using Rocket.Core.Plugins;
 using Rocket.Unturned;
-using Rocket.Unturned.Chat;
 using Rocket.Unturned.Events;
 using Rocket.Unturned.Player;
 using Safezone.Model;
@@ -22,8 +21,8 @@ namespace Safezone
     public class SafeZonePlugin : RocketPlugin<SafeZoneConfiguration>
     {
         public static SafeZonePlugin Instance;
-        private readonly Dictionary<uint, SafeZone> _safeZonePlayers = new Dictionary<uint, SafeZone>();
-        private readonly Dictionary<uint, Vector3> _lastPositions = new Dictionary<uint, Vector3>();
+        private readonly Dictionary<ulong, SafeZone> _safeZonePlayers = new Dictionary<ulong, SafeZone>();
+        private readonly Dictionary<ulong, Vector3> _lastPositions = new Dictionary<ulong, Vector3>();
         internal List<SafeZone> SafeZones => Configuration?.Instance?.SafeZones ?? new List<SafeZone>();
 
         protected override void Load()
@@ -44,8 +43,9 @@ namespace Safezone
             Flag.RegisterFlag("NoLeave", typeof(NoLeaveFlag));
             Flag.RegisterFlag("NoZombies", typeof(NoZombiesFlag));
             Flag.RegisterFlag("PlaceAllowed", typeof(PlaceAllowedFlag));
+            Flag.RegisterFlag("EnterMessage", typeof(EnterMessageFlag));
+            Flag.RegisterFlag("LeaveMessage", typeof(LeaveMessageFlag));
 
-            // 0 is invalid, reset it
             Configuration.Load();
             if (Configuration.Instance.UpdateFrameCount <= 0)
             {
@@ -53,10 +53,13 @@ namespace Safezone
                 Configuration.Save();
             }
 
+            foreach (SafeZone s in SafeZones)
+            {
+                s.RebuildFlags();
+            }
+
             if (SafeZones.Count < 1) return;
             StartListening();
-
-            //Todo: loop all players and check if they are in safezones (for the case that this plugin was loaded after the start)
         }
 
         protected override void Unload()
@@ -109,7 +112,7 @@ namespace Safezone
             //Update players in safezones
             foreach (var id in GetUidsInSafeZone(safeZone))
             {
-                OnPlayerLeftSafeZone(UnturnedPlayer.FromCSteamID(new CSteamID(id)), safeZone, false);
+                OnPlayerLeftSafeZone(UnturnedPlayer.FromCSteamID(new CSteamID(id)), safeZone);
             }
 
             if (SafeZones.Count != 0) return;
@@ -122,14 +125,14 @@ namespace Safezone
             var safeZone = GetSafeZoneAt(untPlayer.Position);
             if (safeZone != null)
             {
-                OnPlayerEnteredSafeZone(player, safeZone, true);
+                OnPlayerEnteredSafeZone(player, safeZone);
             }
         }
 
         private void OnPlayerDisconnect(IRocketPlayer player)
         {
             if (!_safeZonePlayers.ContainsKey(PlayerUtil.GetId(player))) return;
-            OnPlayerLeftSafeZone(player, _safeZonePlayers[PlayerUtil.GetId(player)], false);
+            OnPlayerLeftSafeZone(player, _safeZonePlayers[PlayerUtil.GetId(player)]);
         }
 
         private void OnPlayerUpdatePosition(IRocketPlayer player, Vector3 position)
@@ -156,13 +159,14 @@ namespace Safezone
             {
                 //Left a safezone
                 safeZone = _safeZonePlayers[id];
-                if (safeZone.GetFlag(typeof(NoLeaveFlag)).GetValue<bool>(safeZone.GetGroup(player)) && lastPosition != null)
+                if (safeZone.GetFlag(typeof(NoLeaveFlag)).GetValue<bool>(safeZone.GetGroup(player)) 
+                    && lastPosition != null)
                 {
                     //Todo: send message to player (can't leave safezone)
                     untPlayer.Teleport(lastPosition.Value, untPlayer.Rotation);
                     return;
                 }
-                OnPlayerLeftSafeZone(player, safeZone, true);
+                OnPlayerLeftSafeZone(player, safeZone);
             }
             else if (bIsInSafeZone && !_safeZonePlayers.ContainsKey(id) && lastPosition != null)
             {
@@ -173,7 +177,7 @@ namespace Safezone
                     untPlayer.Teleport(lastPosition.Value, untPlayer.Rotation);
                     return;
                 }
-                OnPlayerEnteredSafeZone(player, safeZone, true);
+                OnPlayerEnteredSafeZone(player, safeZone);
             }
             else
             {
@@ -199,37 +203,28 @@ namespace Safezone
             }
         }
 
-        private void OnPlayerEnteredSafeZone(IRocketPlayer player, SafeZone safeZone, bool bSendMessage)
+        private void OnPlayerEnteredSafeZone(IRocketPlayer player, SafeZone safeZone)
         {
             var id = PlayerUtil.GetId(player);
+            if(id == CSteamID.Nil.m_SteamID) throw new Exception("CSteamID is Nil");
+
             _safeZonePlayers.Add(id, safeZone);
 
             foreach (var flag in safeZone.ParsedFlags)
             {
                 flag.OnSafeZoneEnter((UnturnedPlayer)player);
             }
-
-            if (bSendMessage)
-            {
-                //Todo: use translation
-                //Todo: add flag for this
-                UnturnedChat.Say(player, "Entered safe zone: " + safeZone.Name, Color.green);
-            }
         }
 
-        internal void OnPlayerLeftSafeZone(IRocketPlayer player, SafeZone safeZone, bool bSendMessage)
+        internal void OnPlayerLeftSafeZone(IRocketPlayer player, SafeZone safeZone)
         {
             var id = PlayerUtil.GetId(player);
+            if (id == CSteamID.Nil.m_SteamID) throw new Exception("CSteamID is Nil");
             _safeZonePlayers.Remove(id);
 
             foreach (var flag in safeZone.ParsedFlags)
             {
                 flag.OnSafeZoneLeave((UnturnedPlayer)player);
-            }
-
-            if (bSendMessage)
-            {
-                UnturnedChat.Say(player, "Left safe zone: " + safeZone.Name, Color.red);
             }
         }
 
@@ -266,7 +261,7 @@ namespace Safezone
             return null;
         }
 
-        public IEnumerable<uint> GetUidsInSafeZone(SafeZone zone)
+        public IEnumerable<ulong> GetUidsInSafeZone(SafeZone zone)
         {
             return _safeZonePlayers.Keys.Where(id => _safeZonePlayers[id] == zone).ToList();
         }
