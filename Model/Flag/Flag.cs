@@ -35,7 +35,7 @@ namespace Safezone.Model.Flag
             }
 
             var name = group.GetInternalGroupName();
-            var v = GroupValues.FirstOrDefault(g => g.Key == name);
+            var v = GroupValues.FirstOrDefault(g => g.GroupName == name);
             if (GroupValues != null && v != null)
             {
                 return (T) v.Value;
@@ -75,13 +75,13 @@ namespace Safezone.Model.Flag
 
             var groupName = group.GetInternalGroupName();
 
-            var v = GroupValues.FirstOrDefault(g => g.Key == groupName);
+            var v = GroupValues.FirstOrDefault(g => g.GroupName == groupName);
             if (v != null)
             {
                 v.Value = value;
             }else
             {
-                GroupValues.Add(new GroupValue() { Key=groupName,Value = value });
+                GroupValues.Add(new GroupValue() { GroupName=groupName,Value = value });
             }
         }
 

@@ -10,16 +10,15 @@ namespace Safezone.Model.Flag
     {
         [XmlAttribute("name")]
         public string Name;
-        [XmlAttribute("value")]
         public object Value; 
-        [XmlAttribute("groupvalues")]
+
         public List<GroupValue> GroupValues; 
     }
 
     public class GroupValue
     {
         [XmlAttribute]
-        public string Key;
+        public string GroupName;
         [XmlAttribute]
         public object Value;
     }

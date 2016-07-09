@@ -94,8 +94,9 @@ namespace Safezone.Model.Safezone
 
             foreach (var f in Flags.Where(f => f.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)))
             {
-                Flags.Remove(f);
-                break;
+                f.Value = value;
+                f.GroupValues = groupValues;
+                goto save;
             }
 
             var flag = new SerializableFlag
@@ -105,9 +106,12 @@ namespace Safezone.Model.Safezone
                 GroupValues = groupValues
             };
 
+            if(_flags == null) _flags = new List<Flag.Flag>();
             _flags.Add(DeserializeFlag(flag));
 
             Flags.Add(flag);
+            
+        save:
             if (save)
             {
                 SafeZonePlugin.Instance.Configuration.Save();
@@ -124,7 +128,7 @@ namespace Safezone.Model.Safezone
 
             foreach (var value in flag.GroupValues)
             {
-                deserializedFlag.SetValue(value.Value, GroupUtil.GetGroup(value.Key));
+                deserializedFlag.SetValue(value.Value, GroupUtil.GetGroup(value.GroupName));
             }
 
             deserializedFlag.GroupValues = flag.GroupValues ?? new List<GroupValue>();
