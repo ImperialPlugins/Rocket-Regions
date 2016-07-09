@@ -10,7 +10,7 @@ namespace Safezone.Model.Safezone.Type
     [Serializable]
     [XmlInclude(typeof(RectangleType))]
     [XmlInclude(typeof(CircleType))]
-    [XmlType(TypeName = "Type")]
+    [XmlType(TypeName = "SafezoneType")]
     public abstract class SafeZoneType
     {
         internal static readonly Dictionary<string, System.Type> RegistereTypes = new Dictionary<string, System.Type>();

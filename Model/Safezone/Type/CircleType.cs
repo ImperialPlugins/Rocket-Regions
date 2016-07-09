@@ -8,6 +8,7 @@ using Rocket.API.Extensions;
 
 namespace Safezone.Model.Safezone.Type
 {
+    [Serializable]
     public class CircleType : SafeZoneType
     {
         public int? Radius;

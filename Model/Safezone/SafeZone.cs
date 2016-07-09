@@ -10,23 +10,12 @@ using Safezone.Util;
 
 namespace Safezone.Model.Safezone
 {
-    [Serializable]
-    [XmlType(TypeName = "Safezone")]
     public class SafeZone
     {
-        [XmlAttribute("Name")]
         public string Name;
-
-        [XmlArray("Owners")]
         public List<uint> Owners;
-
-        [XmlElement("Type")]
         public SafeZoneType Type;
-
-        [XmlArray("Flags")]
         public List<SerializableFlag> Flags;
-
-        [XmlArray]
         public List<uint> Members;
 
         [XmlIgnore]

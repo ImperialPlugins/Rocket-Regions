@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace Safezone.Model.Safezone.Type
 {
+    [Serializable]
     public class RectangleType : SafeZoneType
     {
         public SerializablePosition Position1;
