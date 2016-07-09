@@ -6,14 +6,13 @@ namespace Safezone
 {
     public class SafeZoneConfiguration : IRocketPluginConfiguration
     {
+        public int UpdateFrameCount;
         public List<SafeZone> SafeZones;
 
         public void LoadDefaults()
         {
             SafeZones = new List<SafeZone>();
-            ZombieTimerSpeed = 1;
+            UpdateFrameCount = 1;
         }
-
-        public int ZombieTimerSpeed;
     }
 }

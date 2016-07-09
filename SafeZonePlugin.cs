@@ -25,7 +25,7 @@ namespace Safezone
         private readonly Dictionary<uint, SafeZone> _safeZonePlayers = new Dictionary<uint, SafeZone>();
         private readonly Dictionary<uint, Vector3> _lastPositions = new Dictionary<uint, Vector3>();
         internal List<SafeZone> SafeZones => Configuration?.Instance?.SafeZones ?? new List<SafeZone>();
-         
+
         protected override void Load()
         {
             foreach (var untPlayer in Provider.clients.Select(p => UnturnedPlayer.FromCSteamID(p.SteamPlayerID.CSteamID)))
@@ -47,9 +47,9 @@ namespace Safezone
 
             // 0 is invalid, reset it
             Configuration.Load();
-            if (Configuration.Instance.ZombieTimerSpeed == 0)
+            if (Configuration.Instance.UpdateFrameCount <= 0)
             {
-                Configuration.Instance.ZombieTimerSpeed = 5;
+                Configuration.Instance.UpdateFrameCount = 1;
                 Configuration.Save();
             }
 
@@ -61,9 +61,15 @@ namespace Safezone
 
         protected override void Unload()
         {
-            foreach (var untPlayer in Provider.clients.Select(p => UnturnedPlayer.FromCSteamID(p.SteamPlayerID.CSteamID)))
+            if (Provider.clients != null)
             {
-                OnPlayerDisconnect(untPlayer);
+                foreach (
+                    var untPlayer in
+                        Provider.clients.Select(
+                            p => UnturnedPlayer.FromCSteamID(p?.SteamPlayerID?.CSteamID ?? CSteamID.Nil)))
+                {
+                    OnPlayerDisconnect(untPlayer);
+                }
             }
 
             foreach (var safeZone in SafeZones)
@@ -72,7 +78,7 @@ namespace Safezone
             }
             StopListening();
             Instance = null;
-            SafeZoneType.RegistereTypes.Clear();
+            SafeZoneType.RegistereTypes?.Clear();
         }
 
 
@@ -116,7 +122,7 @@ namespace Safezone
             var safeZone = GetSafeZoneAt(untPlayer.Position);
             if (safeZone != null)
             {
-                OnPlayerEnteredSafeZone(player, safeZone, true);    
+                OnPlayerEnteredSafeZone(player, safeZone, true);
             }
         }
 
@@ -150,7 +156,7 @@ namespace Safezone
             {
                 //Left a safezone
                 safeZone = _safeZonePlayers[id];
-                if (safeZone.GetFlag(typeof (NoLeaveFlag)).GetValue<bool>(safeZone.GetGroup(player)) && lastPosition != null)
+                if (safeZone.GetFlag(typeof(NoLeaveFlag)).GetValue<bool>(safeZone.GetGroup(player)) && lastPosition != null)
                 {
                     //Todo: send message to player (can't leave safezone)
                     untPlayer.Teleport(lastPosition.Value, untPlayer.Rotation);
@@ -161,7 +167,7 @@ namespace Safezone
             else if (bIsInSafeZone && !_safeZonePlayers.ContainsKey(id) && lastPosition != null)
             {
                 //Entered a safezone
-                if (safeZone.GetFlag(typeof (NoEnterFlag)).GetValue<bool>(safeZone.GetGroup(player)))
+                if (safeZone.GetFlag(typeof(NoEnterFlag)).GetValue<bool>(safeZone.GetGroup(player)))
                 {
                     //Todo: send message to player (can't enter safezone)
                     untPlayer.Teleport(lastPosition.Value, untPlayer.Rotation);
@@ -265,8 +271,13 @@ namespace Safezone
             return _safeZonePlayers.Keys.Where(id => _safeZonePlayers[id] == zone).ToList();
         }
 
+        private int _frame;
         private void Update()
         {
+            _frame++;
+            if (_frame % Configuration.Instance.UpdateFrameCount != 0)
+                return;
+
             foreach (var safezone in SafeZones)
             {
                 var flags = safezone.ParsedFlags;
