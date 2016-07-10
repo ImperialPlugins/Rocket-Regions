@@ -84,7 +84,8 @@ namespace Safezone.Commands
             }
 
             zone.SetFlag(f.Name, f.Value, f.GroupValues);
-            UnturnedChat.Say(caller, $"Flag has been set to: {f.GetValue<object>(group)}!", Color.green);
+            var parsedValue = f.SupportsGroups ? f.GetValue<object>(group) : f.GetValue<object>();
+            UnturnedChat.Say(caller, $"Flag has been set to: {parsedValue}!", Color.green);
         }
         
         public AllowedCaller AllowedCaller => AllowedCaller.Player;

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using Rocket.Unturned.Player;
+using Safezone.Model.Safezone;
 using SDG.Unturned;
 using Steamworks;
 using UnityEngine;
@@ -15,14 +16,23 @@ namespace Safezone.Model.Flag.Impl
         public override bool SupportsGroups => false;
         public override void UpdateState(List<UnturnedPlayer> players)
         {
-            foreach (var zombie in ZombieManager.ZombieRegions.SelectMany(t => (from zombie in t.Zombies
-                                                                                let safeZone = SafeZonePlugin.Instance.GetSafeZoneAt(zombie.transform.position)
-                                                                                where safeZone != null && GetValue<bool>() select zombie)))
+            if (ZombieManager.ZombieRegions == null) return;
+
+            foreach (ZombieRegion t in ZombieManager.ZombieRegions)
             {
-                Vector3 ragdoll =
-                    (Vector3)typeof(Zombie).GetField("ragdoll", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(zombie);
-                ZombieManager.sendZombieDead(zombie, ragdoll);
-                Object.Destroy(zombie);
+                if (t?.Zombies == null) continue;
+                foreach (var zombie in t.Zombies)
+                {
+                    // ReSharper disable once MergeSequentialChecks
+                    if(zombie == null || zombie.transform?.position == null) continue;
+
+                    SafeZone safeZone = SafeZonePlugin.Instance?.GetSafeZoneAt(zombie.transform.position);
+                    if (safeZone == null || !GetValue<bool>()) continue;
+                    Vector3 ragdoll = (Vector3)typeof(Zombie).GetField("ragdoll", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(zombie);
+
+                    ZombieManager.sendZombieDead(zombie, ragdoll);
+                    Object.Destroy(zombie);
+                }
             }
         }
 
