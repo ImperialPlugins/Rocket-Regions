@@ -82,6 +82,7 @@ namespace Safezone
             StopListening();
             Instance = null;
             SafeZoneType.RegistereTypes?.Clear();
+            Flag.RegisteredFlags.Clear();
         }
 
 

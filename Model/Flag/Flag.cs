@@ -13,7 +13,7 @@ namespace Safezone.Model.Flag
     public abstract class Flag
     {
         public SafeZone SafeZone { get; internal set; }
-        private static readonly Dictionary<string, Type> RegisteredFlags = new Dictionary<string, Type>();
+        internal static readonly Dictionary<string, Type> RegisteredFlags = new Dictionary<string, Type>();
         public string Name;
         private object _value;
 

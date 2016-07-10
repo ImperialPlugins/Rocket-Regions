@@ -23,7 +23,14 @@ namespace Safezone.Model.Flag.Impl
 
         public override void OnSafeZoneEnter(UnturnedPlayer player)
         {
-            _lastHealth.Add(player.CSteamID.m_SteamID, player.Health);
+            if (!_lastHealth.ContainsKey(player.CSteamID.m_SteamID))
+            {
+                _lastHealth.Add(player.CSteamID.m_SteamID, player.Health);
+            }
+            else
+            {
+                _lastHealth[player.CSteamID.m_SteamID] = player.Health;
+            }
             if (!GetValue<bool>(SafeZone.GetGroup(player))) return;
             EnableGodMode(player);
         }
@@ -33,6 +40,7 @@ namespace Safezone.Model.Flag.Impl
             if (!GetValue<bool>(SafeZone.GetGroup(player))) return;
             DisableGodMode(player);
 
+            if (!_lastHealth.ContainsKey(player.CSteamID.m_SteamID)) return;
             var health = _lastHealth[player.CSteamID.m_SteamID];
             var currentHealth = player.Health;
             if (currentHealth < health)
@@ -43,6 +51,7 @@ namespace Safezone.Model.Flag.Impl
             {
                 player.Damage((byte)(currentHealth - health), Vector3.zero, EDeathCause.KILL, ELimb.SPINE, CSteamID.Nil);
             }
+            _lastHealth.Remove(player.CSteamID.m_SteamID);
         }
 
         private void EnableGodMode(IRocketPlayer player)
@@ -55,6 +64,7 @@ namespace Safezone.Model.Flag.Impl
             var unturnedPlayer = (UnturnedPlayer)player;
             //Safe current godmode state and restore it later when the player leaves the safezone
             //this is for e.g. players who enter with /god safezones
+            if (_godModeStates.ContainsKey(id)) _godModeStates.Remove(id);
             _godModeStates.Add(id, unturnedPlayer.Features.GodMode);
             unturnedPlayer.Features.GodMode = true;
         }
@@ -71,7 +81,8 @@ namespace Safezone.Model.Flag.Impl
             try
             {
                 //Try to restore previous godmode state
-                unturnedPlayer.Features.GodMode = _godModeStates[id];
+                var val = _godModeStates.ContainsKey(id) && _godModeStates[id];
+                unturnedPlayer.Features.GodMode = val;
             }
             catch (Exception ex)
             {
@@ -79,7 +90,9 @@ namespace Safezone.Model.Flag.Impl
                 Logger.LogException(ex);
                 unturnedPlayer.Features.GodMode = false;
             }
-            _godModeStates.Remove(id);
+
+            if(_godModeStates.ContainsKey(id))
+                _godModeStates.Remove(id);
         }
     }
 }
