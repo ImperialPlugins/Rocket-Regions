@@ -57,6 +57,11 @@
       <HintPath>lib\Rocket.Unturned.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -64,10 +69,6 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\UnityEngine.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CoordsCommand.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Commands\RedefineCommand.cs" />
     <Compile Include="Commands\RemoveCommand.cs" />
     <Compile Include="Model\Flag\BoolFlag.cs" />
+    <Compile Include="Model\Flag\Impl\DestroyAllowedFlag.cs" />
     <Compile Include="Model\Flag\Impl\EnterVehiclesFlag.cs" />
     <Compile Include="Model\Flag\Flag.cs" />
     <Compile Include="Model\Flag\Impl\GodmodeFlag.cs" />
@@ -113,7 +115,7 @@
     <Content Include="lib\UnityEngine.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
