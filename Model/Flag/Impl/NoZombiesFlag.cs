@@ -18,20 +18,18 @@ namespace Safezone.Model.Flag.Impl
         {
             if (ZombieManager.ZombieRegions == null) return;
 
-            foreach (ZombieRegion t in ZombieManager.ZombieRegions)
+            foreach (ZombieRegion t in ZombieManager.ZombieRegions.Where(t => t.Zombies != null))
             {
-                if (t?.Zombies == null) continue;
-                foreach (var zombie in t.Zombies)
+                // ReSharper disable once MergeSequentialChecks
+                foreach (var zombie in t.Zombies.Where(z => z!= null && z.transform?.position != null))
                 {
-                    // ReSharper disable once MergeSequentialChecks
-                    if(zombie == null || zombie.transform?.position == null) continue;
-
+                    if (zombie.isDead) continue;
                     SafeZone safeZone = SafeZonePlugin.Instance?.GetSafeZoneAt(zombie.transform.position);
                     if (safeZone == null || !GetValue<bool>()) continue;
+                    zombie.gear = 0;
+                    zombie.isDead = true;
                     Vector3 ragdoll = (Vector3)typeof(Zombie).GetField("ragdoll", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(zombie);
-
                     ZombieManager.sendZombieDead(zombie, ragdoll);
-                    Object.Destroy(zombie);
                 }
             }
         }
