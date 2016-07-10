@@ -45,6 +45,7 @@ namespace Safezone
             Flag.RegisterFlag("PlaceAllowed", typeof(PlaceAllowedFlag));
             Flag.RegisterFlag("EnterMessage", typeof(EnterMessageFlag));
             Flag.RegisterFlag("LeaveMessage", typeof(LeaveMessageFlag));
+            Flag.RegisterFlag("DestroyAllowed", typeof(DestroyAllowedFlag));
 
             Configuration.Load();
             if (Configuration.Instance.UpdateFrameCount <= 0)
