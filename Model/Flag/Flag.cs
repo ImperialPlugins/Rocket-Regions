@@ -4,6 +4,7 @@ using Rocket.API;
 using Safezone.Model.Safezone;
 using Safezone.Util;
 using System.Linq;
+using Rocket.Core.Logging;
 using Rocket.Unturned.Player;
 using Steamworks;
 using UnityEngine;
@@ -12,7 +13,23 @@ namespace Safezone.Model.Flag
 {
     public abstract class Flag
     {
-        public SafeZone SafeZone { get; internal set; }
+        private SafeZone _safezone;
+        public SafeZone SafeZone
+        {
+            get
+            {
+                return _safezone;
+            }
+            internal set
+            {
+                if (value == null) throw new ArgumentNullException(nameof(value), "SafeZone value can not be null");
+                if (_safezone == null)
+                    _safezone = value;
+                else 
+                    Logger.Log($"Flag \"{Name}\": Tried to set new SafeZone value! Old value: {_safezone.Name}, new value: {value.Name}");
+            } 
+        }
+
         internal static readonly Dictionary<string, Type> RegisteredFlags = new Dictionary<string, Type>();
         public string Name;
         private object _value;

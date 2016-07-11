@@ -39,7 +39,7 @@ namespace Safezone.Model.Safezone
                         continue;
                     }
 
-                    _flags.Add(DeserializeFlag(serializedFlag));
+                    DeserializeFlag(serializedFlag);
                 }
 
                 return _flags.AsReadOnly();
@@ -52,7 +52,7 @@ namespace Safezone.Model.Safezone
 
             foreach (var serializedFlag in Flags)
             {
-                _flags.Add(DeserializeFlag(serializedFlag));
+                DeserializeFlag(serializedFlag);
             }
         }
 
@@ -129,7 +129,6 @@ namespace Safezone.Model.Safezone
 
             var deserializedFlag = DeserializeFlag(flag);
             deserializedFlag.Value = value;
-            _flags.Add(deserializedFlag);
         }
 
         private Flag.Flag DeserializeFlag(SerializableFlag flag)
@@ -137,6 +136,7 @@ namespace Safezone.Model.Safezone
             var type = Flag.Flag.GetFlagType(flag.Name);
 
             var deserializedFlag = (Flag.Flag)Activator.CreateInstance(type);
+            deserializedFlag.SafeZone = this;
             deserializedFlag.Name = Flag.Flag.GetFlagName(type);
             deserializedFlag.Value = flag.Value;
 
@@ -146,7 +146,7 @@ namespace Safezone.Model.Safezone
             }
 
             deserializedFlag.GroupValues = flag.GroupValues ?? new List<GroupValue>();
-            deserializedFlag.SafeZone = this;
+            _flags.Add(deserializedFlag);
             return deserializedFlag;
         }
 

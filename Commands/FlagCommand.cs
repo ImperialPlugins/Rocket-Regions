@@ -77,6 +77,9 @@ namespace Safezone.Commands
                     return;
                 }
             }
+
+            f.SafeZone = zone;
+
             if (!f.ParseValue(caller, zone, command.GetStringParameter(2), group))
             {
                 UnturnedChat.Say(caller, usage, Color.red);
