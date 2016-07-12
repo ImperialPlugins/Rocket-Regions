@@ -5,9 +5,9 @@ using SDG.Unturned;
 
 namespace Safezone.Model.Flag.Impl
 {
-    public class DestroyAllowedFlag : BoolFlag
+    public class NoDestroy : BoolFlag
     {
-        public override string Description => "Disallow destruction of structures";
+        public override string Description => "Allow/Disallow destruction of structures in the given safezone";
         public override bool SupportsGroups => false;
 
         public override void UpdateState(List<UnturnedPlayer> players)
@@ -27,7 +27,7 @@ namespace Safezone.Model.Flag.Impl
                         var asset = (ItemStructureAsset) Assets.find(EAssetType.ITEM, structure.structure.id);
                         if (asset == null) continue;
 
-                        if ((Value == null || !(bool) Value) && structure.structure.health < maxHealth)
+                        if ((Value != null && (bool) Value) && structure.structure.health < maxHealth)
                         {
                             structure.structure.health = maxHealth;
                         }
@@ -52,7 +52,7 @@ namespace Safezone.Model.Flag.Impl
                         var asset = (ItemBarricadeAsset)Assets.find(EAssetType.ITEM, barricade.barricade.id);
                         if (asset == null) continue;
 
-                        if ((Value == null || !(bool)Value) && barricade.barricade.health < maxHealth)
+                        if ((Value != null && (bool)Value) && barricade.barricade.health < maxHealth)
                         {
                             barricade.barricade.health = maxHealth;
                         }

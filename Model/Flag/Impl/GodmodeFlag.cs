@@ -8,7 +8,7 @@ namespace Safezone.Model.Flag.Impl
 {
     public class GodmodeFlag : BoolFlag
     {
-        public override string Description => "Gives players in safezone godmode";
+        public override string Description => "Give players in safezone godmode";
         private readonly Dictionary<ulong, byte> _lastHealth = new Dictionary<ulong, byte>();
 
         protected override void OnValueUpdate(object oldValue, object newValue)

@@ -6,7 +6,9 @@ namespace Safezone.Model.Flag.Impl
 {
     public class NoEnterFlag : BoolFlag
     {
-        public override string Description => "Disallows entering the safezone";
+        // code is handled in SafeZonePlugin.cs because it needs to hook before these events
+
+        public override string Description => "Allow/Disallow entering the given safezone";
 
         public override void UpdateState(List<UnturnedPlayer> players)
         {

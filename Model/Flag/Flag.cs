@@ -6,7 +6,6 @@ using Safezone.Util;
 using System.Linq;
 using Rocket.Core.Logging;
 using Rocket.Unturned.Player;
-using Steamworks;
 using UnityEngine;
 
 namespace Safezone.Model.Flag
@@ -123,7 +122,7 @@ namespace Safezone.Model.Flag
             }
         }
 
-        public static void RegisterFlag(string name, Type type)
+        public static void RegisterFlag(string name, Type type, List<string> aliases = null)
         {
             name = name.ToLower();
             if (!type.IsSameOrSubclass(typeof(Flag)))
@@ -137,11 +136,22 @@ namespace Safezone.Model.Flag
             }
 
             RegisteredFlags.Add(name, type);
+            if (aliases == null || aliases.Count == 0) return;
+            foreach (string s in aliases)
+            {
+                RegisteredFlags.Add(s.ToLower(), type);
+            }
         }
 
         public static Type GetFlagType(string name)
         {
             return (from f in RegisteredFlags where f.Key.Equals(name, StringComparison.CurrentCultureIgnoreCase) select f.Value).FirstOrDefault();
+        }
+
+        public static string GetPrimaryFlagName(string alias)
+        {
+            var type = GetFlagType(alias);
+            return GetFlagName(type) ?? alias;
         }
 
         public abstract void UpdateState(List<UnturnedPlayer> players);

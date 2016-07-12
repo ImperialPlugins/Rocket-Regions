@@ -37,16 +37,18 @@ namespace Safezone
             SafeZoneType.RegisterSafeZoneType("rectangle", typeof(RectangleType));
             SafeZoneType.RegisterSafeZoneType("circle", typeof(CircleType));
 
-            Flag.RegisterFlag("EnterVehicles", typeof(EnterVehiclesFlag));
+
             Flag.RegisterFlag("Godmode", typeof(GodmodeFlag));
             Flag.RegisterFlag("NoEnter", typeof(NoEnterFlag));
             Flag.RegisterFlag("NoLeave", typeof(NoLeaveFlag));
             Flag.RegisterFlag("NoZombies", typeof(NoZombiesFlag));
-            Flag.RegisterFlag("PlaceAllowed", typeof(PlaceAllowedFlag));
+            Flag.RegisterFlag("NoPlace", typeof(NoPlaceFlag));
+            Flag.RegisterFlag("NoDestroy", typeof(NoDestroy));
+            Flag.RegisterFlag("NoVehiclesUsage", typeof(NoVehiclesUsage));
+
             Flag.RegisterFlag("EnterMessage", typeof(EnterMessageFlag));
             Flag.RegisterFlag("LeaveMessage", typeof(LeaveMessageFlag));
-            Flag.RegisterFlag("DestroyAllowed", typeof(DestroyAllowedFlag));
-
+            
             Configuration.Load();
             if (Configuration.Instance.UpdateFrameCount <= 0)
             {

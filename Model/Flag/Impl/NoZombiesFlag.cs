@@ -11,7 +11,7 @@ namespace Safezone.Model.Flag.Impl
 {
     public class NoZombiesFlag : BoolFlag
     {
-        public override string Description => "Prevents spawning of zombies";
+        public override string Description => "Allow/Disallow spawning of zombies in the given safezone";
 
         public override bool SupportsGroups => false;
         public override void UpdateState(List<UnturnedPlayer> players)

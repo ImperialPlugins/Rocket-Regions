@@ -91,6 +91,7 @@ namespace Safezone.Model.Safezone
 
         public void SetFlag(string name, object value, List<GroupValue> groupValues, bool save = true)
         {
+            name = Flag.Flag.GetPrimaryFlagName(name);
             var flagType = Flag.Flag.GetFlagType(name);
             if (flagType == null)
             {
@@ -133,6 +134,8 @@ namespace Safezone.Model.Safezone
 
         private Flag.Flag DeserializeFlag(SerializableFlag flag)
         {
+            flag.Name = Flag.Flag.GetPrimaryFlagName(flag.Name);
+
             var type = Flag.Flag.GetFlagType(flag.Name);
 
             var deserializedFlag = (Flag.Flag)Activator.CreateInstance(type);

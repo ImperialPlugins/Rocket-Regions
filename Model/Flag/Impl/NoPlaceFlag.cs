@@ -7,9 +7,9 @@ using Steamworks;
 
 namespace Safezone.Model.Flag.Impl
 {
-    public class PlaceAllowedFlag : BoolFlag
+    public class NoPlaceFlag : BoolFlag
     {
-        public override string Description => "Allows placing of structures";
+        public override string Description => "Allow/Disallow placing of structures in the given safezone";
 
         public override void UpdateState(List<UnturnedPlayer> players)
         {
@@ -17,7 +17,7 @@ namespace Safezone.Model.Flag.Impl
                               where PlayerUtil.GetCSteamId(p) != CSteamID.Nil
                               let playerGroup = SafeZone.GetGroup(p)
                               let equippedItem = p.Player.Equipment.useable as UseableBarricade
-                              where equippedItem != null && !SafeZone.GetFlag(typeof (PlaceAllowedFlag)).GetValue<bool>(playerGroup)
+                              where equippedItem != null && GetValue<bool>(playerGroup)
                               select p)
             {
                 p.Player.equipment.dequip();
