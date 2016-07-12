@@ -4,32 +4,32 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Serialization;
 using Rocket.API;
-using Safezone.Model.Flag;
-using Safezone.Model.Safezone.Type;
-using Safezone.Util;
+using RocketRegions.Model.Flag;
+using RocketRegions.Model.Safezone.Type;
+using RocketRegions.Util;
 
-namespace Safezone.Model.Safezone
+namespace RocketRegions.Model.Safezone
 {
-    public class SafeZone
+    public class Region
     {
         public string Name;
         public List<ulong> Owners;
-        public SafeZoneType Type;
+        public RegionType Type;
         public List<SerializableFlag> Flags;
         public List<ulong> Members;
 
         [XmlIgnore]
-        private List<Flag.Flag> _flags;
+        private List<Flag.RegionFlag> _flags;
 
         [XmlIgnore]
-        public ReadOnlyCollection<Flag.Flag> ParsedFlags
+        public ReadOnlyCollection<Flag.RegionFlag> ParsedFlags
         {
             get
             {
                 if (_flags != null) return _flags.AsReadOnly();
-                if (Flags == null) return new List<Flag.Flag>().AsReadOnly();
+                if (Flags == null) return new List<Flag.RegionFlag>().AsReadOnly();
 
-                _flags = new List<Flag.Flag>();
+                _flags = new List<Flag.RegionFlag>();
 
                 foreach (var serializedFlag in Flags)
                 {
@@ -48,7 +48,7 @@ namespace Safezone.Model.Safezone
 
         public void RebuildFlags()
         {
-            _flags = new List<Flag.Flag>();
+            _flags = new List<Flag.RegionFlag>();
 
             foreach (var serializedFlag in Flags)
             {
@@ -56,9 +56,9 @@ namespace Safezone.Model.Safezone
             }
         }
 
-        public Flag.Flag GetFlag(System.Type t, bool createIfNotFound = true)
+        public Flag.RegionFlag GetFlag(System.Type t, bool createIfNotFound = true)
         {
-            if (!t.IsSameOrSubclass(typeof(Flag.Flag)))
+            if (!t.IsSameOrSubclass(typeof(Flag.RegionFlag)))
             {
                 throw new ArgumentException("Can't get type " + t.Name + " as flag!");
             }
@@ -70,8 +70,8 @@ namespace Safezone.Model.Safezone
             }
 
             if (!createIfNotFound) return null;
-            var flag = (Flag.Flag)Activator.CreateInstance(t);
-            flag.Name = Flag.Flag.GetFlagName(t);
+            var flag = (Flag.RegionFlag)Activator.CreateInstance(t);
+            flag.Name = Flag.RegionFlag.GetFlagName(t);
             return flag;
         }
 
@@ -91,8 +91,8 @@ namespace Safezone.Model.Safezone
 
         public void SetFlag(string name, object value, List<GroupValue> groupValues, bool save = true)
         {
-            name = Flag.Flag.GetPrimaryFlagName(name);
-            var flagType = Flag.Flag.GetFlagType(name);
+            name = Flag.RegionFlag.GetPrimaryFlagName(name);
+            var flagType = Flag.RegionFlag.GetFlagType(name);
             if (flagType == null)
             {
                 throw new ArgumentException("Unknown flag: " + name);
@@ -118,11 +118,11 @@ namespace Safezone.Model.Safezone
             Flags.Add(flag);
             if (save)
             {
-                SafeZonePlugin.Instance.Configuration.Save();
+                RegionsPlugin.Instance.Configuration.Save();
             }
 
-            if (_flags == null) _flags = new List<Flag.Flag>();
-            foreach (Flag.Flag f in ParsedFlags.Where(f => f.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)))
+            if (_flags == null) _flags = new List<Flag.RegionFlag>();
+            foreach (Flag.RegionFlag f in ParsedFlags.Where(f => f.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)))
             {
                 f.Value = value;
                 return;
@@ -132,15 +132,15 @@ namespace Safezone.Model.Safezone
             deserializedFlag.Value = value;
         }
 
-        private Flag.Flag DeserializeFlag(SerializableFlag flag)
+        private Flag.RegionFlag DeserializeFlag(SerializableFlag flag)
         {
-            flag.Name = Flag.Flag.GetPrimaryFlagName(flag.Name);
+            flag.Name = Flag.RegionFlag.GetPrimaryFlagName(flag.Name);
 
-            var type = Flag.Flag.GetFlagType(flag.Name);
+            var type = Flag.RegionFlag.GetFlagType(flag.Name);
 
-            var deserializedFlag = (Flag.Flag)Activator.CreateInstance(type);
-            deserializedFlag.SafeZone = this;
-            deserializedFlag.Name = Flag.Flag.GetFlagName(type);
+            var deserializedFlag = (Flag.RegionFlag)Activator.CreateInstance(type);
+            deserializedFlag.Region = this;
+            deserializedFlag.Name = Flag.RegionFlag.GetFlagName(type);
             deserializedFlag.Value = flag.Value;
 
             foreach (var value in flag.GroupValues)

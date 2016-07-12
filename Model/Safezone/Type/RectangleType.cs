@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using Rocket.API;
 using Rocket.Unturned.Chat;
-using Safezone.Util;
+using RocketRegions.Util;
 using UnityEngine;
 
-namespace Safezone.Model.Safezone.Type
+namespace RocketRegions.Model.Safezone.Type
 {
     [Serializable]
-    public class RectangleType : SafeZoneType
+    public class RectangleType : RegionType
     {
         public SerializablePosition Position1;
         public SerializablePosition Position2;
         private static readonly Dictionary<ulong, SerializablePosition> FirstPositions = new Dictionary<ulong, SerializablePosition>();
         private static readonly Dictionary<ulong, SerializablePosition> SecondsPositions = new Dictionary<ulong, SerializablePosition>();
 
-        public override SafeZone OnCreate(IRocketPlayer player, string name, string[] args)
+        public override Region OnCreate(IRocketPlayer player, string name, string[] args)
         {
             if (!HasPositionSet(player))
             {
@@ -25,7 +25,7 @@ namespace Safezone.Model.Safezone.Type
 
             Position1 = GetPosition1(player);
             Position2 = GetPosition2(player);
-            var zone = new SafeZone
+            var zone = new Region
             {
                 Name = name,
                 Owners = new List<ulong> { PlayerUtil.GetId(player) },

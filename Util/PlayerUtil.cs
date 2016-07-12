@@ -5,7 +5,7 @@ using Rocket.Unturned.Player;
 using SDG.Unturned;
 using Steamworks;
 
-namespace Safezone.Util
+namespace RocketRegions.Util
 {
     public static class PlayerUtil
     {

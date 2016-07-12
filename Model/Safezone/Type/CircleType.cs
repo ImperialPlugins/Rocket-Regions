@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using Rocket.API;
 using Rocket.Unturned.Chat;
-using Safezone.Util;
 using UnityEngine;
 using Rocket.API.Extensions;
+using RocketRegions.Util;
 
-namespace Safezone.Model.Safezone.Type
+namespace RocketRegions.Model.Safezone.Type
 {
     [Serializable]
-    public class CircleType : SafeZoneType
+    public class CircleType : RegionType
     {
         public int? Radius;
         public SerializablePosition Center;
 
-        public override SafeZone OnCreate(IRocketPlayer player, string name, string[] args)
+        public override Region OnCreate(IRocketPlayer player, string name, string[] args)
         {
             var pos = PlayerUtil.GetUnturnedPlayer(player).Position;
             Radius = args.GetInt32Parameter(0);
@@ -26,7 +26,7 @@ namespace Safezone.Model.Safezone.Type
 
             Center = new SerializablePosition(pos);
 
-            var zone = new SafeZone
+            var zone = new Region
             {
                 Name = name,
                 Owners = new List<ulong> {PlayerUtil.GetId(player)}, 

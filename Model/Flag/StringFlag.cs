@@ -1,12 +1,12 @@
 ﻿using System;
 using Rocket.API;
-using Safezone.Model.Safezone;
+using RocketRegions.Model.Safezone;
 
-namespace Safezone.Model.Flag
+namespace RocketRegions.Model.Flag
 {
-    public abstract class StringFlag : Flag
+    public abstract class StringFlag : RegionFlag
     {
-        public override bool ParseValue(IRocketPlayer caller, SafeZone zone, string rawValue, Group group = Group.NONE)
+        public override bool ParseValue(IRocketPlayer caller, Region zone, string rawValue, Group group = Group.NONE)
         {
             if(rawValue.Equals("null", StringComparison.CurrentCultureIgnoreCase))
                 rawValue = null;

@@ -1,21 +1,21 @@
 ﻿using System.Collections.Generic;
 using Rocket.API;
 using Rocket.Unturned.Chat;
-using Safezone.Model;
-using Safezone.Model.Flag;
-using Safezone.Util;
 using UnityEngine;
 using Rocket.API.Extensions;
 using Rocket.Core.Logging;
+using RocketRegions.Model;
+using RocketRegions.Model.Flag;
+using RocketRegions.Util;
 
-namespace Safezone.Commands
+namespace RocketRegions.Commands
 {
     public class FlagCommand : IRocketCommand
     {
         public void Execute(IRocketPlayer caller, string[] command)
         {
             var name = command.GetStringParameter(0);
-            var zone = SafeZonePlugin.Instance.GetSafeZone(name, true);
+            var zone = RegionsPlugin.Instance.GetSafeZone(name, true);
             if (zone == null)
             {
                 UnturnedChat.Say(caller, "Safezone \"" + name + "\" not found", Color.red);
@@ -30,7 +30,7 @@ namespace Safezone.Commands
             
             var flagName = command.GetStringParameter(1);
 
-            var t = Flag.GetFlagType(flagName);
+            var t = RegionFlag.GetFlagType(flagName);
             if (t == null)
             {
                 UnturnedChat.Say(caller, "Unknown flag: \"" + flagName + "\"", Color.red);
@@ -78,7 +78,7 @@ namespace Safezone.Commands
                 }
             }
 
-            f.SafeZone = zone;
+            f.Region = zone;
 
             if (!f.ParseValue(caller, zone, command.GetStringParameter(2), group))
             {
@@ -93,14 +93,14 @@ namespace Safezone.Commands
         
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
 
-        public string Name => "safezoneflag";
+        public string Name => "regionflag";
 
-        public string Help => "Modify flags for safezones";
+        public string Help => "Set flags for regions";
 
         public string Syntax => "<region> <flag> <value>";
 
-        public List<string> Aliases => new List<string> { "sflag" };
+        public List<string> Aliases => new List<string> { "rflag" };
 
-        public List<string> Permissions => new List<string> { "safezones.flag" };
+        public List<string> Permissions => new List<string> { "regions.flag" };
     }
 }

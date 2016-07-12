@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using Rocket.API;
 using Rocket.Unturned.Chat;
-using Safezone.Util;
 using UnityEngine;
 using Rocket.API.Extensions;
+using RocketRegions.Util;
 
-namespace Safezone.Commands
+namespace RocketRegions.Commands
 {
     public class RedefineCommand : IRocketCommand
     {
@@ -20,10 +20,10 @@ namespace Safezone.Commands
 
             var name = command.GetStringParameter(0);
 
-            var zone = SafeZonePlugin.Instance.GetSafeZone(name, true);
+            var zone = RegionsPlugin.Instance.GetSafeZone(name, true);
             if (zone == null)
             {
-                UnturnedChat.Say(caller, "Safezone \"" + name + "\" not found", Color.red);
+                UnturnedChat.Say(caller, "Region \"" + name + "\" not found", Color.red);
                 return;
             }
 
@@ -38,31 +38,31 @@ namespace Safezone.Commands
 
             if (zone.Type.OnRedefine(PlayerUtil.GetUnturnedPlayer(caller), (string[])args.ToArray(typeof(string))))
             {
-                SafeZonePlugin.Instance.SafeZones.Remove(zone);
-                SafeZonePlugin.Instance.Configuration.Save();
-                SafeZonePlugin.Instance.OnSafeZoneRemoved(zone);
-                SafeZonePlugin.Instance.SafeZones.Add(zone);
-                SafeZonePlugin.Instance.Configuration.Save();
-                SafeZonePlugin.Instance.OnSafeZoneCreated(zone);
+                RegionsPlugin.Instance.Regions.Remove(zone);
+                RegionsPlugin.Instance.Configuration.Save();
+                RegionsPlugin.Instance.OnRegionRemoved(zone);
+                RegionsPlugin.Instance.Regions.Add(zone);
+                RegionsPlugin.Instance.Configuration.Save();
+                RegionsPlugin.Instance.OnRegionCreated(zone);
 
-                UnturnedChat.Say(caller, "Successfully redefined safezone: " + name, Color.green);
+                UnturnedChat.Say(caller, "Successfully redefined region: " + name, Color.green);
                 return;
             }
 
-            UnturnedChat.Say(caller, "Redefine of safezone: " + name + " failed.", Color.red);
+            UnturnedChat.Say(caller, "Redefine of region: " + name + " failed.", Color.red);
         }
 
 
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
 
-        public string Name => "safezoneredefine";
+        public string Name => "regionredefine";
 
-        public string Help => "Redefine a safezone";
+        public string Help => "Redefine a region";
 
         public string Syntax => "<name>";
 
-        public List<string> Aliases => new List<string> { "sredefine" };
+        public List<string> Aliases => new List<string> { "rredefine" };
 
-        public List<string> Permissions => new List<string> { "safezones.redefine" };
+        public List<string> Permissions => new List<string> { "regions.redefine" };
     }
 }

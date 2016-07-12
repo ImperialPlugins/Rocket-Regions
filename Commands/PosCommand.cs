@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using Rocket.API;
 using Rocket.Unturned.Chat;
-using Safezone.Model;
-using Safezone.Model.Safezone.Type;
-using Safezone.Util;
+using RocketRegions.Model;
+using RocketRegions.Model.Safezone.Type;
+using RocketRegions.Util;
 using UnityEngine;
 
-namespace Safezone.Commands
+namespace RocketRegions.Commands
 {
     public class PosCommand : IRocketCommand
     {
@@ -35,14 +35,14 @@ namespace Safezone.Commands
         
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
         
-        public string Name => "safezonepos";
+        public string Name => "regionpos";
 
-        public string Help => "Set first positon for safezones";
+        public string Help => "Set position bounds for rectangular region";
 
         public string Syntax => "<1/2>";
 
-        public List<string> Aliases => new List<string> {"spos"};
+        public List<string> Aliases => new List<string> {"rpos"};
 
-        public List<string> Permissions => new List<string> { "safezones.pos" };
+        public List<string> Permissions => new List<string> { "regions.pos" };
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using Rocket.API;
 using Rocket.Unturned.Chat;
-using Safezone.Util;
+using RocketRegions.Util;
 using UnityEngine;
 
-namespace Safezone.Commands
+namespace RocketRegions.Commands
 {
     public class CoordsCommand : IRocketCommand
     {
@@ -23,7 +23,7 @@ namespace Safezone.Commands
 
         public List<string> Aliases => new List<string>();
 
-        public List<string> Permissions => new List<string> { "safezones.coords" };
+        public List<string> Permissions => new List<string> { "regions.coords" };
 
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
     }

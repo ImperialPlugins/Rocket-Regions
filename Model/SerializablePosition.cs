@@ -2,7 +2,7 @@
 using System.Xml.Serialization;
 using UnityEngine;
 
-namespace Safezone.Model
+namespace RocketRegions.Model
 {
     [Serializable]
     public class SerializablePosition

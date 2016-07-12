@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Safezone.Util
+namespace RocketRegions.Util
 {
     public static class TypeUtil
     {

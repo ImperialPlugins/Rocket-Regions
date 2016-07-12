@@ -2,16 +2,16 @@
 using System.Linq;
 using System.Reflection;
 using Rocket.Unturned.Player;
-using Safezone.Model.Safezone;
+using RocketRegions.Model.Safezone;
 using SDG.Unturned;
 using Steamworks;
 using UnityEngine;
 
-namespace Safezone.Model.Flag.Impl
+namespace RocketRegions.Model.Flag.Impl
 {
     public class NoZombiesFlag : BoolFlag
     {
-        public override string Description => "Allow/Disallow spawning of zombies in the given safezone";
+        public override string Description => "Allow/Disallow spawning of zombies";
 
         public override bool SupportsGroups => false;
         public override void UpdateState(List<UnturnedPlayer> players)
@@ -24,8 +24,8 @@ namespace Safezone.Model.Flag.Impl
                 foreach (var zombie in t.Zombies.Where(z => z!= null && z.transform?.position != null))
                 {
                     if (zombie.isDead) continue;
-                    SafeZone safeZone = SafeZonePlugin.Instance?.GetSafeZoneAt(zombie.transform.position);
-                    if (safeZone == null || !GetValue<bool>()) continue;
+                    Region region = RegionsPlugin.Instance?.GetSafeZoneAt(zombie.transform.position);
+                    if (region == null || !GetValue<bool>()) continue;
                     zombie.gear = 0;
                     zombie.isDead = true;
                     Vector3 ragdoll = (Vector3)typeof(Zombie).GetField("ragdoll", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(zombie);

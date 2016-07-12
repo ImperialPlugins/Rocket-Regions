@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using Rocket.API;
 using Rocket.Unturned.Chat;
-using Safezone.Model.Safezone.Type;
 using UnityEngine;
 using Rocket.API.Extensions;
-using Safezone.Model.Flag;
-using Safezone.Model.Flag.Impl;
+using RocketRegions.Model.Flag;
+using RocketRegions.Model.Safezone.Type;
+using RocketRegions.Model.Flag.Impl;
 
-namespace Safezone.Commands
+namespace RocketRegions.Commands
 {
     public class CreateCommand : IRocketCommand
     {
@@ -23,17 +23,17 @@ namespace Safezone.Commands
             var name = command.GetStringParameter(0);
             var typeName = command.GetStringParameter(1).ToLower();
 
-            if (SafeZonePlugin.Instance.GetSafeZone(name, true) != null)
+            if (RegionsPlugin.Instance.GetSafeZone(name, true) != null)
             {
-                UnturnedChat.Say(caller, "A safezone with this name already exists!", Color.red);
+                UnturnedChat.Say(caller, "A region with this name already exists!", Color.red);
                 return;
             }
 
-            var type = SafeZoneType.RegisterSafeZoneType(typeName);
+            var type = RegionType.RegisterSafeZoneType(typeName);
             if (type == null)
             {
                 var types = "";
-                foreach (var t in SafeZoneType.GetTypes())
+                foreach (var t in RegionType.GetTypes())
                 {
                     if (types == "")
                     {
@@ -53,30 +53,30 @@ namespace Safezone.Commands
 
             if (safeZone == null)
             {
-                UnturnedChat.Say(caller, "Could't create safezone!", Color.red);
+                UnturnedChat.Say(caller, "Could't create region!", Color.red);
                 return;
             }
 
-            SafeZonePlugin.Instance.SafeZones.Add(safeZone);
-            SafeZonePlugin.Instance.OnSafeZoneCreated(safeZone);
+            RegionsPlugin.Instance.Regions.Add(safeZone);
+            RegionsPlugin.Instance.OnRegionCreated(safeZone);
 
             safeZone.SetFlag("EnterMessage", "Entered Safezone: {0}", new List<GroupValue>());
             safeZone.SetFlag("LeaveMessage", "Left Safezone: {0}", new List<GroupValue>());
 
-            SafeZonePlugin.Instance.Configuration.Save();
-            UnturnedChat.Say(caller, "Successfully created safezone: " + name, Color.green);
+            RegionsPlugin.Instance.Configuration.Save();
+            UnturnedChat.Say(caller, "Successfully created region: " + name, Color.green);
         }
         
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
 
-        public string Name => "safezonecreate";
+        public string Name => "regioncreate";
 
-        public string Help => "Create a safezone";
+        public string Help => "Create a region";
 
         public string Syntax => "<name>";
 
-        public List<string> Aliases => new List<string> { "screate" };
+        public List<string> Aliases => new List<string> { "rcreate" };
 
-        public List<string> Permissions => new List<string> { "safezones.create" };
+        public List<string> Permissions => new List<string> { "regions.create" };
     }
 }

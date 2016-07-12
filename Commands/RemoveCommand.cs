@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using Rocket.API;
 using Rocket.Unturned.Chat;
-using Safezone.Util;
 using UnityEngine;
 using Rocket.API.Extensions;
+using RocketRegions.Util;
 
-namespace Safezone.Commands
+namespace RocketRegions.Commands
 {
     public class RemoveCommand : IRocketCommand
     {
@@ -18,7 +18,7 @@ namespace Safezone.Commands
             }
 
             var name = command.GetStringParameter(0);
-            var zone = SafeZonePlugin.Instance.GetSafeZone(name);
+            var zone = RegionsPlugin.Instance.GetSafeZone(name);
             if (zone == null)
             {
                 UnturnedChat.Say(caller, "Safezone \"" + name + "\" not found", Color.red);
@@ -31,22 +31,22 @@ namespace Safezone.Commands
                 return;
             }
 
-            SafeZonePlugin.Instance.SafeZones.Remove(zone);
-            SafeZonePlugin.Instance.Configuration.Save();
-            SafeZonePlugin.Instance.OnSafeZoneRemoved(zone);
+            RegionsPlugin.Instance.Regions.Remove(zone);
+            RegionsPlugin.Instance.Configuration.Save();
+            RegionsPlugin.Instance.OnRegionRemoved(zone);
 
-            UnturnedChat.Say(caller, "Successfully removed safezone: " + name, Color.green);
+            UnturnedChat.Say(caller, "Successfully removed region: " + name, Color.green);
         }
 
-        public string Name => "safezoneremove";
+        public string Name => "regionremove";
 
-        public string Help => "Remove a safezone";
+        public string Help => "Remove a region";
 
         public string Syntax => "<name>";
 
-        public List<string> Aliases => new List<string> { "sremove" };
+        public List<string> Aliases => new List<string> { "rremove" };
 
-        public List<string> Permissions => new List<string> { "safezones.remove" };
+        public List<string> Permissions => new List<string> { "regiones.remove" };
 
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
     }

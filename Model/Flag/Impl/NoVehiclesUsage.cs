@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using Rocket.Unturned.Player;
-using Safezone.Util;
+using RocketRegions.Util;
 using SDG.Unturned;
 
-namespace Safezone.Model.Flag.Impl
+namespace RocketRegions.Model.Flag.Impl
 {
     public class NoVehiclesUsage : BoolFlag
     {
-        public override string Description => "Allow/Disallow usage of vehicles in the given safezone";
+        public override string Description => "Allow/Disallow usage of vehicles";
 
         private readonly Dictionary<ulong, bool> _lastVehicleStates = new Dictionary<ulong, bool>();
 
@@ -27,7 +27,7 @@ namespace Safezone.Model.Flag.Impl
                 var wasDriving = _lastVehicleStates[id];
 
                 if (!isInVeh || wasDriving ||
-                    !GetValue<bool>(SafeZone.GetGroup(player))) continue;
+                    !GetValue<bool>(Region.GetGroup(player))) continue;
                 sbyte index = -1;
                 foreach (Passenger p in veh.passengers)
                 {

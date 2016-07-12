@@ -1,4 +1,4 @@
-﻿namespace Safezone.Model
+﻿namespace RocketRegions.Model
 {
     public enum Group
     {

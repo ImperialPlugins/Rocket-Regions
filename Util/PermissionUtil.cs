@@ -1,7 +1,7 @@
 ﻿using Rocket.API;
 using Rocket.Unturned.Player;
 
-namespace Safezone.Util
+namespace RocketRegions.Util
 {
     public static class PermissionUtil
     {
@@ -12,7 +12,7 @@ namespace Safezone.Util
             {
                 return true;
             }
-            return player.HasPermission("safezones." + permission);
+            return player.HasPermission("regiones." + permission);
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace Safezone.Model.Flag
+namespace RocketRegions.Model.Flag
 {
     [Serializable]
     [XmlType(TypeName = "Flag")]

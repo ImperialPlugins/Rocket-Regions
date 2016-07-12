@@ -6,24 +6,24 @@ using Rocket.Core.Plugins;
 using Rocket.Unturned;
 using Rocket.Unturned.Events;
 using Rocket.Unturned.Player;
-using Safezone.Model;
-using Safezone.Model.Flag.Impl;
-using Safezone.Model.Safezone;
-using Safezone.Model.Safezone.Type;
-using Safezone.Util;
+using RocketRegions.Model;
+using RocketRegions.Model.Flag;
+using RocketRegions.Model.Flag.Impl;
+using RocketRegions.Model.Safezone;
+using RocketRegions.Model.Safezone.Type;
+using RocketRegions.Util;
 using SDG.Unturned;
 using Steamworks;
 using UnityEngine;
-using Flag = Safezone.Model.Flag.Flag;
 
-namespace Safezone
+namespace RocketRegions
 {
-    public class SafeZonePlugin : RocketPlugin<SafeZoneConfiguration>
+    public class RegionsPlugin : RocketPlugin<RegionsConfiguration>
     {
-        public static SafeZonePlugin Instance;
-        private readonly Dictionary<ulong, SafeZone> _safeZonePlayers = new Dictionary<ulong, SafeZone>();
+        public static RegionsPlugin Instance;
+        private readonly Dictionary<ulong, Region> _playersInRegions = new Dictionary<ulong, Region>();
         private readonly Dictionary<ulong, Vector3> _lastPositions = new Dictionary<ulong, Vector3>();
-        internal List<SafeZone> SafeZones => Configuration?.Instance?.SafeZones ?? new List<SafeZone>();
+        internal List<Region> Regions => Configuration?.Instance?.Regions ?? new List<Region>();
 
         protected override void Load()
         {
@@ -34,20 +34,20 @@ namespace Safezone
 
             Instance = this;
 
-            SafeZoneType.RegisterSafeZoneType("rectangle", typeof(RectangleType));
-            SafeZoneType.RegisterSafeZoneType("circle", typeof(CircleType));
+            RegionType.RegisterSafeZoneType("rectangle", typeof(RectangleType));
+            RegionType.RegisterSafeZoneType("circle", typeof(CircleType));
 
 
-            Flag.RegisterFlag("Godmode", typeof(GodmodeFlag));
-            Flag.RegisterFlag("NoEnter", typeof(NoEnterFlag));
-            Flag.RegisterFlag("NoLeave", typeof(NoLeaveFlag));
-            Flag.RegisterFlag("NoZombies", typeof(NoZombiesFlag));
-            Flag.RegisterFlag("NoPlace", typeof(NoPlaceFlag));
-            Flag.RegisterFlag("NoDestroy", typeof(NoDestroy));
-            Flag.RegisterFlag("NoVehiclesUsage", typeof(NoVehiclesUsage));
+            RegionFlag.RegisterFlag("Godmode", typeof(GodmodeFlag));
+            RegionFlag.RegisterFlag("NoEnter", typeof(NoEnterFlag));
+            RegionFlag.RegisterFlag("NoLeave", typeof(NoLeaveFlag));
+            RegionFlag.RegisterFlag("NoZombies", typeof(NoZombiesFlag));
+            RegionFlag.RegisterFlag("NoPlace", typeof(NoPlaceFlag));
+            RegionFlag.RegisterFlag("NoDestroy", typeof(NoDestroy));
+            RegionFlag.RegisterFlag("NoVehiclesUsage", typeof(NoVehiclesUsage));
 
-            Flag.RegisterFlag("EnterMessage", typeof(EnterMessageFlag));
-            Flag.RegisterFlag("LeaveMessage", typeof(LeaveMessageFlag));
+            RegionFlag.RegisterFlag("EnterMessage", typeof(EnterMessageFlag));
+            RegionFlag.RegisterFlag("LeaveMessage", typeof(LeaveMessageFlag));
             
             Configuration.Load();
             if (Configuration.Instance.UpdateFrameCount <= 0)
@@ -56,12 +56,12 @@ namespace Safezone
                 Configuration.Save();
             }
 
-            foreach (SafeZone s in SafeZones)
+            foreach (Region s in Regions)
             {
                 s.RebuildFlags();
             }
 
-            if (SafeZones.Count < 1) return;
+            if (Regions.Count < 1) return;
             StartListening();
         }
 
@@ -78,14 +78,14 @@ namespace Safezone
                 }
             }
 
-            foreach (var safeZone in SafeZones)
+            foreach (var safeZone in Regions)
             {
-                OnSafeZoneRemoved(safeZone);
+                OnRegionRemoved(safeZone);
             }
             StopListening();
             Instance = null;
-            SafeZoneType.RegistereTypes?.Clear();
-            Flag.RegisteredFlags.Clear();
+            RegionType.RegistereTypes?.Clear();
+            RegionFlag.RegisteredFlags.Clear();
         }
 
 
@@ -105,21 +105,21 @@ namespace Safezone
             U.Events.OnPlayerDisconnected -= OnPlayerDisconnect;
         }
 
-        internal void OnSafeZoneCreated(SafeZone safeZone)
+        internal void OnRegionCreated(Region region)
         {
-            if (SafeZones.Count != 1) return;
+            if (Regions.Count != 1) return;
             StartListening();
         }
 
-        internal void OnSafeZoneRemoved(SafeZone safeZone)
+        internal void OnRegionRemoved(Region region)
         {
-            //Update players in safezones
-            foreach (var id in GetUidsInSafeZone(safeZone))
+            //Update players in regions
+            foreach (var id in GetUidsInSafeZone(region))
             {
-                OnPlayerLeftSafeZone(UnturnedPlayer.FromCSteamID(new CSteamID(id)), safeZone);
+                OnPlayerLeftSafeZone(UnturnedPlayer.FromCSteamID(new CSteamID(id)), region);
             }
 
-            if (SafeZones.Count != 0) return;
+            if (Regions.Count != 0) return;
             StopListening();
         }
 
@@ -135,8 +135,8 @@ namespace Safezone
 
         private void OnPlayerDisconnect(IRocketPlayer player)
         {
-            if (!_safeZonePlayers.ContainsKey(PlayerUtil.GetId(player))) return;
-            OnPlayerLeftSafeZone(player, _safeZonePlayers[PlayerUtil.GetId(player)]);
+            if (!_playersInRegions.ContainsKey(PlayerUtil.GetId(player))) return;
+            OnPlayerLeftSafeZone(player, _playersInRegions[PlayerUtil.GetId(player)]);
         }
 
         private void OnPlayerUpdatePosition(IRocketPlayer player, Vector3 position)
@@ -151,7 +151,7 @@ namespace Safezone
             var untPlayer = PlayerUtil.GetUnturnedPlayer(player);
 
             var safeZone = GetSafeZoneAt(position);
-            var bIsInSafeZone = safeZone != null;
+            var bIsInRegion = safeZone != null;
 
             Vector3? lastPosition = null;
             if (_lastPositions.ContainsKey(id))
@@ -159,25 +159,25 @@ namespace Safezone
                 lastPosition = _lastPositions[id];
             }
 
-            if (!bIsInSafeZone && _safeZonePlayers.ContainsKey(id))
+            if (!bIsInRegion && _playersInRegions.ContainsKey(id))
             {
-                //Left a safezone
-                safeZone = _safeZonePlayers[id];
+                //Left a region
+                safeZone = _playersInRegions[id];
                 if (safeZone.GetFlag(typeof(NoLeaveFlag)).GetValue<bool>(safeZone.GetGroup(player)) 
                     && lastPosition != null)
                 {
-                    //Todo: send message to player (can't leave safezone)
+                    //Todo: send message to player (can't leave region)
                     untPlayer.Teleport(lastPosition.Value, untPlayer.Rotation);
                     return;
                 }
                 OnPlayerLeftSafeZone(player, safeZone);
             }
-            else if (bIsInSafeZone && !_safeZonePlayers.ContainsKey(id) && lastPosition != null)
+            else if (bIsInRegion && !_playersInRegions.ContainsKey(id) && lastPosition != null)
             {
-                //Entered a safezone
+                //Entered a region
                 if (safeZone.GetFlag(typeof(NoEnterFlag)).GetValue<bool>(safeZone.GetGroup(player)))
                 {
-                    //Todo: send message to player (can't enter safezone)
+                    //Todo: send message to player (can't enter region)
                     untPlayer.Teleport(lastPosition.Value, untPlayer.Rotation);
                     return;
                 }
@@ -185,13 +185,13 @@ namespace Safezone
             }
             else
             {
-                //Player is still inside or outside a safezone
+                //Player is still inside or outside a region
             }
 
 
             if (safeZone != null)
             {
-                foreach (Flag f in safeZone.ParsedFlags)
+                foreach (RegionFlag f in safeZone.ParsedFlags)
                 {
                     f.OnPlayerUpdatePosition(untPlayer, position);
                 }
@@ -207,46 +207,46 @@ namespace Safezone
             }
         }
 
-        private void OnPlayerEnteredSafeZone(IRocketPlayer player, SafeZone safeZone)
+        private void OnPlayerEnteredSafeZone(IRocketPlayer player, Region region)
         {
             var id = PlayerUtil.GetId(player);
             if(id == CSteamID.Nil.m_SteamID) throw new Exception("CSteamID is Nil");
 
-            _safeZonePlayers.Add(id, safeZone);
+            _playersInRegions.Add(id, region);
 
-            foreach (var flag in safeZone.ParsedFlags)
+            foreach (var flag in region.ParsedFlags)
             {
                 flag.OnSafeZoneEnter((UnturnedPlayer)player);
             }
         }
 
-        internal void OnPlayerLeftSafeZone(IRocketPlayer player, SafeZone safeZone)
+        internal void OnPlayerLeftSafeZone(IRocketPlayer player, Region region)
         {
             var id = PlayerUtil.GetId(player);
             if (id == CSteamID.Nil.m_SteamID) throw new Exception("CSteamID is Nil");
-            _safeZonePlayers.Remove(id);
+            _playersInRegions.Remove(id);
 
-            foreach (var flag in safeZone.ParsedFlags)
+            foreach (var flag in region.ParsedFlags)
             {
                 flag.OnSafeZoneLeave((UnturnedPlayer)player);
             }
         }
 
-        private static bool IsInSafeZone(Vector3 pos, SafeZone zone)
+        private static bool IsInSafeZone(Vector3 pos, Region zone)
         {
             return zone.Type.IsInSafeZone(new SerializablePosition(pos));
         }
 
-        public SafeZone GetSafeZoneAt(Vector3 pos)
+        public Region GetSafeZoneAt(Vector3 pos)
         {
-            return SafeZones.FirstOrDefault(safeZone => IsInSafeZone(pos, safeZone));
+            return Regions.FirstOrDefault(safeZone => IsInSafeZone(pos, safeZone));
         }
 
-        public SafeZone GetSafeZone(string safeZoneName, bool exact = false)
+        public Region GetSafeZone(string safeZoneName, bool exact = false)
         {
-            if (SafeZones == null || SafeZones.Count == 0) return null;
+            if (Regions == null || Regions.Count == 0) return null;
 
-            foreach (var safeZone in SafeZones)
+            foreach (var safeZone in Regions)
             {
                 if (exact)
                 {
@@ -265,9 +265,9 @@ namespace Safezone
             return null;
         }
 
-        public IEnumerable<ulong> GetUidsInSafeZone(SafeZone zone)
+        public IEnumerable<ulong> GetUidsInSafeZone(Region zone)
         {
-            return _safeZonePlayers.Keys.Where(id => _safeZonePlayers[id] == zone).ToList();
+            return _playersInRegions.Keys.Where(id => _playersInRegions[id] == zone).ToList();
         }
 
         private int _frame;
@@ -277,10 +277,10 @@ namespace Safezone
             if (_frame % Configuration.Instance.UpdateFrameCount != 0)
                 return;
 
-            foreach (var safezone in SafeZones)
+            foreach (var region in Regions)
             {
-                var flags = safezone.ParsedFlags;
-                var players = _safeZonePlayers.Where(c => c.Value == safezone).
+                var flags = region.ParsedFlags;
+                var players = _playersInRegions.Where(c => c.Value == region).
                     Select(player => UnturnedPlayer.FromCSteamID(new CSteamID(player.Key))).ToList();
                 foreach (var flag in flags)
                 {

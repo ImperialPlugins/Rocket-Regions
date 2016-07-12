@@ -1,31 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using Rocket.API;
-using Safezone.Model.Safezone;
-using Safezone.Util;
+using RocketRegions.Util;
 using System.Linq;
 using Rocket.Core.Logging;
 using Rocket.Unturned.Player;
+using RocketRegions.Model.Safezone;
 using UnityEngine;
 
-namespace Safezone.Model.Flag
+namespace RocketRegions.Model.Flag
 {
-    public abstract class Flag
+    public abstract class RegionFlag
     {
-        private SafeZone _safezone;
-        public SafeZone SafeZone
+        private Region _region;
+        public Region Region
         {
             get
             {
-                return _safezone;
+                return _region;
             }
             internal set
             {
                 if (value == null) throw new ArgumentNullException(nameof(value), "SafeZone value can not be null");
-                if (_safezone == null)
-                    _safezone = value;
+                if (_region == null)
+                    _region = value;
                 else 
-                    Logger.Log($"Flag \"{Name}\": Tried to set new SafeZone value! Old value: {_safezone.Name}, new value: {value.Name}");
+                    Logger.Log($"Flag \"{Name}\": Tried to set new SafeZone value! Old value: {_region.Name}, new value: {value.Name}");
             } 
         }
 
@@ -92,7 +92,7 @@ namespace Safezone.Model.Flag
             return (T)Value;
         }
 
-        public abstract bool ParseValue(IRocketPlayer caller, SafeZone safeZone, string rawValue, Group group = Group.NONE);
+        public abstract bool ParseValue(IRocketPlayer caller, Region region, string rawValue, Group group = Group.NONE);
 
         protected virtual void OnValueUpdate(object oldValue, object newValue)
         {
@@ -125,7 +125,7 @@ namespace Safezone.Model.Flag
         public static void RegisterFlag(string name, Type type, List<string> aliases = null)
         {
             name = name.ToLower();
-            if (!type.IsSameOrSubclass(typeof(Flag)))
+            if (!type.IsSameOrSubclass(typeof(RegionFlag)))
             {
                 throw new ArgumentException(type.FullName + " does not extend the abstract Flag type!");
             }

@@ -2,13 +2,13 @@
 using Rocket.Unturned.Player;
 using Steamworks;
 
-namespace Safezone.Model.Flag.Impl
+namespace RocketRegions.Model.Flag.Impl
 {
     public class NoEnterFlag : BoolFlag
     {
         // code is handled in SafeZonePlugin.cs because it needs to hook before these events
 
-        public override string Description => "Allow/Disallow entering the given safezone";
+        public override string Description => "Allow/Disallow entering the region";
 
         public override void UpdateState(List<UnturnedPlayer> players)
         {

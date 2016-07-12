@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 using Rocket.API;
-using Safezone.Util;
+using RocketRegions.Util;
 
-namespace Safezone.Model.Safezone.Type
+namespace RocketRegions.Model.Safezone.Type
 {
     [Serializable]
     [XmlInclude(typeof(RectangleType))]
     [XmlInclude(typeof(CircleType))]
     [XmlType(TypeName = "SafezoneType")]
-    public abstract class SafeZoneType
+    public abstract class RegionType
     {
         internal static readonly Dictionary<string, System.Type> RegistereTypes = new Dictionary<string, System.Type>();
 
-        public static SafeZoneType RegisterSafeZoneType(string name)
+        public static RegionType RegisterSafeZoneType(string name)
         {
             if (name == null)
             {
@@ -29,12 +29,12 @@ namespace Safezone.Model.Safezone.Type
                 return null;
             }
             var t = RegistereTypes[name];
-            return (SafeZoneType)Activator.CreateInstance(t);
+            return (RegionType)Activator.CreateInstance(t);
         }
 
         public static void RegisterSafeZoneType(string name, System.Type t)
         {
-            if(!t.IsSameOrSubclass(typeof(SafeZoneType)))
+            if(!t.IsSameOrSubclass(typeof(RegionType)))
             {
                 throw new ArgumentException(t.Name + " is not a SafeZoneType!");
             }
@@ -47,7 +47,7 @@ namespace Safezone.Model.Safezone.Type
             RegistereTypes.Add(name, t);
         }
 
-        public abstract SafeZone OnCreate(IRocketPlayer player, string name, string[] args);
+        public abstract Region OnCreate(IRocketPlayer player, string name, string[] args);
         public abstract bool OnRedefine(IRocketPlayer player, string[] args);
         public abstract double GetDistance(SerializablePosition pos);
 

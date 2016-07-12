@@ -1,11 +1,11 @@
 ﻿using Rocket.API;
-using Safezone.Model.Safezone;
+using RocketRegions.Model.Safezone;
 
-namespace Safezone.Model.Flag
+namespace RocketRegions.Model.Flag
 {
-    public abstract class BoolFlag : Flag
+    public abstract class BoolFlag : RegionFlag
     {
-        public override bool ParseValue(IRocketPlayer caller, SafeZone zone, string rawValue, Group group = Group.NONE)
+        public override bool ParseValue(IRocketPlayer caller, Region zone, string rawValue, Group group = Group.NONE)
         {
             switch (rawValue.ToLower().Trim())
             {
