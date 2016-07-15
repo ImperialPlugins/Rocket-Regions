@@ -14,7 +14,7 @@ namespace RocketRegions.Model.Flag.Impl
     
         }
 
-        public override void OnSafeZoneEnter(UnturnedPlayer player)
+        public override void OnRegionEnter(UnturnedPlayer player)
         {
             if (Value == null) return;
             var parsedValue = (string) Value;
@@ -22,7 +22,7 @@ namespace RocketRegions.Model.Flag.Impl
             UnturnedChat.Say(player, parsedValue);
         }
 
-        public override void OnSafeZoneLeave(UnturnedPlayer player)
+        public override void OnRegionLeave(UnturnedPlayer player)
         {
  
         }

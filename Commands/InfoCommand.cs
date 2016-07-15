@@ -9,10 +9,10 @@ namespace RocketRegions.Commands
     {
         public void Execute(IRocketPlayer caller, string[] command)
         {
-            UnturnedChat.Say(caller, "Rocket Regions by Trojaner", Color.cyan);
+            UnturnedChat.Say(caller, "Rocket Regions by Trojaner [SteamID: ]", Color.cyan);
             UnturnedChat.Say(caller, "Available under GNU Affero General Public License v3", Color.cyan);
-            UnturnedChat.Say(caller, "Copyright © 2015 http://static-interface.de", Color.cyan);
-            UnturnedChat.Say(caller, "Source code available under http://github.com/Trojaner25/Rocket-Safezone", Color.cyan);
+            UnturnedChat.Say(caller, "Copyright © 2015-2016 Trojaner", Color.cyan);
+            UnturnedChat.Say(caller, "Source code available under http://github.com/Trojaner25/Rocket-Regions", Color.cyan);
         }
         
         public AllowedCaller AllowedCaller => AllowedCaller.Player;

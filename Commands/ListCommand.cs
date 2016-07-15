@@ -11,14 +11,14 @@ namespace RocketRegions.Commands
         {
             UnturnedChat.Say(caller, "Regions:", Color.green);
 
-            var bZonesFound = false;
-            foreach (var zone in RegionsPlugin.Instance.Regions)
+            var bRegionsFound = false;
+            foreach (var region in RegionsPlugin.Instance.Regions)
             {
-                UnturnedChat.Say(caller, "• " + zone.Name, Color.green);
-                bZonesFound = true;
+                UnturnedChat.Say(caller, "• " + region.Name, Color.green);
+                bRegionsFound = true;
             }
 
-            if (!bZonesFound)
+            if (!bRegionsFound)
             {
                 UnturnedChat.Say(caller, "No regions found", Color.red);
             }

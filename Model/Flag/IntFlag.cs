@@ -1,12 +1,12 @@
 ﻿using System;
 using Rocket.API;
-using RocketRegions.Model.Safezone;
+using RocketRegions.Model;
 
 namespace RocketRegions.Model.Flag
 {
     public abstract class IntFlag : RegionFlag
     {
-        public override bool ParseValue(IRocketPlayer caller, Region zone, string rawValue, Group group = Group.NONE)
+        public override bool ParseValue(IRocketPlayer caller, Region region, string rawValue, Group group = Group.NONE)
         {
             try
             {

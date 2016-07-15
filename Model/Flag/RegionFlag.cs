@@ -5,7 +5,6 @@ using RocketRegions.Util;
 using System.Linq;
 using Rocket.Core.Logging;
 using Rocket.Unturned.Player;
-using RocketRegions.Model.Safezone;
 using UnityEngine;
 
 namespace RocketRegions.Model.Flag
@@ -21,11 +20,11 @@ namespace RocketRegions.Model.Flag
             }
             internal set
             {
-                if (value == null) throw new ArgumentNullException(nameof(value), "SafeZone value can not be null");
+                if (value == null) throw new ArgumentNullException(nameof(value), "Region value can not be null");
                 if (_region == null)
                     _region = value;
                 else 
-                    Logger.Log($"Flag \"{Name}\": Tried to set new SafeZone value! Old value: {_region.Name}, new value: {value.Name}");
+                    Logger.Log($"Flag \"{Name}\": Tried to set new region value! Old value: {_region.Name}, new value: {value.Name}");
             } 
         }
 
@@ -155,8 +154,8 @@ namespace RocketRegions.Model.Flag
         }
 
         public abstract void UpdateState(List<UnturnedPlayer> players);
-        public abstract void OnSafeZoneEnter(UnturnedPlayer player);
-        public abstract void OnSafeZoneLeave(UnturnedPlayer player);
+        public abstract void OnRegionEnter(UnturnedPlayer player);
+        public abstract void OnRegionLeave(UnturnedPlayer player);
 
         public static string GetFlagName(Type type)
         {

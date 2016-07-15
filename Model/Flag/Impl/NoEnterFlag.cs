@@ -6,7 +6,7 @@ namespace RocketRegions.Model.Flag.Impl
 {
     public class NoEnterFlag : BoolFlag
     {
-        // code is handled in SafeZonePlugin.cs because it needs to hook before these events
+        // code is handled in RegionsPlugin.cs because it needs to hook before these events
 
         public override string Description => "Allow/Disallow entering the region";
 
@@ -15,12 +15,12 @@ namespace RocketRegions.Model.Flag.Impl
             //do nothing
         }
 
-        public override void OnSafeZoneEnter(UnturnedPlayer player)
+        public override void OnRegionEnter(UnturnedPlayer player)
         {
             //do nothing
         }
 
-        public override void OnSafeZoneLeave(UnturnedPlayer player)
+        public override void OnRegionLeave(UnturnedPlayer player)
         {
             //do nothing
         }

@@ -20,9 +20,9 @@ namespace RocketRegions.Model.Flag.Impl
                 foreach (var player in Provider.clients)
                 {
                     if (player?.player?.transform?.position == null) continue;
-                    if (Region.Type.IsInSafeZone(new SerializablePosition(player.player.transform.position)))
+                    if (Region.Type.IsInRegion(new SerializablePosition(player.player.transform.position)))
                     {
-                        OnSafeZoneEnter(UnturnedPlayer.FromSteamPlayer(player));
+                        OnRegionEnter(UnturnedPlayer.FromSteamPlayer(player));
                     }
                 }
                 return;
@@ -31,9 +31,9 @@ namespace RocketRegions.Model.Flag.Impl
             foreach (var player in Provider.clients)
             {
                 if (player?.player?.transform?.position == null) continue;
-                if (Region.Type.IsInSafeZone(new SerializablePosition(player.player.transform.position)))
+                if (Region.Type.IsInRegion(new SerializablePosition(player.player.transform.position)))
                 {
-                    OnSafeZoneLeave(UnturnedPlayer.FromSteamPlayer(player));
+                    OnRegionLeave(UnturnedPlayer.FromSteamPlayer(player));
                 }
             }
         }
@@ -43,7 +43,7 @@ namespace RocketRegions.Model.Flag.Impl
             //do nothing
         }
 
-        public override void OnSafeZoneEnter(UnturnedPlayer player)
+        public override void OnRegionEnter(UnturnedPlayer player)
         {
             if(!_lastHealth.ContainsKey(player.CSteamID.m_SteamID))
                 _lastHealth.Add(player.CSteamID.m_SteamID, player.Health);
@@ -51,7 +51,7 @@ namespace RocketRegions.Model.Flag.Impl
             player.Features.GodMode = true;
         }
 
-        public override void OnSafeZoneLeave(UnturnedPlayer player)
+        public override void OnRegionLeave(UnturnedPlayer player)
         {
             int health = player.Health;
             if (_lastHealth.ContainsKey(player.CSteamID.m_SteamID))

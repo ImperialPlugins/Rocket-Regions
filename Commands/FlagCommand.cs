@@ -15,14 +15,14 @@ namespace RocketRegions.Commands
         public void Execute(IRocketPlayer caller, string[] command)
         {
             var name = command.GetStringParameter(0);
-            var zone = RegionsPlugin.Instance.GetSafeZone(name, true);
-            if (zone == null)
+            var region = RegionsPlugin.Instance.GetRegion(name, true);
+            if (region == null)
             {
-                UnturnedChat.Say(caller, "Safezone \"" + name + "\" not found", Color.red);
+                UnturnedChat.Say(caller, "Region \"" + name + "\" not found", Color.red);
                 return;
             }
 
-            if (!zone.IsOwner(caller) && !PermissionUtil.HasPermission(caller, "flag.override"))
+            if (!region.IsOwner(caller) && !PermissionUtil.HasPermission(caller, "flag.override"))
             {
                 UnturnedChat.Say(caller, "You're not the owner of this region!", Color.red);
                 return;
@@ -37,7 +37,7 @@ namespace RocketRegions.Commands
                 return;
             }
 
-            var f = zone.GetFlag(t);
+            var f = region.GetFlag(t);
             if (f == null)
             {
                 UnturnedChat.Say(caller, "An unexpected error occurred: flag instance equals null but type was registered. Please report this", Color.red);
@@ -78,15 +78,15 @@ namespace RocketRegions.Commands
                 }
             }
 
-            f.Region = zone;
+            f.Region = region;
 
-            if (!f.ParseValue(caller, zone, command.GetStringParameter(2), group))
+            if (!f.ParseValue(caller, region, command.GetStringParameter(2), group))
             {
                 UnturnedChat.Say(caller, usage, Color.red);
                 return;
             }
 
-            zone.SetFlag(f.Name, f.Value, f.GroupValues);
+            region.SetFlag(f.Name, f.Value, f.GroupValues);
             var parsedValue = f.SupportsGroups ? f.GetValue<object>(group) : f.GetValue<object>();
             UnturnedChat.Say(caller, $"Flag has been set to: {parsedValue}!", Color.green);
         }

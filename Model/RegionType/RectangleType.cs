@@ -5,7 +5,7 @@ using Rocket.Unturned.Chat;
 using RocketRegions.Util;
 using UnityEngine;
 
-namespace RocketRegions.Model.Safezone.Type
+namespace RocketRegions.Model.RegionType
 {
     [Serializable]
     public class RectangleType : RegionType
@@ -25,14 +25,14 @@ namespace RocketRegions.Model.Safezone.Type
 
             Position1 = GetPosition1(player);
             Position2 = GetPosition2(player);
-            var zone = new Region
+            var region = new Region
             {
                 Name = name,
                 Owners = new List<ulong> { PlayerUtil.GetId(player) },
                 Type = this
             };
 
-            return zone;
+            return region;
         }
 
         public override double GetDistance(SerializablePosition pos)
@@ -84,7 +84,7 @@ namespace RocketRegions.Model.Safezone.Type
             return 0f;
         }
 
-        public override bool IsInSafeZone(SerializablePosition p)
+        public override bool IsInRegion(SerializablePosition p)
         {
             /*
             SerializablePosition p1 = Position1;

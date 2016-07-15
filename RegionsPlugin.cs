@@ -9,8 +9,7 @@ using Rocket.Unturned.Player;
 using RocketRegions.Model;
 using RocketRegions.Model.Flag;
 using RocketRegions.Model.Flag.Impl;
-using RocketRegions.Model.Safezone;
-using RocketRegions.Model.Safezone.Type;
+using RocketRegions.Model.RegionType;
 using RocketRegions.Util;
 using SDG.Unturned;
 using Steamworks;
@@ -34,8 +33,8 @@ namespace RocketRegions
 
             Instance = this;
 
-            RegionType.RegisterSafeZoneType("rectangle", typeof(RectangleType));
-            RegionType.RegisterSafeZoneType("circle", typeof(CircleType));
+            RegionType.RegisterRegionType("rectangle", typeof(RectangleType));
+            RegionType.RegisterRegionType("circle", typeof(CircleType));
 
 
             RegionFlag.RegisterFlag("Godmode", typeof(GodmodeFlag));
@@ -78,9 +77,9 @@ namespace RocketRegions
                 }
             }
 
-            foreach (var safeZone in Regions)
+            foreach (var region in Regions)
             {
-                OnRegionRemoved(safeZone);
+                OnRegionRemoved(region);
             }
             StopListening();
             Instance = null;
@@ -114,9 +113,9 @@ namespace RocketRegions
         internal void OnRegionRemoved(Region region)
         {
             //Update players in regions
-            foreach (var id in GetUidsInSafeZone(region))
+            foreach (var id in GetUidsInRegion(region))
             {
-                OnPlayerLeftSafeZone(UnturnedPlayer.FromCSteamID(new CSteamID(id)), region);
+                OnPlayerLeftRegion(UnturnedPlayer.FromCSteamID(new CSteamID(id)), region);
             }
 
             if (Regions.Count != 0) return;
@@ -126,17 +125,17 @@ namespace RocketRegions
         private void OnPlayerConnect(IRocketPlayer player)
         {
             var untPlayer = PlayerUtil.GetUnturnedPlayer(player);
-            var safeZone = GetSafeZoneAt(untPlayer.Position);
-            if (safeZone != null)
+            var region = GetRegionAt(untPlayer.Position);
+            if (region != null)
             {
-                OnPlayerEnteredSafeZone(player, safeZone);
+                OnPlayerEnteredRegion(player, region);
             }
         }
 
         private void OnPlayerDisconnect(IRocketPlayer player)
         {
             if (!_playersInRegions.ContainsKey(PlayerUtil.GetId(player))) return;
-            OnPlayerLeftSafeZone(player, _playersInRegions[PlayerUtil.GetId(player)]);
+            OnPlayerLeftRegion(player, _playersInRegions[PlayerUtil.GetId(player)]);
         }
 
         private void OnPlayerUpdatePosition(IRocketPlayer player, Vector3 position)
@@ -150,8 +149,8 @@ namespace RocketRegions
             var id = PlayerUtil.GetId(player);
             var untPlayer = PlayerUtil.GetUnturnedPlayer(player);
 
-            var safeZone = GetSafeZoneAt(position);
-            var bIsInRegion = safeZone != null;
+            var region = GetRegionAt(position);
+            var bIsInRegion = region != null;
 
             Vector3? lastPosition = null;
             if (_lastPositions.ContainsKey(id))
@@ -162,26 +161,26 @@ namespace RocketRegions
             if (!bIsInRegion && _playersInRegions.ContainsKey(id))
             {
                 //Left a region
-                safeZone = _playersInRegions[id];
-                if (safeZone.GetFlag(typeof(NoLeaveFlag)).GetValue<bool>(safeZone.GetGroup(player)) 
+                region = _playersInRegions[id];
+                if (region.GetFlag(typeof(NoLeaveFlag)).GetValue<bool>(region.GetGroup(player)) 
                     && lastPosition != null)
                 {
                     //Todo: send message to player (can't leave region)
                     untPlayer.Teleport(lastPosition.Value, untPlayer.Rotation);
                     return;
                 }
-                OnPlayerLeftSafeZone(player, safeZone);
+                OnPlayerLeftRegion(player, region);
             }
             else if (bIsInRegion && !_playersInRegions.ContainsKey(id) && lastPosition != null)
             {
                 //Entered a region
-                if (safeZone.GetFlag(typeof(NoEnterFlag)).GetValue<bool>(safeZone.GetGroup(player)))
+                if (region.GetFlag(typeof(NoEnterFlag)).GetValue<bool>(region.GetGroup(player)))
                 {
                     //Todo: send message to player (can't enter region)
                     untPlayer.Teleport(lastPosition.Value, untPlayer.Rotation);
                     return;
                 }
-                OnPlayerEnteredSafeZone(player, safeZone);
+                OnPlayerEnteredRegion(player, region);
             }
             else
             {
@@ -189,9 +188,9 @@ namespace RocketRegions
             }
 
 
-            if (safeZone != null)
+            if (region != null)
             {
-                foreach (RegionFlag f in safeZone.ParsedFlags)
+                foreach (RegionFlag f in region.ParsedFlags)
                 {
                     f.OnPlayerUpdatePosition(untPlayer, position);
                 }
@@ -207,7 +206,7 @@ namespace RocketRegions
             }
         }
 
-        private void OnPlayerEnteredSafeZone(IRocketPlayer player, Region region)
+        private void OnPlayerEnteredRegion(IRocketPlayer player, Region region)
         {
             var id = PlayerUtil.GetId(player);
             if(id == CSteamID.Nil.m_SteamID) throw new Exception("CSteamID is Nil");
@@ -216,11 +215,11 @@ namespace RocketRegions
 
             foreach (var flag in region.ParsedFlags)
             {
-                flag.OnSafeZoneEnter((UnturnedPlayer)player);
+                flag.OnRegionEnter((UnturnedPlayer)player);
             }
         }
 
-        internal void OnPlayerLeftSafeZone(IRocketPlayer player, Region region)
+        internal void OnPlayerLeftRegion(IRocketPlayer player, Region region)
         {
             var id = PlayerUtil.GetId(player);
             if (id == CSteamID.Nil.m_SteamID) throw new Exception("CSteamID is Nil");
@@ -228,46 +227,46 @@ namespace RocketRegions
 
             foreach (var flag in region.ParsedFlags)
             {
-                flag.OnSafeZoneLeave((UnturnedPlayer)player);
+                flag.OnRegionLeave((UnturnedPlayer)player);
             }
         }
 
-        private static bool IsInSafeZone(Vector3 pos, Region zone)
+        private static bool IsInRegion(Vector3 pos, Region region)
         {
-            return zone.Type.IsInSafeZone(new SerializablePosition(pos));
+            return region.Type.IsInRegion(new SerializablePosition(pos));
         }
 
-        public Region GetSafeZoneAt(Vector3 pos)
+        public Region GetRegionAt(Vector3 pos)
         {
-            return Regions.FirstOrDefault(safeZone => IsInSafeZone(pos, safeZone));
+            return Regions.FirstOrDefault(region => IsInRegion(pos, region));
         }
 
-        public Region GetSafeZone(string safeZoneName, bool exact = false)
+        public Region GetRegion(string regionName, bool exact = false)
         {
             if (Regions == null || Regions.Count == 0) return null;
 
-            foreach (var safeZone in Regions)
+            foreach (var region in Regions)
             {
                 if (exact)
                 {
-                    if (safeZone.Name.Equals(safeZoneName, StringComparison.CurrentCultureIgnoreCase))
+                    if (region.Name.Equals(regionName, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        return safeZone;
+                        return region;
                     }
                     continue;
                 }
 
-                if (safeZone.Name.ToLower().Trim().StartsWith(safeZoneName.ToLower().Trim()))
+                if (region.Name.ToLower().Trim().StartsWith(regionName.ToLower().Trim()))
                 {
-                    return safeZone;
+                    return region;
                 }
             }
             return null;
         }
 
-        public IEnumerable<ulong> GetUidsInSafeZone(Region zone)
+        public IEnumerable<ulong> GetUidsInRegion(Region region)
         {
-            return _playersInRegions.Keys.Where(id => _playersInRegions[id] == zone).ToList();
+            return _playersInRegions.Keys.Where(id => _playersInRegions[id] == region).ToList();
         }
 
         private int _frame;

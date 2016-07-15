@@ -18,22 +18,22 @@ namespace RocketRegions.Commands
             }
 
             var name = command.GetStringParameter(0);
-            var zone = RegionsPlugin.Instance.GetSafeZone(name);
-            if (zone == null)
+            var region = RegionsPlugin.Instance.GetRegion(name);
+            if (region == null)
             {
-                UnturnedChat.Say(caller, "Safezone \"" + name + "\" not found", Color.red);
+                UnturnedChat.Say(caller, "Region \"" + name + "\" not found", Color.red);
                 return;
             }
 
-            if (!zone.IsOwner(caller) && !PermissionUtil.HasPermission(caller, "remove.override"))
+            if (!region.IsOwner(caller) && !PermissionUtil.HasPermission(caller, "remove.override"))
             {
                 UnturnedChat.Say(caller, "You're not the owner of this region!", Color.red);
                 return;
             }
 
-            RegionsPlugin.Instance.Regions.Remove(zone);
+            RegionsPlugin.Instance.Regions.Remove(region);
             RegionsPlugin.Instance.Configuration.Save();
-            RegionsPlugin.Instance.OnRegionRemoved(zone);
+            RegionsPlugin.Instance.OnRegionRemoved(region);
 
             UnturnedChat.Say(caller, "Successfully removed region: " + name, Color.green);
         }

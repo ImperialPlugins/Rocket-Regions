@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Reflection;
 using Rocket.Unturned.Player;
-using RocketRegions.Model.Safezone;
 using SDG.Unturned;
 using Steamworks;
 using UnityEngine;
@@ -24,7 +23,7 @@ namespace RocketRegions.Model.Flag.Impl
                 foreach (var zombie in t.Zombies.Where(z => z!= null && z.transform?.position != null))
                 {
                     if (zombie.isDead) continue;
-                    Region region = RegionsPlugin.Instance?.GetSafeZoneAt(zombie.transform.position);
+                    Region region = RegionsPlugin.Instance?.GetRegionAt(zombie.transform.position);
                     if (region == null || !GetValue<bool>()) continue;
                     zombie.gear = 0;
                     zombie.isDead = true;
@@ -34,12 +33,12 @@ namespace RocketRegions.Model.Flag.Impl
             }
         }
 
-        public override void OnSafeZoneEnter(UnturnedPlayer player)
+        public override void OnRegionEnter(UnturnedPlayer player)
         {
             //do nothing
         }
 
-        public override void OnSafeZoneLeave(UnturnedPlayer player)
+        public override void OnRegionLeave(UnturnedPlayer player)
         {
             //do nothing
         }

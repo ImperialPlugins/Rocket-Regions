@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Rocket.API;
-using RocketRegions.Model.Safezone;
+using RocketRegions.Model;
 
 namespace RocketRegions
 {

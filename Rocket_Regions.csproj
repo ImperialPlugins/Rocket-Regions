@@ -95,10 +95,10 @@
     <Compile Include="Model\Flag\StringFlag.cs" />
     <Compile Include="Model\Group.cs" />
     <Compile Include="Model\SerializablePosition.cs" />
-    <Compile Include="Model\Safezone\Type\CircleType.cs" />
-    <Compile Include="Model\Safezone\Type\RectangleType.cs" />
-    <Compile Include="Model\Safezone\Region.cs" />
-    <Compile Include="Model\Safezone\Type\RegionType.cs" />
+    <Compile Include="Model\RegionType\CircleType.cs" />
+    <Compile Include="Model\RegionType\RectangleType.cs" />
+    <Compile Include="Model\Region.cs" />
+    <Compile Include="Model\RegionType\RegionType.cs" />
     <Compile Include="RegionsPlugin.cs" />
     <Compile Include="RegionsConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

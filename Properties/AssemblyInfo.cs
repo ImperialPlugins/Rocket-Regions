@@ -4,13 +4,13 @@ using System.Runtime.InteropServices;
 // Allgemeine Informationen über eine Assembly werden über die folgenden 
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die mit einer Assembly verknüpft sind.
-[assembly: AssemblyTitle("Rocket_Safezone")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Rocket_Regiones")]
+[assembly: AssemblyDescription("Regiones for Rocket")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Rocket_Safezone")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCompany("Static-Interface")]
+[assembly: AssemblyProduct("Rocket_Regiones")]
+[assembly: AssemblyCopyright("Copyright © 2015 - 2016 Trojaner")]
+[assembly: AssemblyTrademark("Rocket Regiones")]
 [assembly: AssemblyCulture("")]
 
 // Durch Festlegen von ComVisible auf "false" werden die Typen in dieser Assembly unsichtbar 

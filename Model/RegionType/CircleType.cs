@@ -6,18 +6,18 @@ using UnityEngine;
 using Rocket.API.Extensions;
 using RocketRegions.Util;
 
-namespace RocketRegions.Model.Safezone.Type
+namespace RocketRegions.Model.RegionType
 {
     [Serializable]
     public class CircleType : RegionType
     {
-        public int? Radius;
+        public double? Radius;
         public SerializablePosition Center;
 
         public override Region OnCreate(IRocketPlayer player, string name, string[] args)
         {
             var pos = PlayerUtil.GetUnturnedPlayer(player).Position;
-            Radius = args.GetInt32Parameter(0);
+            Radius = args.GetFloatParameter(0);
             if (Radius == null)
             {
                 UnturnedChat.Say(player, "Usage: /screate circle <radius>", Color.red);
@@ -26,19 +26,20 @@ namespace RocketRegions.Model.Safezone.Type
 
             Center = new SerializablePosition(pos);
 
-            var zone = new Region
+            var region = new Region
             {
                 Name = name,
                 Owners = new List<ulong> {PlayerUtil.GetId(player)}, 
                 Type = this
             };
 
-            return zone;
+            return region;
         }
 
         public override double GetDistance(SerializablePosition p)
         {
-            return (double) (GetDistanceToCenter(p) - Radius);
+            if(Radius == null) throw new Exception("Radius not set!");
+            return GetDistanceToCenter(p) - Radius.Value;
         }
 
         public double GetDistanceToCenter(SerializablePosition p)
@@ -46,7 +47,7 @@ namespace RocketRegions.Model.Safezone.Type
             return Math.Sqrt(Math.Pow(p.X - Center.X, 2) + Math.Pow(p.Y - Center.Y, 2));
         }
 
-        public override bool IsInSafeZone(SerializablePosition p)
+        public override bool IsInRegion(SerializablePosition p)
         {
             return GetDistance(p) <= Radius;
         }

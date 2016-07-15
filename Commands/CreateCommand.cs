@@ -5,7 +5,7 @@ using Rocket.Unturned.Chat;
 using UnityEngine;
 using Rocket.API.Extensions;
 using RocketRegions.Model.Flag;
-using RocketRegions.Model.Safezone.Type;
+using RocketRegions.Model.RegionType;
 using RocketRegions.Model.Flag.Impl;
 
 namespace RocketRegions.Commands
@@ -23,13 +23,13 @@ namespace RocketRegions.Commands
             var name = command.GetStringParameter(0);
             var typeName = command.GetStringParameter(1).ToLower();
 
-            if (RegionsPlugin.Instance.GetSafeZone(name, true) != null)
+            if (RegionsPlugin.Instance.GetRegion(name, true) != null)
             {
                 UnturnedChat.Say(caller, "A region with this name already exists!", Color.red);
                 return;
             }
 
-            var type = RegionType.RegisterSafeZoneType(typeName);
+            var type = RegionType.RegisterRegionType(typeName);
             if (type == null)
             {
                 var types = "";
@@ -49,19 +49,19 @@ namespace RocketRegions.Commands
             var args = new ArrayList(command);
             args.RemoveAt(0); // remove name...
             args.RemoveAt(0); // remove type...
-            var safeZone = type.OnCreate(caller, name, (string[]) args.ToArray(typeof(string)));
+            var region = type.OnCreate(caller, name, (string[]) args.ToArray(typeof(string)));
 
-            if (safeZone == null)
+            if (region == null)
             {
                 UnturnedChat.Say(caller, "Could't create region!", Color.red);
                 return;
             }
 
-            RegionsPlugin.Instance.Regions.Add(safeZone);
-            RegionsPlugin.Instance.OnRegionCreated(safeZone);
+            RegionsPlugin.Instance.Regions.Add(region);
+            RegionsPlugin.Instance.OnRegionCreated(region);
 
-            safeZone.SetFlag("EnterMessage", "Entered Safezone: {0}", new List<GroupValue>());
-            safeZone.SetFlag("LeaveMessage", "Left Safezone: {0}", new List<GroupValue>());
+            region.SetFlag("EnterMessage", "Entered region: {0}", new List<GroupValue>());
+            region.SetFlag("LeaveMessage", "Left region: {0}", new List<GroupValue>());
 
             RegionsPlugin.Instance.Configuration.Save();
             UnturnedChat.Say(caller, "Successfully created region: " + name, Color.green);

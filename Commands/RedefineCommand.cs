@@ -20,14 +20,14 @@ namespace RocketRegions.Commands
 
             var name = command.GetStringParameter(0);
 
-            var zone = RegionsPlugin.Instance.GetSafeZone(name, true);
-            if (zone == null)
+            var region = RegionsPlugin.Instance.GetRegion(name, true);
+            if (region == null)
             {
                 UnturnedChat.Say(caller, "Region \"" + name + "\" not found", Color.red);
                 return;
             }
 
-            if (!zone.IsOwner(caller) && !PermissionUtil.HasPermission(caller, "redefine.override"))
+            if (!region.IsOwner(caller) && !PermissionUtil.HasPermission(caller, "redefine.override"))
             {
                 UnturnedChat.Say(caller, "You're not the owner of this region!", Color.red);
                 return;
@@ -36,14 +36,14 @@ namespace RocketRegions.Commands
             var args = new ArrayList(command);
             args.RemoveAt(0);
 
-            if (zone.Type.OnRedefine(PlayerUtil.GetUnturnedPlayer(caller), (string[])args.ToArray(typeof(string))))
+            if (region.Type.OnRedefine(PlayerUtil.GetUnturnedPlayer(caller), (string[])args.ToArray(typeof(string))))
             {
-                RegionsPlugin.Instance.Regions.Remove(zone);
+                RegionsPlugin.Instance.Regions.Remove(region);
                 RegionsPlugin.Instance.Configuration.Save();
-                RegionsPlugin.Instance.OnRegionRemoved(zone);
-                RegionsPlugin.Instance.Regions.Add(zone);
+                RegionsPlugin.Instance.OnRegionRemoved(region);
+                RegionsPlugin.Instance.Regions.Add(region);
                 RegionsPlugin.Instance.Configuration.Save();
-                RegionsPlugin.Instance.OnRegionCreated(zone);
+                RegionsPlugin.Instance.OnRegionCreated(region);
 
                 UnturnedChat.Say(caller, "Successfully redefined region: " + name, Color.green);
                 return;

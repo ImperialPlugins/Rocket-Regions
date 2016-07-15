@@ -5,31 +5,31 @@ using System.Linq;
 using System.Xml.Serialization;
 using Rocket.API;
 using RocketRegions.Model.Flag;
-using RocketRegions.Model.Safezone.Type;
+using RocketRegions.Model.RegionType;
 using RocketRegions.Util;
 
-namespace RocketRegions.Model.Safezone
+namespace RocketRegions.Model
 {
     public class Region
     {
         public string Name;
         public List<ulong> Owners;
-        public RegionType Type;
+        public RegionType.RegionType Type;
         public List<SerializableFlag> Flags;
         public List<ulong> Members;
 
         [XmlIgnore]
-        private List<Flag.RegionFlag> _flags;
+        private List<RegionFlag> _flags;
 
         [XmlIgnore]
-        public ReadOnlyCollection<Flag.RegionFlag> ParsedFlags
+        public ReadOnlyCollection<RegionFlag> ParsedFlags
         {
             get
             {
                 if (_flags != null) return _flags.AsReadOnly();
-                if (Flags == null) return new List<Flag.RegionFlag>().AsReadOnly();
+                if (Flags == null) return new List<RegionFlag>().AsReadOnly();
 
-                _flags = new List<Flag.RegionFlag>();
+                _flags = new List<RegionFlag>();
 
                 foreach (var serializedFlag in Flags)
                 {
@@ -48,7 +48,7 @@ namespace RocketRegions.Model.Safezone
 
         public void RebuildFlags()
         {
-            _flags = new List<Flag.RegionFlag>();
+            _flags = new List<RegionFlag>();
 
             foreach (var serializedFlag in Flags)
             {
@@ -56,9 +56,9 @@ namespace RocketRegions.Model.Safezone
             }
         }
 
-        public Flag.RegionFlag GetFlag(System.Type t, bool createIfNotFound = true)
+        public RegionFlag GetFlag(Type t, bool createIfNotFound = true)
         {
-            if (!t.IsSameOrSubclass(typeof(Flag.RegionFlag)))
+            if (!t.IsSameOrSubclass(typeof(RegionFlag)))
             {
                 throw new ArgumentException("Can't get type " + t.Name + " as flag!");
             }
@@ -70,8 +70,8 @@ namespace RocketRegions.Model.Safezone
             }
 
             if (!createIfNotFound) return null;
-            var flag = (Flag.RegionFlag)Activator.CreateInstance(t);
-            flag.Name = Flag.RegionFlag.GetFlagName(t);
+            var flag = (RegionFlag)Activator.CreateInstance(t);
+            flag.Name = RegionFlag.GetFlagName(t);
             return flag;
         }
 
@@ -91,8 +91,8 @@ namespace RocketRegions.Model.Safezone
 
         public void SetFlag(string name, object value, List<GroupValue> groupValues, bool save = true)
         {
-            name = Flag.RegionFlag.GetPrimaryFlagName(name);
-            var flagType = Flag.RegionFlag.GetFlagType(name);
+            name = RegionFlag.GetPrimaryFlagName(name);
+            var flagType = RegionFlag.GetFlagType(name);
             if (flagType == null)
             {
                 throw new ArgumentException("Unknown flag: " + name);
@@ -121,8 +121,8 @@ namespace RocketRegions.Model.Safezone
                 RegionsPlugin.Instance.Configuration.Save();
             }
 
-            if (_flags == null) _flags = new List<Flag.RegionFlag>();
-            foreach (Flag.RegionFlag f in ParsedFlags.Where(f => f.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)))
+            if (_flags == null) _flags = new List<RegionFlag>();
+            foreach (RegionFlag f in ParsedFlags.Where(f => f.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)))
             {
                 f.Value = value;
                 return;
@@ -132,15 +132,15 @@ namespace RocketRegions.Model.Safezone
             deserializedFlag.Value = value;
         }
 
-        private Flag.RegionFlag DeserializeFlag(SerializableFlag flag)
+        private RegionFlag DeserializeFlag(SerializableFlag flag)
         {
-            flag.Name = Flag.RegionFlag.GetPrimaryFlagName(flag.Name);
+            flag.Name = RegionFlag.GetPrimaryFlagName(flag.Name);
 
-            var type = Flag.RegionFlag.GetFlagType(flag.Name);
+            var type = RegionFlag.GetFlagType(flag.Name);
 
-            var deserializedFlag = (Flag.RegionFlag)Activator.CreateInstance(type);
+            var deserializedFlag = (RegionFlag)Activator.CreateInstance(type);
             deserializedFlag.Region = this;
-            deserializedFlag.Name = Flag.RegionFlag.GetFlagName(type);
+            deserializedFlag.Name = RegionFlag.GetFlagName(type);
             deserializedFlag.Value = flag.Value;
 
             foreach (var value in flag.GroupValues)

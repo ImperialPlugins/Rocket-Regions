@@ -42,12 +42,12 @@ namespace RocketRegions.Model.Flag.Impl
             }
         }
 
-        public override void OnSafeZoneEnter(UnturnedPlayer p)
+        public override void OnRegionEnter(UnturnedPlayer p)
         {
             //do nothing
         }
 
-        public override void OnSafeZoneLeave(UnturnedPlayer p)
+        public override void OnRegionLeave(UnturnedPlayer p)
         {
             //do nothing
         }
