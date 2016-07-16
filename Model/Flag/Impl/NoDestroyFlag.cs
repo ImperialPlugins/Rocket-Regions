@@ -13,7 +13,7 @@ namespace RocketRegions.Model.Flag.Impl
         public override void UpdateState(List<UnturnedPlayer> players)
         {
 
-            ushort maxHealth = ushort.MaxValue - 1;
+            ushort maxHealth = ushort.MaxValue;
             if (StructureManager.StructureRegions != null)
             {
                 foreach (var region in StructureManager.StructureRegions)
@@ -31,7 +31,7 @@ namespace RocketRegions.Model.Flag.Impl
                         {
                             structure.structure.health = maxHealth;
                         }
-                        else if (structure.structure.health > asset.health)
+                        else if ((Value == null || !(bool)Value) && structure.structure.health > asset.health)
                         {
                             structure.structure.health = asset.health;
                         }
@@ -56,7 +56,7 @@ namespace RocketRegions.Model.Flag.Impl
                         {
                             barricade.barricade.health = maxHealth;
                         }
-                        else if (barricade.barricade.health > asset.health)
+                        else if ((Value == null || !(bool)Value) && barricade.barricade.health > asset.health)
                         {
                             barricade.barricade.health = asset.health;
                         }
