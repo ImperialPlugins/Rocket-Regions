@@ -12,6 +12,7 @@ namespace RocketRegions.Model.Flag.Impl
             foreach (var player in players)
             {
                 if(!player.Player.Equipment.isEquipped) continue;
+                if(!GetValue<bool>(Region.GetGroup(player))) continue;
                 player.Player.Equipment.dequip();
             }    
         }
