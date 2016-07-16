@@ -11,18 +11,20 @@ namespace RocketRegions.Model.RegionType
     [Serializable]
     public class CircleType : RegionType
     {
-        public double? Radius;
+        public double Radius;
         public SerializablePosition Center;
 
         public override Region OnCreate(IRocketPlayer player, string name, string[] args)
         {
             var pos = PlayerUtil.GetUnturnedPlayer(player).Position;
-            Radius = args.GetFloatParameter(0);
-            if (Radius == null)
+            var r= args.GetFloatParameter(0);
+            if (r == null)
             {
                 UnturnedChat.Say(player, "Usage: /screate circle <radius>", Color.red);
                 return null;
             }
+
+            Radius = r.Value;
 
             Center = new SerializablePosition(pos);
 
@@ -38,8 +40,7 @@ namespace RocketRegions.Model.RegionType
 
         public override double GetDistance(SerializablePosition p)
         {
-            if(Radius == null) throw new Exception("Radius not set!");
-            return GetDistanceToCenter(p) - Radius.Value;
+            return GetDistanceToCenter(p) - Radius;
         }
 
         public double GetDistanceToCenter(SerializablePosition p)
@@ -61,13 +62,15 @@ namespace RocketRegions.Model.RegionType
                 return false;
             }
 
-            Radius = args.GetInt32Parameter(0);
+            var r = args.GetInt32Parameter(0);
 
-            if (Radius == null)
+            if (r == null)
             {
                 UnturnedChat.Say(player, "Usage: /sredefine <name> circle <radius>", Color.red);
                 return false;
             }
+
+            Radius = r.Value;
 
             Center = new SerializablePosition(pos);
             return true;

@@ -35,8 +35,7 @@ namespace RocketRegions
 
             RegionType.RegisterRegionType("rectangle", typeof(RectangleType));
             RegionType.RegisterRegionType("circle", typeof(CircleType));
-
-
+            
             RegionFlag.RegisterFlag("Godmode", typeof(GodmodeFlag));
             RegionFlag.RegisterFlag("NoEnter", typeof(NoEnterFlag));
             RegionFlag.RegisterFlag("NoLeave", typeof(NoLeaveFlag));
@@ -84,7 +83,7 @@ namespace RocketRegions
             StopListening();
             Instance = null;
             RegionType.RegistereTypes?.Clear();
-            RegionFlag.RegisteredFlags.Clear();
+            RegionFlag.RegisteredFlags?.Clear();
         }
 
 
@@ -182,11 +181,6 @@ namespace RocketRegions
                 }
                 OnPlayerEnteredRegion(player, region);
             }
-            else
-            {
-                //Player is still inside or outside a region
-            }
-
 
             if (region != null)
             {
@@ -209,8 +203,6 @@ namespace RocketRegions
         private void OnPlayerEnteredRegion(IRocketPlayer player, Region region)
         {
             var id = PlayerUtil.GetId(player);
-            if(id == CSteamID.Nil.m_SteamID) throw new Exception("CSteamID is Nil");
-
             _playersInRegions.Add(id, region);
 
             foreach (var flag in region.ParsedFlags)
@@ -222,7 +214,6 @@ namespace RocketRegions
         internal void OnPlayerLeftRegion(IRocketPlayer player, Region region)
         {
             var id = PlayerUtil.GetId(player);
-            if (id == CSteamID.Nil.m_SteamID) throw new Exception("CSteamID is Nil");
             _playersInRegions.Remove(id);
 
             foreach (var flag in region.ParsedFlags)
