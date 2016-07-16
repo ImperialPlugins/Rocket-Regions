@@ -5,7 +5,7 @@ using SDG.Unturned;
 
 namespace RocketRegions.Model.Flag.Impl
 {
-    public class NoDestroy : BoolFlag
+    public class NoDestroyFlag : BoolFlag
     {
         public override string Description => "Allow/Disallow destruction of structures";
         public override bool SupportsGroups => false;

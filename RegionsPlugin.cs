@@ -41,8 +41,9 @@ namespace RocketRegions
             RegionFlag.RegisterFlag("NoLeave", typeof(NoLeaveFlag));
             RegionFlag.RegisterFlag("NoZombies", typeof(NoZombiesFlag));
             RegionFlag.RegisterFlag("NoPlace", typeof(NoPlaceFlag));
-            RegionFlag.RegisterFlag("NoDestroy", typeof(NoDestroy));
-            RegionFlag.RegisterFlag("NoVehiclesUsage", typeof(NoVehiclesUsage));
+            RegionFlag.RegisterFlag("NoDestroy", typeof(NoDestroyFlag));
+            RegionFlag.RegisterFlag("NoVehiclesUsage", typeof(NoVehiclesUsageFlag));
+            RegionFlag.RegisterFlag("NoEquip", typeof(NoEquipFlag));
 
             RegionFlag.RegisterFlag("EnterMessage", typeof(EnterMessageFlag));
             RegionFlag.RegisterFlag("LeaveMessage", typeof(LeaveMessageFlag));

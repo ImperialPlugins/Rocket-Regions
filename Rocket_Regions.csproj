@@ -81,8 +81,9 @@
     <Compile Include="Commands\RedefineCommand.cs" />
     <Compile Include="Commands\RemoveCommand.cs" />
     <Compile Include="Model\Flag\BoolFlag.cs" />
-    <Compile Include="Model\Flag\Impl\NoDestroy.cs" />
-    <Compile Include="Model\Flag\Impl\NoVehiclesUsage.cs" />
+    <Compile Include="Model\Flag\Impl\NoDestroyFlag.cs" />
+    <Compile Include="Model\Flag\Impl\NoEquipFlag.cs" />
+    <Compile Include="Model\Flag\Impl\NoVehiclesUsageFlag.cs" />
     <Compile Include="Model\Flag\RegionFlag.cs" />
     <Compile Include="Model\Flag\Impl\GodmodeFlag.cs" />
     <Compile Include="Model\Flag\Impl\EnterMessageFlag.cs" />

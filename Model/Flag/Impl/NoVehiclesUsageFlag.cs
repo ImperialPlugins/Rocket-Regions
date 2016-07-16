@@ -5,9 +5,9 @@ using SDG.Unturned;
 
 namespace RocketRegions.Model.Flag.Impl
 {
-    public class NoVehiclesUsage : BoolFlag
+    public class NoVehiclesUsageFlag : BoolFlag
     {
-        public override string Description => "Allow/Disallow usage of vehicles";
+        public override string Description => "Allow/Disallow usage of vehicles in region";
 
         private readonly Dictionary<ulong, bool> _lastVehicleStates = new Dictionary<ulong, bool>();
 
