@@ -16,8 +16,9 @@ namespace RocketRegions.Model.Flag.Impl
             foreach (var p in from p in players
                               where PlayerUtil.GetCSteamId(p) != CSteamID.Nil
                               let playerGroup = Region.GetGroup(p)
-                              let equippedItem = p.Player.Equipment.useable as UseableBarricade
-                              where equippedItem != null && GetValue<bool>(playerGroup)
+                              let equippedItem = p.Player.Equipment.useable
+                              where (equippedItem is UseableBarricade || equippedItem is UseableStructure) 
+                              && GetValue<bool>(playerGroup)
                               select p)
             {
                 p.Player.equipment.dequip();
