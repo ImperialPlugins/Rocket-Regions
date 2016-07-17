@@ -2,10 +2,11 @@
 {
     public enum Group
     {
-        ALL = 0,
-        MEMBERS = 1,
-        NONMEMBERS = 2,
-        NONE = 3
+        NONE = 0,
+        ALL = 1,
+        MEMBERS = 2,
+        NONMEMBERS = 3,
+        OWNERS = 4,
     }
 
     public static class GroupExtensions
@@ -17,6 +18,9 @@
             {
                 case "all":
                     return Group.ALL;
+                case "owners":
+                case "owner":
+                    return Group.OWNERS;
                 case "members":
                 case "member":
                     return Group.MEMBERS;

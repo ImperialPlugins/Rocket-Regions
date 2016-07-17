@@ -5,7 +5,6 @@ using System.Linq;
 using System.Xml.Serialization;
 using Rocket.API;
 using RocketRegions.Model.Flag;
-using RocketRegions.Model.RegionType;
 using RocketRegions.Util;
 
 namespace RocketRegions.Model
@@ -77,6 +76,7 @@ namespace RocketRegions.Model
 
         public Group GetGroup(IRocketPlayer player)
         {
+            if(IsOwner(player)) return Group.OWNERS;
             var id = PlayerUtil.GetId(player);
             return GetAllMembers().Any(member => member == id) ? Group.MEMBERS : Group.NONMEMBERS;
         }
