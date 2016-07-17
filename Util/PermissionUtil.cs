@@ -12,7 +12,7 @@ namespace RocketRegions.Util
             {
                 return true;
             }
-            return player.HasPermission("regiones." + permission);
+            return player.HasPermission("regions." + permission);
         }
     }
 }

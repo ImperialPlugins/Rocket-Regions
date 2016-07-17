@@ -25,6 +25,6 @@ namespace RocketRegions.Commands
 
         public List<string> Aliases => new List<string> { "rinfo" };
 
-        public List<string> Permissions => new List<string>();
+        public List<string> Permissions => new List<string>{"rinfo"};
     }
 }

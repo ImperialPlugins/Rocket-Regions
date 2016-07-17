@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Rocket.API;
+using Rocket.Core;
 using Rocket.Core.Plugins;
 using Rocket.Unturned;
 using Rocket.Unturned.Events;
+using Rocket.Unturned.Permissions;
 using Rocket.Unturned.Player;
 using RocketRegions.Model;
 using RocketRegions.Model.Flag;
@@ -23,7 +25,7 @@ namespace RocketRegions
         private readonly Dictionary<ulong, Region> _playersInRegions = new Dictionary<ulong, Region>();
         private readonly Dictionary<ulong, Vector3> _lastPositions = new Dictionary<ulong, Vector3>();
         internal List<Region> Regions => Configuration?.Instance?.Regions ?? new List<Region>();
-
+        private IRocketPermissionsProvider _defaultPermissionsProvider;
         protected override void Load()
         {
             foreach (var untPlayer in Provider.clients.Select(p => UnturnedPlayer.FromCSteamID(p.SteamPlayerID.CSteamID)))
@@ -62,6 +64,9 @@ namespace RocketRegions
 
             if (Regions.Count < 1) return;
             StartListening();
+
+            _defaultPermissionsProvider = R.Permissions;
+            R.Permissions = new RegionsPermissionsProvider(_defaultPermissionsProvider);
         }
 
         protected override void Unload()
