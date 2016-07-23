@@ -49,7 +49,15 @@ namespace RocketRegions
 
             RegionFlag.RegisterFlag("EnterMessage", typeof(EnterMessageFlag));
             RegionFlag.RegisterFlag("LeaveMessage", typeof(LeaveMessageFlag));
-            
+
+            _defaultPermissionsProvider = R.Permissions;
+            R.Permissions = new RegionsPermissionsProvider(_defaultPermissionsProvider);
+
+            R.Plugins.OnPluginsLoaded += OnPluginsLoaded;
+        }
+
+        private void OnPluginsLoaded()
+        {
             Configuration.Load();
             if (Configuration.Instance.UpdateFrameCount <= 0)
             {
@@ -64,9 +72,6 @@ namespace RocketRegions
 
             if (Regions.Count < 1) return;
             StartListening();
-
-            _defaultPermissionsProvider = R.Permissions;
-            R.Permissions = new RegionsPermissionsProvider(_defaultPermissionsProvider);
         }
 
         protected override void Unload()

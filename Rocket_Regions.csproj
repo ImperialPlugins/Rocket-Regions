@@ -7,8 +7,8 @@
     <ProjectGuid>{E765482E-CDA0-4DB0-9376-4650A9EA9264}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Safezone</RootNamespace>
-    <AssemblyName>Rocket-Regions</AssemblyName>
+    <RootNamespace>RocketRegions</RootNamespace>
+    <AssemblyName>RocketRegions</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
@@ -101,6 +101,7 @@
     <Compile Include="Model\RegionType\RectangleType.cs" />
     <Compile Include="Model\Region.cs" />
     <Compile Include="Model\RegionType\RegionType.cs" />
+    <Compile Include="Model\SerializablePosition3.cs" />
     <Compile Include="RegionsPlugin.cs" />
     <Compile Include="RegionsConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
