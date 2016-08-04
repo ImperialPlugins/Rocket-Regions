@@ -16,7 +16,7 @@ namespace RocketRegions.Commands
         {
             if (command.Length < 2)
             {
-                UnturnedChat.Say(caller, "Usage: /screate <name> <type>", Color.red);
+                UnturnedChat.Say(caller, "Usage: /rcreate " + Syntax, Color.red);
                 return;
             }
 
@@ -73,7 +73,7 @@ namespace RocketRegions.Commands
 
         public string Help => "Create a region";
 
-        public string Syntax => "<name>";
+        public string Syntax => "<name> <type> [args]";
 
         public List<string> Aliases => new List<string> { "rcreate" };
 

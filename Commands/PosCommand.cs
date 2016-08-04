@@ -14,7 +14,7 @@ namespace RocketRegions.Commands
         {
             if (command.Length < 1 || (command[0] != "1" && command[0] != "2"))
             {
-                UnturnedChat.Say(caller, "Use /spos 1 or /spos 2!", Color.red);
+                UnturnedChat.Say(caller, "Use /rpos 1 or /rpos 2!", Color.red);
                 return;
             }
             

@@ -14,7 +14,7 @@ namespace RocketRegions.Commands
         {
             if (command.Length == 0)
             {
-                UnturnedChat.Say(caller, "Usage: /sredefine <name> [...]", Color.red);
+                UnturnedChat.Say(caller, "Usage: /rredefine " + Syntax, Color.red);
                 return;
             }
 
@@ -59,7 +59,7 @@ namespace RocketRegions.Commands
 
         public string Help => "Redefine a region";
 
-        public string Syntax => "<name>";
+        public string Syntax => "<name> [type args]";
 
         public List<string> Aliases => new List<string> { "rredefine" };
 

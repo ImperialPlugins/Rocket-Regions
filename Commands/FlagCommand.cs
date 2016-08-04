@@ -45,7 +45,7 @@ namespace RocketRegions.Commands
             }
 
             var hasFlagPermission = PermissionUtil.HasPermission(caller, "flag." + flagName);
-            var usage = "Usage: /sflag " + name + " " + f.Name + " " + f.Usage + " [group]";
+            var usage = "Usage: /rflag " + name + " " + f.Name + " " + f.Usage + " [group]";
             if (command.Length == 2)
             {
                 var description = f.Description;
@@ -97,7 +97,7 @@ namespace RocketRegions.Commands
 
         public string Help => "Set flags for regions";
 
-        public string Syntax => "<region> <flag> <value>";
+        public string Syntax => "<region> <flag> [value] [group]";
 
         public List<string> Aliases => new List<string> { "rflag" };
 
