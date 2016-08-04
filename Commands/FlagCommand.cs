@@ -91,7 +91,7 @@ namespace RocketRegions.Commands
             UnturnedChat.Say(caller, $"Flag has been set to: {parsedValue}!", Color.green);
         }
         
-        public AllowedCaller AllowedCaller => AllowedCaller.Player;
+        public AllowedCaller AllowedCaller => AllowedCaller.Both;
 
         public string Name => "regionflag";
 
