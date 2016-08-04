@@ -82,6 +82,7 @@
     <Compile Include="Commands\RemoveCommand.cs" />
     <Compile Include="Model\Flag\BoolFlag.cs" />
     <Compile Include="Model\Flag\Impl\NoDestroyFlag.cs" />
+    <Compile Include="Model\Flag\Impl\NoEquipWeaponFlag.cs" />
     <Compile Include="Model\Flag\Impl\NoEquipFlag.cs" />
     <Compile Include="Model\Flag\Impl\NoVehiclesUsageFlag.cs" />
     <Compile Include="Model\Flag\RegionFlag.cs" />
