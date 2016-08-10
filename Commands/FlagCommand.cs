@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Fclp;
 using Rocket.API;
 using Rocket.Unturned.Chat;
 using UnityEngine;
@@ -14,7 +16,7 @@ namespace RocketRegions.Commands
     {
         public void Execute(IRocketPlayer caller, string[] command)
         {
-            var name = command.GetStringParameter(0);
+            var name = command[0];
             var region = RegionsPlugin.Instance.GetRegion(name, true);
             if (region == null)
             {
@@ -28,7 +30,7 @@ namespace RocketRegions.Commands
                 return;
             }
             
-            var flagName = command.GetStringParameter(1);
+            var flagName = command[1];
 
             var t = RegionFlag.GetFlagType(flagName);
             if (t == null)
@@ -67,21 +69,27 @@ namespace RocketRegions.Commands
                 return;
             }
 
-            var group = Group.NONE;
-            if (command.Length == 4)
-            {
-                group = GroupExtensions.GetGroup(command.GetStringParameter(3));
-                if (group == Group.NONE)
-                {
-                    UnturnedChat.Say(caller, "Unknown group: " + command.GetStringParameter(3) + "!", Color.red);
-                    return;
-                }
-            }
 
             f.Region = region;
 
+            FluentCommandLineParser<FlagGroup> parser = new FluentCommandLineParser<FlagGroup>();
+            parser.Setup(c => c.Group)
+                .As('g', "group")
+                .WithDescription("Group");
+            parser.SetupHelp("?", "help")
+                .Callback(text => UnturnedChat.Say(caller, text, Color.red));
+            var res = parser.Parse(command.Skip(2).ToArray());
+
+            if (res.HasErrors)
+            {
+                UnturnedChat.Say(caller, "Failed to parse command", Color.red);
+                return;
+            }
+
+            var group = parser.Object.Group;
+
             string shownValue;
-            if (!f.ParseValue(caller, region, command.GetStringParameter(2), out shownValue, group))
+            if (!f.ParseValue(caller, region, command, out shownValue, group))
             {
                 UnturnedChat.Say(caller, usage, Color.red);
                 return;
@@ -90,7 +98,12 @@ namespace RocketRegions.Commands
             region.SetFlag(f.Name, f.Value, f.GroupValues);
             UnturnedChat.Say(caller, $"Flag has been set to: {shownValue}!", Color.green);
         }
-        
+
+        public class FlagGroup
+        {
+            public Group Group { get; set; }
+        }
+
         public AllowedCaller AllowedCaller => AllowedCaller.Both;
 
         public string Name => "regionflag";

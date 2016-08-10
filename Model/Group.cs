@@ -1,5 +1,8 @@
-﻿namespace RocketRegions.Model
+﻿using System;
+
+namespace RocketRegions.Model
 {
+    [Flags]
     public enum Group
     {
         NONE = 0,

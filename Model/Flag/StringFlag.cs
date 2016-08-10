@@ -1,16 +1,24 @@
 ﻿using System;
 using Rocket.API;
-using RocketRegions.Model;
 
 namespace RocketRegions.Model.Flag
 {
     public abstract class StringFlag : RegionFlag
     {
-        public override bool ParseValue(IRocketPlayer caller, Region region, string rawValue, Group group = Group.NONE)
+        public override bool ParseValue(IRocketPlayer caller, Region region, string[] command, out string shownValue, Group group = Group.NONE)
         {
-            if(rawValue.Equals("null", StringComparison.CurrentCultureIgnoreCase))
-                rawValue = null;
-            SetValue(rawValue, group);
+            string label = "";
+            foreach (string s in command)
+            {
+                if (label != "")
+                    label += " ";
+                label += s;
+            }
+
+            if(label.Equals("null", StringComparison.CurrentCultureIgnoreCase))
+                label = null;
+            shownValue = label;
+            SetValue(label, group);
             return true;
         }
     }
