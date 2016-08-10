@@ -43,6 +43,6 @@ namespace RocketRegions.Commands
 
         public List<string> Aliases => new List<string> {"rpos"};
 
-        public List<string> Permissions => new List<string> { "regions.pos" };
+        public List<string> Permissions => new List<string> { "regions.command.pos" };
     }
 }

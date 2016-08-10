@@ -42,6 +42,10 @@
       <HintPath>lib\Assembly-CSharp-firstpass.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="FluentCommandLineParser, Version=1.4.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\FluentCommandLineParser.1.4.3\lib\net35\FluentCommandLineParser.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Rocket.API, Version=2.6.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\Rocket.API.dll</HintPath>
@@ -77,6 +81,9 @@
     <Compile Include="Commands\FlagCommand.cs" />
     <Compile Include="Commands\InfoCommand.cs" />
     <Compile Include="Commands\ListCommand.cs" />
+    <Compile Include="Commands\ListHandleCommand.cs" />
+    <Compile Include="Commands\MemberCommand.cs" />
+    <Compile Include="Commands\OwnerCommand.cs" />
     <Compile Include="Commands\PosCommand.cs" />
     <Compile Include="Commands\RedefineCommand.cs" />
     <Compile Include="Commands\RemoveCommand.cs" />
@@ -118,6 +125,9 @@
     <Content Include="lib\Rocket.Core.dll" />
     <Content Include="lib\Rocket.Unturned.dll" />
     <Content Include="lib\UnityEngine.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

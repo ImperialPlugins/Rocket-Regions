@@ -25,7 +25,7 @@ namespace RocketRegions.Model
         {
             get
             {
-                if (_flags != null) return _flags.AsReadOnly();
+                if (_flags != null) return _flags.Where(c => RegionFlag.IsRegistered(c.Name)).ToList().AsReadOnly();
                 if (Flags == null) return new List<RegionFlag>().AsReadOnly();
 
                 _flags = new List<RegionFlag>();

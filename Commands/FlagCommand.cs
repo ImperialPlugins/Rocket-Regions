@@ -80,15 +80,15 @@ namespace RocketRegions.Commands
 
             f.Region = region;
 
-            if (!f.ParseValue(caller, region, command.GetStringParameter(2), group))
+            string shownValue;
+            if (!f.ParseValue(caller, region, command.GetStringParameter(2), out shownValue, group))
             {
                 UnturnedChat.Say(caller, usage, Color.red);
                 return;
             }
 
             region.SetFlag(f.Name, f.Value, f.GroupValues);
-            var parsedValue = f.SupportsGroups ? f.GetValue<object>(group) : f.GetValue<object>();
-            UnturnedChat.Say(caller, $"Flag has been set to: {parsedValue}!", Color.green);
+            UnturnedChat.Say(caller, $"Flag has been set to: {shownValue}!", Color.green);
         }
         
         public AllowedCaller AllowedCaller => AllowedCaller.Both;
@@ -97,10 +97,10 @@ namespace RocketRegions.Commands
 
         public string Help => "Set flags for regions";
 
-        public string Syntax => "<region> <flag> [value] [group]";
+        public string Syntax => "<region> <flag> [value] [-g <group>]";
 
         public List<string> Aliases => new List<string> { "rflag" };
 
-        public List<string> Permissions => new List<string> { "regions.flag" };
+        public List<string> Permissions => new List<string> { "regions.command.flag" };
     }
 }

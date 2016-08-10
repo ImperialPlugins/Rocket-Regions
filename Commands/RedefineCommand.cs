@@ -63,6 +63,6 @@ namespace RocketRegions.Commands
 
         public List<string> Aliases => new List<string> { "rredefine" };
 
-        public List<string> Permissions => new List<string> { "regions.redefine" };
+        public List<string> Permissions => new List<string> { "regions.command.redefine" };
     }
 }

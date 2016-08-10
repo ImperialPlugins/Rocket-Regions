@@ -46,7 +46,7 @@ namespace RocketRegions.Commands
 
         public List<string> Aliases => new List<string> { "rremove" };
 
-        public List<string> Permissions => new List<string> { "regions.remove" };
+        public List<string> Permissions => new List<string> { "regions.command.remove" };
 
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
     }

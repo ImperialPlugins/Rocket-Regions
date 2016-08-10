@@ -77,6 +77,6 @@ namespace RocketRegions.Commands
 
         public List<string> Aliases => new List<string> { "rcreate" };
 
-        public List<string> Permissions => new List<string> { "regions.create" };
+        public List<string> Permissions => new List<string> { "regions.command.create" };
     }
 }

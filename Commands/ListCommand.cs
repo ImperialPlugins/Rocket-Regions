@@ -35,6 +35,6 @@ namespace RocketRegions.Commands
 
         public List<string> Aliases => new List<string> { "rlist" };
 
-        public List<string> Permissions => new List<string> { "regions.list" };
+        public List<string> Permissions => new List<string> { "regions.command.list" };
     }
 }

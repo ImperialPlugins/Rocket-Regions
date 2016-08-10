@@ -23,7 +23,7 @@ namespace RocketRegions.Commands
 
         public List<string> Aliases => new List<string>();
 
-        public List<string> Permissions => new List<string> { "regions.coords" };
+        public List<string> Permissions => new List<string> { "regions.command.coords" };
 
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
     }

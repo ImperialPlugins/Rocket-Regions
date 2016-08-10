@@ -91,7 +91,7 @@ namespace RocketRegions.Model.Flag
             return (T)Value;
         }
 
-        public abstract bool ParseValue(IRocketPlayer caller, Region region, string rawValue, Group group = Group.NONE);
+        public abstract bool ParseValue(IRocketPlayer caller, Region region, string[] command, out string valueShown, Group group = Group.NONE);
 
         protected virtual void OnValueUpdate(object oldValue, object newValue)
         {
@@ -123,7 +123,7 @@ namespace RocketRegions.Model.Flag
 
         public static void RegisterFlag(string name, Type type, List<string> aliases = null)
         {
-            name = name.ToLower();
+            name = name.Trim().ToLower();
             if (!type.IsSameOrSubclass(typeof(RegionFlag)))
             {
                 throw new ArgumentException(type.FullName + " does not extend the abstract Flag type!");
@@ -160,6 +160,17 @@ namespace RocketRegions.Model.Flag
         public static string GetFlagName(Type type)
         {
             return RegisteredFlags.FirstOrDefault(c => c.Value == type).Key;
+        }
+
+        public static bool IsRegistered(string name)
+        {
+            return RegisteredFlags.ContainsKey(name.ToLower().Trim());
+        }
+
+        public static void UnregisterFlag(string name)
+        {
+            name = name.ToLower().Trim();
+            RegisteredFlags.Remove(name);
         }
 
         public virtual void OnPlayerUpdatePosition(UnturnedPlayer player, Vector3 position)
