@@ -53,7 +53,6 @@ namespace RocketRegions
 
             _defaultPermissionsProvider = R.Permissions;
             R.Permissions = new RegionsPermissionsProvider(_defaultPermissionsProvider);
-
             R.Plugins.OnPluginsLoaded += OnPluginsLoaded;
         }
 
@@ -92,10 +91,15 @@ namespace RocketRegions
             {
                 OnRegionRemoved(region);
             }
+
+            R.Permissions = _defaultPermissionsProvider;
+            R.Plugins.OnPluginsLoaded -= OnPluginsLoaded;
             StopListening();
             Instance = null;
             RegionType.RegistereTypes?.Clear();
             RegionFlag.RegisteredFlags?.Clear();
+            _playersInRegions.Clear();
+            _lastPositions.Clear();
         }
 
 
