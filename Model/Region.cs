@@ -129,28 +129,37 @@ namespace RocketRegions.Model
             }
 
             var deserializedFlag = DeserializeFlag(flag);
-            deserializedFlag.Value = value;
+            if(deserializedFlag != null)
+                deserializedFlag.Value = value;
         }
 
         private RegionFlag DeserializeFlag(SerializableFlag flag)
         {
-            flag.Name = RegionFlag.GetPrimaryFlagName(flag.Name);
-
-            var type = RegionFlag.GetFlagType(flag.Name);
-
-            var deserializedFlag = (RegionFlag)Activator.CreateInstance(type);
-            deserializedFlag.Region = this;
-            deserializedFlag.Name = RegionFlag.GetFlagName(type);
-            deserializedFlag.Value = flag.Value;
-
-            foreach (var value in flag.GroupValues)
+            try
             {
-                deserializedFlag.SetValue(value.Value, GroupExtensions.GetGroup(value.GroupName));
-            }
+                flag.Name = RegionFlag.GetPrimaryFlagName(flag.Name);
 
-            deserializedFlag.GroupValues = flag.GroupValues ?? new List<GroupValue>();
-            _flags.Add(deserializedFlag);
-            return deserializedFlag;
+                var type = RegionFlag.GetFlagType(flag.Name);
+
+                var deserializedFlag = (RegionFlag) Activator.CreateInstance(type);
+                deserializedFlag.Region = this;
+                deserializedFlag.Name = RegionFlag.GetFlagName(type);
+                deserializedFlag.Value = flag.Value;
+
+                foreach (var value in flag.GroupValues)
+                {
+                    deserializedFlag.SetValue(value.Value, GroupExtensions.GetGroup(value.GroupName));
+                }
+
+                deserializedFlag.GroupValues = flag.GroupValues ?? new List<GroupValue>();
+                _flags.Add(deserializedFlag);
+                return deserializedFlag;
+            }
+            catch (Exception)
+            {
+                //ignored
+            }
+            return null;
         }
 
         public bool IsOwner(IRocketPlayer player)

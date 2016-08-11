@@ -1,11 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Fclp;
 using Rocket.API;
 using Rocket.Unturned.Chat;
 using UnityEngine;
-using Rocket.API.Extensions;
-using Rocket.Core.Logging;
 using RocketRegions.Model;
 using RocketRegions.Model.Flag;
 using RocketRegions.Util;
@@ -72,24 +68,33 @@ namespace RocketRegions.Commands
 
             f.Region = region;
 
-            FluentCommandLineParser<FlagGroup> parser = new FluentCommandLineParser<FlagGroup>();
-            parser.Setup(c => c.Group)
-                .As('g', "group")
-                .WithDescription("Group");
-            parser.SetupHelp("?", "help")
-                .Callback(text => UnturnedChat.Say(caller, text, Color.red));
-            var res = parser.Parse(command.Skip(2).ToArray());
-
-            if (res.HasErrors)
+            Group group = Group.NONE;
+            List<string> args = new List<string>();
+            bool isValue = false;
+            bool valueSet = false;
+            foreach (string arg in command)
             {
-                UnturnedChat.Say(caller, "Failed to parse command", Color.red);
-                return;
+                if (!valueSet)
+                {
+                    if (isValue)
+                    {
+                        group = GroupExtensions.GetGroup(arg);
+                        valueSet = true;
+                        isValue = false;
+                        continue;
+                    }
+                    if (arg.ToLower().Equals("-g") || arg.ToLower().Equals("--group"))
+                    {
+                        isValue = true;
+                        continue;
+                    }
+                }
+
+                args.Add(arg);
             }
 
-            var group = parser.Object.Group;
-
             string shownValue;
-            if (!f.ParseValue(caller, region, command, out shownValue, group))
+            if (!f.ParseValue(caller, region, args.ToArray(), out shownValue, group))
             {
                 UnturnedChat.Say(caller, usage, Color.red);
                 return;

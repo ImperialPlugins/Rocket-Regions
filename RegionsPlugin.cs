@@ -28,11 +28,6 @@ namespace RocketRegions
         private IRocketPermissionsProvider _defaultPermissionsProvider;
         protected override void Load()
         {
-            foreach (var untPlayer in Provider.clients.Select(p => UnturnedPlayer.FromCSteamID(p.SteamPlayerID.CSteamID)))
-            {
-                OnPlayerConnect(untPlayer);
-            }
-
             Instance = this;
 
             RegionType.RegisterRegionType("rectangle", typeof(RectangleType));
@@ -47,13 +42,19 @@ namespace RocketRegions
             RegionFlag.RegisterFlag("NoVehiclesUsage", typeof(NoVehiclesUsageFlag));
             RegionFlag.RegisterFlag("NoEquip", typeof(NoEquipFlag));
             RegionFlag.RegisterFlag("NoEquipWeapon", typeof(NoEquipWeaponFlag));
-
             RegionFlag.RegisterFlag("EnterMessage", typeof(EnterMessageFlag));
             RegionFlag.RegisterFlag("LeaveMessage", typeof(LeaveMessageFlag));
+
+            Configuration.Load();
 
             _defaultPermissionsProvider = R.Permissions;
             R.Permissions = new RegionsPermissionsProvider(_defaultPermissionsProvider);
             R.Plugins.OnPluginsLoaded += OnPluginsLoaded;
+
+            foreach (var untPlayer in Provider.clients.Select(p => UnturnedPlayer.FromCSteamID(p.SteamPlayerID.CSteamID)))
+            {
+                OnPlayerConnect(untPlayer);
+            }
         }
 
         private void OnPluginsLoaded()

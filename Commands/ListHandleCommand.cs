@@ -14,7 +14,7 @@ namespace RocketRegions.Commands
     {
         public void Execute(IRocketPlayer caller, string[] command)
         {
-            if (command.Length < 3)
+            if (command.Length < 2)
             {
                 SendUsage(caller);
                 return;
@@ -108,7 +108,7 @@ namespace RocketRegions.Commands
             throw new WrongUsageOfCommandException(caller, this);
         }
 
-        public AllowedCaller AllowedCaller => AllowedCaller.Console;
+        public AllowedCaller AllowedCaller => AllowedCaller.Player;
         public abstract string Name { get; }
         public abstract string Help { get; }
         public string Syntax => "<add/remove/list> <region> <name/SteamID>";
