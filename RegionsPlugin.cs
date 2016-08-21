@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Rocket.API;
 using Rocket.Core;
+using Rocket.Core.Logging;
 using Rocket.Core.Plugins;
 using Rocket.Unturned;
 using Rocket.Unturned.Events;
@@ -24,10 +25,13 @@ namespace RocketRegions
         public static RegionsPlugin Instance;
         private readonly Dictionary<ulong, Region> _playersInRegions = new Dictionary<ulong, Region>();
         private readonly Dictionary<ulong, Vector3> _lastPositions = new Dictionary<ulong, Vector3>();
-        internal List<Region> Regions => Configuration?.Instance?.Regions ?? new List<Region>();
+        public List<Region> Regions => Configuration?.Instance?.Regions ?? new List<Region>();
         private IRocketPermissionsProvider _defaultPermissionsProvider;
+        public event RegionsLoaded OnRegionsLoaded;
+
         protected override void Load()
         {
+            Logger.Log($"Regions version {Assembly.GetName().Version.ToString(4)}", ConsoleColor.Cyan);
             Instance = this;
 
             RegionType.RegisterRegionType("rectangle", typeof(RectangleType));
@@ -73,6 +77,7 @@ namespace RocketRegions
 
             if (Regions.Count < 1) return;
             StartListening();
+            OnRegionsLoaded?.Invoke(this, new EventArgs());
         }
 
         protected override void Unload()
@@ -296,4 +301,6 @@ namespace RocketRegions
             }
         }
     }
+
+    public delegate void RegionsLoaded(object sender, EventArgs args);
 }

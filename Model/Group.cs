@@ -5,11 +5,10 @@ namespace RocketRegions.Model
     [Flags]
     public enum Group
     {
-        NONE = 0,
-        ALL = 1,
-        MEMBERS = 2,
-        NONMEMBERS = 3,
-        OWNERS = 4,
+        ALL = 0,
+        MEMBERS = 1,
+        NONMEMBERS = 2,
+        OWNERS = 3,
     }
 
     public static class GroupExtensions
@@ -34,7 +33,7 @@ namespace RocketRegions.Model
                     return Group.NONMEMBERS;
             }
 
-            return Group.NONE;
+            return Group.ALL;
         }
 
         public static string GetSerializableName(this Group group)

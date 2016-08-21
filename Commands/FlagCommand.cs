@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Rocket.API;
 using Rocket.Unturned.Chat;
 using UnityEngine;
@@ -68,23 +69,26 @@ namespace RocketRegions.Commands
 
             f.Region = region;
 
-            Group group = Group.NONE;
+            Group group = Group.ALL;
             List<string> args = new List<string>();
             bool isValue = false;
             bool valueSet = false;
-            foreach (string arg in command)
+            foreach (string arg in command.Skip(2))
             {
                 if (!valueSet)
                 {
                     if (isValue)
                     {
-                        group = GroupExtensions.GetGroup(arg);
+                        if(!f.SupportsGroups)
+                            group = GroupExtensions.GetGroup(arg);
                         valueSet = true;
                         isValue = false;
                         continue;
                     }
                     if (arg.ToLower().Equals("-g") || arg.ToLower().Equals("--group"))
                     {
+                        if(!f.SupportsGroups)
+                            UnturnedChat.Say(caller, "Warning: Flag does not support groups", Color.red);
                         isValue = true;
                         continue;
                     }
@@ -101,7 +105,7 @@ namespace RocketRegions.Commands
             }
 
             region.SetFlag(f.Name, f.Value, f.GroupValues);
-            UnturnedChat.Say(caller, $"Flag has been set to: {shownValue}!", Color.green);
+            UnturnedChat.Say(caller, $"Flag has been set to: {shownValue} for group {group}!", Color.green);
         }
 
         public class FlagGroup

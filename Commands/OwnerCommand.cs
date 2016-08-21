@@ -5,6 +5,9 @@ namespace RocketRegions.Commands
 {
     public class OwnerCommand : ListHandleCommand
     {
+        protected override void Add(Region region, ulong mSteamID)
+            => region.AddOwnerSafe(mSteamID);
+
         protected override List<ulong> GetList(Region region)
             => region.Owners;
 

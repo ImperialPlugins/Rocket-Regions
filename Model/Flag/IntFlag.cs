@@ -6,7 +6,7 @@ namespace RocketRegions.Model.Flag
 {
     public abstract class IntFlag : RegionFlag
     {
-        public override bool ParseValue(IRocketPlayer caller, Region region, string[] command, out string shownValue, Group group = Group.NONE)
+        public override bool ParseValue(IRocketPlayer caller, Region region, string[] command, out string shownValue, Group group = Group.ALL)
         {
             shownValue = null;
             int? value = command.GetInt32Parameter(0);

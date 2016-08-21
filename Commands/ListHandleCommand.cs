@@ -34,7 +34,7 @@ namespace RocketRegions.Commands
                 {
                     string name;
                     CSteamID target = GetTarget(command.GetStringParameter(2), out name);
-                    GetList(region).Add(target.m_SteamID);
+                    Add(region, target.m_SteamID);
                     break;
                 }
                 case "remove":
@@ -82,6 +82,8 @@ namespace RocketRegions.Commands
                     break;
             }
         }
+
+        protected abstract void Add(Region steamID, ulong mSteamID);
 
         protected abstract List<ulong> GetList(Region region);
 

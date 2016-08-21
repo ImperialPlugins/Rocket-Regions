@@ -91,7 +91,7 @@ namespace RocketRegions.Model.Flag
             return (T)Value;
         }
 
-        public abstract bool ParseValue(IRocketPlayer caller, Region region, string[] command, out string valueShown, Group group = Group.NONE);
+        public abstract bool ParseValue(IRocketPlayer caller, Region region, string[] command, out string valueShown, Group group = Group.ALL);
 
         protected virtual void OnValueUpdate(object oldValue, object newValue)
         {
@@ -102,7 +102,7 @@ namespace RocketRegions.Model.Flag
 
         public void SetValue(object value, Group group)
         {
-            if (group == Group.NONE)
+            if (group == Group.ALL)
             {
                 Value = value;
                 return;

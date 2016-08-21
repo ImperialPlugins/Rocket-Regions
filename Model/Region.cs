@@ -17,6 +17,35 @@ namespace RocketRegions.Model
         public List<SerializableFlag> Flags;
         public List<ulong> Members;
 
+        public void AddOwnerSafe(ulong owner)
+        {
+            if (Members.Contains(owner))
+                Members.Remove(owner);
+
+            if (Owners.Contains(owner))
+                return;
+            Owners.Add(owner);
+        }
+
+        public void AddMemberSafe(ulong member)
+        {
+            if (Owners.Contains(member) || Members.Contains(member))
+                return;
+            Members.Add(member);
+        }
+
+        public List<ulong> GetOwnersSafe() => Owners.Distinct().ToList();
+
+        public List<ulong> GetMembersSafe()
+        {
+            foreach (var owner in Owners)
+            {
+                if(!Members.Contains(owner))
+                    continue;
+                Members.Remove(owner);
+            }
+            return Members.Distinct().ToList();
+        }
         [XmlIgnore]
         private List<RegionFlag> _flags;
 
@@ -83,10 +112,10 @@ namespace RocketRegions.Model
 
         public List<ulong> GetAllMembers()
         {
-            var allMembers = Owners;
-            if (Members == null) Members = new List<ulong>();
-            allMembers.AddRange(Members);
-            return allMembers;
+            var allMembers = Owners.ToList();
+            if(Members != null)
+                allMembers.AddRange(Members?.ToList());
+            return allMembers.Distinct().ToList();
         }
 
         public void SetFlag(string name, object value, List<GroupValue> groupValues, bool save = true)

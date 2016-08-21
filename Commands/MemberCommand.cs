@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
-using Rocket.API;
 using RocketRegions.Model;
 
 namespace RocketRegions.Commands
 {
     public class MemberCommand : ListHandleCommand
     {
+        protected override void Add(Region region, ulong mSteamID)
+            => region.AddMemberSafe(mSteamID);
+
         protected override List<ulong> GetList(Region region)
             => region.Members;
 
