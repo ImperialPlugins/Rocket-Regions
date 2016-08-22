@@ -79,7 +79,7 @@ namespace RocketRegions.Commands
                 {
                     if (isValue)
                     {
-                        if(!f.SupportsGroups)
+                        if(f.SupportsGroups)
                             group = GroupExtensions.GetGroup(arg);
                         valueSet = true;
                         isValue = false;
