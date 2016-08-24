@@ -17,7 +17,7 @@ namespace RocketRegions.Model.Flag.Impl
         public override void OnRegionEnter(UnturnedPlayer player)
         {
             if (Value == null) return;
-            var parsedValue = (string) Value;
+            var parsedValue = GetValue<string>(Region.GetGroup(player));
             parsedValue = parsedValue.Replace("{0}", Region.Name);
             UnturnedChat.Say(player, parsedValue);
         }

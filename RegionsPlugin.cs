@@ -170,8 +170,9 @@ namespace RocketRegions
             var id = PlayerUtil.GetId(player);
             var untPlayer = PlayerUtil.GetUnturnedPlayer(player);
 
-            var region = GetRegionAt(position);
-            var bIsInRegion = region != null;
+            var currentRegion = GetRegionAt(position);
+
+            var oldRegion = _playersInRegions.ContainsKey(id) ? _playersInRegions[id] : null;
 
             Vector3? lastPosition = null;
             if (_lastPositions.ContainsKey(id))
@@ -179,34 +180,34 @@ namespace RocketRegions
                 lastPosition = _lastPositions[id];
             }
 
-            if (!bIsInRegion && _playersInRegions.ContainsKey(id))
+            if (oldRegion != currentRegion)
             {
                 //Left a region
-                region = _playersInRegions[id];
-                if (region.GetFlag(typeof(NoLeaveFlag)).GetValue<bool>(region.GetGroup(player)) 
+                currentRegion = _playersInRegions[id];
+                if (currentRegion.GetFlag(typeof(NoLeaveFlag)).GetValue<bool>(currentRegion.GetGroup(player)) 
                     && lastPosition != null)
                 {
                     //Todo: send message to player (can't leave region)
                     untPlayer.Teleport(lastPosition.Value, untPlayer.Rotation);
                     return;
                 }
-                OnPlayerLeftRegion(player, region);
+                OnPlayerLeftRegion(player, currentRegion);
             }
-            else if (bIsInRegion && !_playersInRegions.ContainsKey(id) && lastPosition != null)
+            else if (oldRegion == null && currentRegion != null && lastPosition != null)
             {
                 //Entered a region
-                if (region.GetFlag(typeof(NoEnterFlag)).GetValue<bool>(region.GetGroup(player)))
+                if (currentRegion.GetFlag(typeof(NoEnterFlag)).GetValue<bool>(currentRegion.GetGroup(player)))
                 {
                     //Todo: send message to player (can't enter region)
                     untPlayer.Teleport(lastPosition.Value, untPlayer.Rotation);
                     return;
                 }
-                OnPlayerEnteredRegion(player, region);
+                OnPlayerEnteredRegion(player, currentRegion);
             }
 
-            if (region != null)
+            if (currentRegion != null)
             {
-                foreach (RegionFlag f in region.ParsedFlags)
+                foreach (RegionFlag f in currentRegion.ParsedFlags)
                 {
                     f.OnPlayerUpdatePosition(untPlayer, position);
                 }

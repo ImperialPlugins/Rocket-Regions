@@ -88,6 +88,7 @@
     <Compile Include="Model\Flag\Impl\NoEquipWeaponFlag.cs" />
     <Compile Include="Model\Flag\Impl\NoEquipFlag.cs" />
     <Compile Include="Model\Flag\Impl\NoVehiclesUsageFlag.cs" />
+    <Compile Include="Model\Flag\Impl\UnlimitedGeneratorFlag.cs" />
     <Compile Include="Model\Flag\RegionFlag.cs" />
     <Compile Include="Model\Flag\Impl\GodmodeFlag.cs" />
     <Compile Include="Model\Flag\Impl\EnterMessageFlag.cs" />
