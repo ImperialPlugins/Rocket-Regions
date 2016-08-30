@@ -7,7 +7,6 @@ using Rocket.Core.Logging;
 using Rocket.Core.Plugins;
 using Rocket.Unturned;
 using Rocket.Unturned.Events;
-using Rocket.Unturned.Permissions;
 using Rocket.Unturned.Player;
 using RocketRegions.Model;
 using RocketRegions.Model.Flag;
@@ -48,6 +47,7 @@ namespace RocketRegions
             RegionFlag.RegisterFlag("NoEquipWeapon", typeof(NoEquipWeaponFlag));
             RegionFlag.RegisterFlag("EnterMessage", typeof(EnterMessageFlag));
             RegionFlag.RegisterFlag("LeaveMessage", typeof(LeaveMessageFlag));
+            RegionFlag.RegisterFlag("Teleport", typeof(TeleportFlag));
 
             Configuration.Load();
 
@@ -77,7 +77,7 @@ namespace RocketRegions
 
             if (Regions.Count < 1) return;
             StartListening();
-            OnRegionsLoaded?.Invoke(this, new EventArgs());
+            OnRegionsLoaded?.Invoke(this, Regions);
         }
 
         protected override void Unload()
@@ -303,5 +303,5 @@ namespace RocketRegions
         }
     }
 
-    public delegate void RegionsLoaded(object sender, EventArgs args);
+    public delegate void RegionsLoaded(RegionsPlugin plugin, List<Region> regions);
 }

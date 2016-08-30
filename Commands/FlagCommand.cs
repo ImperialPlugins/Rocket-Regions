@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Rocket.API;
 using Rocket.Unturned.Chat;
@@ -26,7 +27,7 @@ namespace RocketRegions.Commands
                 UnturnedChat.Say(caller, "You're not the owner of this region!", Color.red);
                 return;
             }
-            
+
             var flagName = command[1];
 
             var t = RegionFlag.GetFlagType(flagName);
@@ -39,8 +40,8 @@ namespace RocketRegions.Commands
             var f = region.GetFlag(t);
             if (f == null)
             {
-                UnturnedChat.Say(caller, "An unexpected error occurred: flag instance equals null but type was registered. Please report this", Color.red);
-                return;
+                f = (RegionFlag)Activator.CreateInstance(t);
+                f.Name = RegionFlag.GetFlagName(t);
             }
 
             var hasFlagPermission = PermissionUtil.HasPermission(caller, "flag." + flagName);
@@ -72,22 +73,22 @@ namespace RocketRegions.Commands
             Group group = Group.ALL;
             List<string> args = new List<string>();
             bool isValue = false;
-            bool valueSet = false;
+            bool groupSet = false;
             foreach (string arg in command.Skip(2))
             {
-                if (!valueSet)
+                if (!groupSet)
                 {
                     if (isValue)
                     {
-                        if(f.SupportsGroups)
+                        if (f.SupportsGroups)
                             group = GroupExtensions.GetGroup(arg);
-                        valueSet = true;
+                        groupSet = true;
                         isValue = false;
                         continue;
                     }
                     if (arg.ToLower().Equals("-g") || arg.ToLower().Equals("--group"))
                     {
-                        if(!f.SupportsGroups)
+                        if (!f.SupportsGroups)
                             UnturnedChat.Say(caller, "Warning: Flag does not support groups", Color.red);
                         isValue = true;
                         continue;
@@ -105,7 +106,9 @@ namespace RocketRegions.Commands
             }
 
             region.SetFlag(f.Name, f.Value, f.GroupValues);
-            UnturnedChat.Say(caller, $"Flag has been set to: {shownValue} for group {group}!", Color.green);
+
+            if (shownValue != null)
+                UnturnedChat.Say(caller, $"Flag has been set to: {shownValue} for group {group}!", Color.green);
         }
 
         public class FlagGroup

@@ -84,7 +84,12 @@ namespace RocketRegions.Model
             }
         }
 
-        public RegionFlag GetFlag(Type t, bool createIfNotFound = true)
+        public T GetFlag<T>() where T: RegionFlag
+        {
+            return (T) GetFlag(typeof (T));
+        }
+
+        public RegionFlag GetFlag(Type t)
         {
             if (!t.IsSameOrSubclass(typeof(RegionFlag)))
             {
@@ -97,10 +102,7 @@ namespace RocketRegions.Model
                 if (match != null) return match;
             }
 
-            if (!createIfNotFound) return null;
-            var flag = (RegionFlag)Activator.CreateInstance(t);
-            flag.Name = RegionFlag.GetFlagName(t);
-            return flag;
+            return null;
         }
 
         public Group GetGroup(IRocketPlayer player)
