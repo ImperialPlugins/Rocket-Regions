@@ -52,6 +52,9 @@ namespace RocketRegions.Model.Flag.Impl
                         var asset = (ItemBarricadeAsset)Assets.find(EAssetType.ITEM, barricade.barricade.id);
                         if (asset == null) continue;
 
+                        if(asset.build == EBuild.FARM)
+                            continue;
+
                         if ((Value != null && (bool)Value) && barricade.barricade.health < maxHealth)
                         {
                             barricade.barricade.health = maxHealth;
