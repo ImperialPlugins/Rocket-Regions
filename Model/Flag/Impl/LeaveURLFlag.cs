@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using Rocket.Unturned.Player;
+using RocketRegions.Util;
 
 namespace RocketRegions.Model.Flag.Impl
 {
-    public class LeaveEffectFlag : IDFlag
+    public class LeaveURLFlag : StringFlag
     {
-        public override string Description => "Play effect when leaving the region";
+        public override string Description => "Open URL when leaving the region";
+        public override string Usage => "<url>";
         public override void UpdateState(List<UnturnedPlayer> players)
         {
 
@@ -18,10 +20,12 @@ namespace RocketRegions.Model.Flag.Impl
 
         public override void OnRegionLeave(UnturnedPlayer player)
         {
-            var val = GetValue<ushort?>();
+            var group = Region.GetGroup(player);
+            var val = GetValue<string>(group);
             if (val == null)
                 return;
-            player.TriggerEffect(val.Value);
+            string msg = RegionsPlugin.Instance.Configuration.Instance.UrlOpenMessage;
+            PlayerUtil.OpenUrl(player, msg, val);
         }
     }
 }

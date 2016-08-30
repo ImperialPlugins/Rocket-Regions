@@ -5,7 +5,7 @@ namespace RocketRegions.Model.Flag.Impl
 {
     public class EnterEffectFlag : IDFlag
     {
-        public override string Description => "Play effect on enter";
+        public override string Description => "Play effect when entering the region";
         public override void UpdateState(List<UnturnedPlayer> players)
         {
 

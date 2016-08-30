@@ -1,8 +1,7 @@
 ﻿using System.Xml.Serialization;
-using RocketRegions.Model;
 using UnityEngine;
 
-namespace xCapturePlugin.Model
+namespace RocketRegions.Model
 {
     public class SerializablePosition3 : SerializablePosition
     {

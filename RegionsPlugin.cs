@@ -51,6 +51,8 @@ namespace RocketRegions
             RegionFlag.RegisterFlag("UnlimitedGenerator", typeof(UnlimitedGeneratorFlag));
             RegionFlag.RegisterFlag("EnterEffect", typeof(EnterEffectFlag));
             RegionFlag.RegisterFlag("LeaveEffect", typeof(LeaveEffectFlag));
+            RegionFlag.RegisterFlag("EnterURL", typeof(EnterURLFlag));
+            RegionFlag.RegisterFlag("LeaveURL", typeof(LeaveURLFlag));
 
             Configuration.Load();
 

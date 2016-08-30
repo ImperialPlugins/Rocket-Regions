@@ -40,5 +40,10 @@ namespace RocketRegions.Util
             var id = player.playerID.CSteamID;
             return id.GetAccountID().m_AccountID;
         }
+
+        public static void OpenUrl(UnturnedPlayer player, string msg, string url)
+        {
+            player.Player.channel.send("askBrowserRequest", player.CSteamID, ESteamPacket.UPDATE_RELIABLE_BUFFER, msg, url);
+        }
     }
 }

@@ -8,11 +8,13 @@ namespace RocketRegions
     {
         public int UpdateFrameCount;
         public List<Region> Regions;
+        public string UrlOpenMessage;
 
         public void LoadDefaults()
         {
             Regions = new List<Region>();
             UpdateFrameCount = 1;
+            UrlOpenMessage = "Visit webpage";
         }
     }
 }
