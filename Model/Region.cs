@@ -19,6 +19,12 @@ namespace RocketRegions.Model
 
         public void AddOwnerSafe(ulong owner)
         {
+            if (Owners == null)
+                Owners = new List<ulong>();
+
+            if (Members == null)
+                Members = new List<ulong>();
+
             if (Members.Contains(owner))
                 Members.Remove(owner);
 
@@ -29,6 +35,12 @@ namespace RocketRegions.Model
 
         public void AddMemberSafe(ulong member)
         {
+            if(Owners == null)
+                Owners = new List<ulong>();
+
+            if(Members == null)
+                Members = new List<ulong>();
+
             if (Owners.Contains(member) || Members.Contains(member))
                 return;
             Members.Add(member);
