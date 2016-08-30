@@ -48,6 +48,9 @@ namespace RocketRegions
             RegionFlag.RegisterFlag("EnterMessage", typeof(EnterMessageFlag));
             RegionFlag.RegisterFlag("LeaveMessage", typeof(LeaveMessageFlag));
             RegionFlag.RegisterFlag("Teleport", typeof(TeleportFlag));
+            RegionFlag.RegisterFlag("UnlimitedGenerator", typeof(UnlimitedGeneratorFlag));
+            RegionFlag.RegisterFlag("EnterEffect", typeof(EnterEffectFlag));
+            RegionFlag.RegisterFlag("LeaveEffect", typeof(LeaveEffectFlag));
 
             Configuration.Load();
 
