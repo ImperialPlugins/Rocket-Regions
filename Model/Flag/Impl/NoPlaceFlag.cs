@@ -18,7 +18,7 @@ namespace RocketRegions.Model.Flag.Impl
                               let playerGroup = Region.GetGroup(p)
                               let equippedItem = p.Player.Equipment.useable
                               where (equippedItem is UseableBarricade || equippedItem is UseableStructure) 
-                              && GetValue<bool>(playerGroup)
+                              && GetValueSafe(playerGroup)
                               select p)
             {
                 p.Player.equipment.dequip();

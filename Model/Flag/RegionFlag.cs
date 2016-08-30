@@ -73,9 +73,9 @@ namespace RocketRegions.Model.Flag
                 return (T)v.Value;
             }
 
-            if (Value == null)
+            if (Value == null && group != Group.ALL)
             {
-                return default(T);
+                return GetValue<T>(Group.ALL);
             }
 
             return (T)Value;

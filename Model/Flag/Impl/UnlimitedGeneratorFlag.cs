@@ -20,7 +20,7 @@ namespace RocketRegions.Model.Flag.Impl
 
                 ushort oldFuel = generator.fuel;
                 ushort newFuel = oldFuel;
-                if (GetValue<bool>())
+                if (GetValueSafe())
                 {
                     newFuel = (ushort) (generator.capacity + 1);
                 }

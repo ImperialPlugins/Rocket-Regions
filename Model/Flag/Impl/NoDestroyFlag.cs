@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Rocket.Core.Logging;
 using Rocket.Unturned.Player;
 using SDG.Unturned;
@@ -27,11 +28,11 @@ namespace RocketRegions.Model.Flag.Impl
                         var asset = (ItemStructureAsset) Assets.find(EAssetType.ITEM, structure.structure.id);
                         if (asset == null) continue;
 
-                        if ((Value != null && (bool) Value) && structure.structure.health < maxHealth)
+                        if (GetValueSafe() && structure.structure.health < maxHealth)
                         {
                             structure.structure.health = maxHealth;
                         }
-                        else if ((Value == null || !(bool)Value) && structure.structure.health > asset.health)
+                        else if (!GetValueSafe() && structure.structure.health > asset.health)
                         {
                             structure.structure.health = asset.health;
                         }
@@ -55,11 +56,11 @@ namespace RocketRegions.Model.Flag.Impl
                         if(asset.build == EBuild.FARM)
                             continue;
 
-                        if ((Value != null && (bool)Value) && barricade.barricade.health < maxHealth)
+                        if (GetValueSafe() && barricade.barricade.health < maxHealth)
                         {
                             barricade.barricade.health = maxHealth;
                         }
-                        else if ((Value == null || !(bool)Value) && barricade.barricade.health > asset.health)
+                        else if (!GetValueSafe() && barricade.barricade.health > asset.health)
                         {
                             barricade.barricade.health = asset.health;
                         }

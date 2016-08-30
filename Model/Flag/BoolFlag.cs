@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Rocket.API;
 using RocketRegions.Model;
 
@@ -6,6 +7,22 @@ namespace RocketRegions.Model.Flag
 {
     public abstract class BoolFlag : RegionFlag
     {
+        public bool GetValueSafe(Group group)
+        {
+            var val = GetValue<bool?>(group);
+            if (val == null)
+                SetValue(false, group);
+            return val != null && val.Value;
+        }
+
+        public bool GetValueSafe()
+        {
+            var val = GetValue<bool?>();
+            if (val == null)
+                Value = false;
+            return val != null && val.Value;
+        }
+
         public override bool ParseValue(IRocketPlayer caller, Region region, string[] command, out string shownValue, Group group = Group.ALL)
         {
             shownValue = null;

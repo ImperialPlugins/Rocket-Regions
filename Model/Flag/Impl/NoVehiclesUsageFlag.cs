@@ -27,7 +27,7 @@ namespace RocketRegions.Model.Flag.Impl
                 var wasDriving = _lastVehicleStates[id];
 
                 if (!isInVeh || wasDriving ||
-                    !GetValue<bool>(Region.GetGroup(player))) continue;
+                    !GetValueSafe(Region.GetGroup(player))) continue;
                 sbyte index = -1;
                 foreach (Passenger p in veh.passengers)
                 {

@@ -47,7 +47,7 @@ namespace RocketRegions.Model.Flag.Impl
         {
             if(!_lastHealth.ContainsKey(player.CSteamID.m_SteamID))
                 _lastHealth.Add(player.CSteamID.m_SteamID, player.Health);
-            if (!GetValue<bool>(Region.GetGroup(player))) return;
+            if (!GetValueSafe(Region.GetGroup(player))) return;
             player.Features.GodMode = true;
         }
 
@@ -62,7 +62,7 @@ namespace RocketRegions.Model.Flag.Impl
 
             player.Features.GodMode = false;
 
-            if (!GetValue<bool>(Region.GetGroup(player))) return;
+            if (!GetValueSafe(Region.GetGroup(player))) return;
             
             var currentHealth = player.Health;
             if (currentHealth < health)

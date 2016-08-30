@@ -104,6 +104,7 @@ namespace RocketRegions
             R.Permissions = _defaultPermissionsProvider;
             R.Plugins.OnPluginsLoaded -= OnPluginsLoaded;
             StopListening();
+            StopListening();
             Instance = null;
             RegionType.RegistereTypes?.Clear();
             RegionFlag.RegisteredFlags?.Clear();
@@ -187,7 +188,7 @@ namespace RocketRegions
             {
                 //Left a region
                 currentRegion = _playersInRegions[id];
-                if (currentRegion.GetFlag(typeof(NoLeaveFlag)).GetValue<bool>(currentRegion.GetGroup(player)) 
+                if (currentRegion.GetFlag<NoLeaveFlag>().GetValueSafe(currentRegion.GetGroup(player)) 
                     && lastPosition != null)
                 {
                     //Todo: send message to player (can't leave region)
@@ -196,10 +197,11 @@ namespace RocketRegions
                 }
                 OnPlayerLeftRegion(player, currentRegion);
             }
-            else if (oldRegion == null && currentRegion != null && lastPosition != null)
+            else if (oldRegion == null && currentRegion != null)
             {
                 //Entered a region
-                if (currentRegion.GetFlag(typeof(NoEnterFlag)).GetValue<bool>(currentRegion.GetGroup(player)))
+                if (currentRegion.GetFlag<NoEnterFlag>().GetValueSafe(currentRegion.GetGroup(player))
+                    && lastPosition != null)
                 {
                     //Todo: send message to player (can't enter region)
                     untPlayer.Teleport(lastPosition.Value, untPlayer.Rotation);
