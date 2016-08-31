@@ -7,7 +7,8 @@ namespace RocketRegions.Model.Flag.Impl
 {
     public class UnlimitedGeneratorFlag : BoolFlag
     {
-        public override string Description => "Fuel for generators in this region never ends";
+        public override string Description => "Infinite fuel for generators in this region";
+        public override bool SupportsGroups => false;
 
         public override void UpdateState(List<UnturnedPlayer> players)
         {
@@ -32,7 +33,7 @@ namespace RocketRegions.Model.Flag.Impl
                 if(newFuel == oldFuel) //Prevent spamming packets to clients
                     continue;
 
-                generator.tellFuel(newFuel);
+                BarricadeManager.sendFuel(generator.transform, newFuel);
             }
         }
 

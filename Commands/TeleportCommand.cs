@@ -4,6 +4,7 @@ using Rocket.API.Extensions;
 using Rocket.Unturned.Chat;
 using Rocket.Unturned.Player;
 using RocketRegions.Model.Flag.Impl;
+using RocketRegions.Util;
 using UnityEngine;
 
 namespace RocketRegions.Commands
@@ -14,7 +15,7 @@ namespace RocketRegions.Commands
         {
             if (command.Length < 1)
             {
-                UnturnedChat.Say(caller, "Usage: /" + Name + " " + Syntax, Color.red);
+                this.SendUsage(caller);
                 return;
             }
 

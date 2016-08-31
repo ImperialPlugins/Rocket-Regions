@@ -6,6 +6,7 @@ using UnityEngine;
 using Rocket.API.Extensions;
 using RocketRegions.Model.Flag;
 using RocketRegions.Model.RegionType;
+using RocketRegions.Util;
 
 namespace RocketRegions.Commands
 {
@@ -15,7 +16,7 @@ namespace RocketRegions.Commands
         {
             if (command.Length < 2)
             {
-                UnturnedChat.Say(caller, "Usage: /rcreate " + Syntax, Color.red);
+                this.SendUsage(caller);
                 return;
             }
 

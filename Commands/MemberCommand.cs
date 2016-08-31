@@ -1,15 +1,19 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using RocketRegions.Model;
 
 namespace RocketRegions.Commands
 {
     public class MemberCommand : ListHandleCommand
     {
+        protected override void Remove(Region region, ulong mSteamID)
+            => region.RemoveMember(mSteamID);
+
         protected override void Add(Region region, ulong mSteamID)
-            => region.AddMemberSafe(mSteamID);
+            => region.AddMember(mSteamID);
 
         protected override List<ulong> GetList(Region region)
-            => region.Members;
+            => region.GetMembers();
 
         public override List<string> Aliases => new List<string> { "regionsmember" };
         public override List<string> Permissions => new List<string>() { "regions.command.member" };

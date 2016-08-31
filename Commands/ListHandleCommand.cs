@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Rocket.API;
 using Rocket.API.Extensions;
 using Rocket.Unturned.Chat;
 using Rocket.Unturned.Player;
 using RocketRegions.Model;
+using RocketRegions.Util;
 using Steamworks;
 using UnityEngine;
 
@@ -16,7 +18,7 @@ namespace RocketRegions.Commands
         {
             if (command.Length < 2)
             {
-                SendUsage(caller);
+                this.SendUsage(caller);
                 return;
             }
 
@@ -31,21 +33,35 @@ namespace RocketRegions.Commands
             switch (command.GetStringParameter(0).ToLower())
             {
                 case "add":
-                {
-                    string name;
-                    CSteamID target = GetTarget(command.GetStringParameter(2), out name);
-                    Add(region, target.m_SteamID);
-                    break;
-                }
+                    {
+                        string name;
+                        CSteamID target = GetTarget(command.GetStringParameter(2), out name);
+                        if (target == CSteamID.Nil)
+                        {
+                            UnturnedChat.Say(caller, "Player not found", Color.red);
+                            return;
+                        }
+
+                        Add(region, target.m_SteamID);
+                        UnturnedChat.Say(caller, "Done", Color.green);
+                        break;
+                    }
                 case "remove":
-                {
-                    string name;
-                    CSteamID target = GetTarget(command.GetStringParameter(2), out name);
-                    GetList(region).Add(target.m_SteamID);
-                    break;
-                }
+                    {
+                        string name;
+                        CSteamID target = GetTarget(command.GetStringParameter(2), out name);
+                        if (target == CSteamID.Nil)
+                        {
+                            UnturnedChat.Say(caller, "Player not found", Color.red);
+                            return;
+                        }
+                        Remove(region, target.m_SteamID);
+                        UnturnedChat.Say(caller, "Done", Color.green);
+                        break;
+                    }
 
                 case "list":
+                {
                     var list = GetList(region);
                     if (list.Count == 0)
                     {
@@ -64,7 +80,7 @@ namespace RocketRegions.Commands
                         }
                         catch (Exception)
                         {
-                            
+
                         }
 
                         if (player != null)
@@ -76,12 +92,17 @@ namespace RocketRegions.Commands
                     }
 
                     break;
+                }
 
                 default:
-                    SendUsage(caller);
+                    this.SendUsage(caller);
                     break;
             }
+
+            RegionsPlugin.Instance.Configuration.Save();
         }
+
+        protected abstract void Remove(Region region, ulong mSteamID);
 
         protected abstract void Add(Region steamID, ulong mSteamID);
 
@@ -98,16 +119,10 @@ namespace RocketRegions.Commands
             }
 
             ulong val;
-            if(!ulong.TryParse(search, out val))
+            if (!ulong.TryParse(search, out val))
                 return CSteamID.Nil;
             name = val.ToString();
             return new CSteamID(val);
-        }
-
-        private void SendUsage(IRocketPlayer caller)
-        {
-            UnturnedChat.Say("Usage: /" + Name + " " + Syntax);
-            throw new WrongUsageOfCommandException(caller, this);
         }
 
         public AllowedCaller AllowedCaller => AllowedCaller.Player;

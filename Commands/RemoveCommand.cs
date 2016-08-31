@@ -13,7 +13,7 @@ namespace RocketRegions.Commands
         {
             if (command.Length == 0)
             {
-                UnturnedChat.Say(caller, "Usage: /rremove <name>", Color.red);
+                this.SendUsage(caller);
                 return;
             }
 

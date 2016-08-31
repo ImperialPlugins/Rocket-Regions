@@ -5,11 +5,14 @@ namespace RocketRegions.Commands
 {
     public class OwnerCommand : ListHandleCommand
     {
+        protected override void Remove(Region region, ulong mSteamID)
+            => region.RemoveOwner(mSteamID);
+
         protected override void Add(Region region, ulong mSteamID)
-            => region.AddOwnerSafe(mSteamID);
+            => region.AddOwner(mSteamID);
 
         protected override List<ulong> GetList(Region region)
-            => region.Owners;
+            => region.GetOwners();
 
         public override List<string> Aliases => new List<string> { "regionsowner" };
         public override List<string> Permissions => new List<string>() { "regions.command.owner" };

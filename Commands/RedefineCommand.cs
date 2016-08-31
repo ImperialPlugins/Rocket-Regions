@@ -14,7 +14,7 @@ namespace RocketRegions.Commands
         {
             if (command.Length == 0)
             {
-                UnturnedChat.Say(caller, "Usage: /rredefine " + Syntax, Color.red);
+                this.SendUsage(caller);
                 return;
             }
 

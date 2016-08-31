@@ -9,18 +9,24 @@ namespace RocketRegions.Model.Flag
     {
         public bool GetValueSafe(Group group)
         {
-            var val = GetValue<bool?>(group);
+            var val = GetValue<object>(group);
             if (val == null)
+            {
                 SetValue(false, group);
-            return val != null && val.Value;
+                return false;
+            }
+            return GetValue<bool>(group);
         }
 
         public bool GetValueSafe()
         {
-            var val = GetValue<bool?>();
+            var val = GetValue<object>();
             if (val == null)
+            {
                 Value = false;
-            return val != null && val.Value;
+                return false;
+            }
+            return GetValue<bool>();
         }
 
         public override bool ParseValue(IRocketPlayer caller, Region region, string[] command, out string shownValue, Group group = Group.ALL)

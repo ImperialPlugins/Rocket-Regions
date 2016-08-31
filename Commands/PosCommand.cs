@@ -14,10 +14,10 @@ namespace RocketRegions.Commands
         {
             if (command.Length < 1 || (command[0] != "1" && command[0] != "2"))
             {
-                UnturnedChat.Say(caller, "Use /rpos 1 or /rpos 2!", Color.red);
+                this.SendUsage(caller);
                 return;
             }
-            
+
             var rawpos = PlayerUtil.GetUnturnedPlayer(caller).Position;
             var pos = new SerializablePosition(rawpos);
 
@@ -32,16 +32,16 @@ namespace RocketRegions.Commands
                 RectangleType.SetPosition2(caller, pos);
             }
         }
-        
+
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
-        
+
         public string Name => "regionpos";
 
         public string Help => "Set position bounds for rectangular region";
 
         public string Syntax => "<1/2>";
 
-        public List<string> Aliases => new List<string> {"rpos"};
+        public List<string> Aliases => new List<string> { "rpos" };
 
         public List<string> Permissions => new List<string> { "regions.command.pos" };
     }

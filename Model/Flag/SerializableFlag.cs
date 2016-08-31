@@ -17,9 +17,7 @@ namespace RocketRegions.Model.Flag
 
     public class GroupValue
     {
-        [XmlAttribute]
         public string GroupName;
-        [XmlAttribute]
         public object Value;
     }
 }

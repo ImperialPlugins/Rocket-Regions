@@ -1,4 +1,5 @@
 ﻿using Rocket.API;
+using Rocket.Unturned.Chat;
 using Rocket.Unturned.Player;
 
 namespace RocketRegions.Util
@@ -13,6 +14,11 @@ namespace RocketRegions.Util
                 return true;
             }
             return player.HasPermission("regions." + permission);
+        }
+
+        public static void SendUsage(this IRocketCommand command, IRocketPlayer caller)
+        {
+            UnturnedChat.Say(caller, "Usage: " + command.Name + " " + command.Syntax);
         }
     }
 }

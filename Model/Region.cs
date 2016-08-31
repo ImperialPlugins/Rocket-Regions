@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using Rocket.API;
 using RocketRegions.Model.Flag;
 using RocketRegions.Util;
+using Steamworks;
 
 namespace RocketRegions.Model
 {
@@ -17,7 +18,7 @@ namespace RocketRegions.Model
         public List<SerializableFlag> Flags;
         public List<ulong> Members;
 
-        public void AddOwnerSafe(ulong owner)
+        public void AddOwner(ulong owner)
         {
             if (Owners == null)
                 Owners = new List<ulong>();
@@ -33,12 +34,12 @@ namespace RocketRegions.Model
             Owners.Add(owner);
         }
 
-        public void AddMemberSafe(ulong member)
+        public void AddMember(ulong member)
         {
-            if(Owners == null)
+            if (Owners == null)
                 Owners = new List<ulong>();
 
-            if(Members == null)
+            if (Members == null)
                 Members = new List<ulong>();
 
             if (Owners.Contains(member) || Members.Contains(member))
@@ -46,17 +47,47 @@ namespace RocketRegions.Model
             Members.Add(member);
         }
 
-        public List<ulong> GetOwnersSafe() => Owners.Distinct().ToList();
-
-        public List<ulong> GetMembersSafe()
+        public void RemoveMember(ulong member)
         {
+            RemoveOwner(member);
+            if (Members != null && Members.Contains(member))
+                Members.Remove(member);
+        }
+
+        public void RemoveOwner(ulong member)
+        {
+            if (Owners != null && Owners.Contains(member))
+                Owners.Remove(member);
+        }
+
+        public List<ulong> GetOwners()
+        {
+            if (Owners.Contains(CSteamID.Nil.m_SteamID))
+                Owners.Remove(CSteamID.Nil.m_SteamID);
+            Owners = Owners.Distinct().ToList();
+            return Owners.ToList(); //return a copy
+        } 
+
+        public List<ulong> GetMembers()
+        {
+            if (Owners == null)
+                Owners = new List<ulong>();
+
+            if (Members == null)
+                Members = new List<ulong>();
+
+            if (Members.Contains(CSteamID.Nil.m_SteamID))
+                Members.Remove(CSteamID.Nil.m_SteamID);
+
             foreach (var owner in Owners)
             {
-                if(!Members.Contains(owner))
+                if (!Members.Contains(owner))
                     continue;
                 Members.Remove(owner);
             }
-            return Members.Distinct().ToList();
+
+            Members = Members.Distinct().ToList();
+            return Members.ToList(); //return a copy
         }
         [XmlIgnore]
         private List<RegionFlag> _flags;
@@ -96,9 +127,9 @@ namespace RocketRegions.Model
             }
         }
 
-        public T GetFlag<T>() where T: RegionFlag
+        public T GetFlag<T>() where T : RegionFlag
         {
-            return (T) GetFlag(typeof (T));
+            return (T)GetFlag(typeof(T));
         }
 
         public RegionFlag GetFlag(Type t)
@@ -119,16 +150,15 @@ namespace RocketRegions.Model
 
         public Group GetGroup(IRocketPlayer player)
         {
-            if(IsOwner(player)) return Group.OWNERS;
+            if (IsOwner(player)) return Group.OWNERS;
             var id = PlayerUtil.GetId(player);
             return GetAllMembers().Any(member => member == id) ? Group.MEMBERS : Group.NONMEMBERS;
         }
 
         public List<ulong> GetAllMembers()
         {
-            var allMembers = Owners.ToList();
-            if(Members != null)
-                allMembers.AddRange(Members?.ToList());
+            var allMembers = GetOwners().ToList();
+            allMembers.AddRange(GetMembers().ToList());
             return allMembers.Distinct().ToList();
         }
 
@@ -172,7 +202,7 @@ namespace RocketRegions.Model
             }
 
             var deserializedFlag = DeserializeFlag(flag);
-            if(deserializedFlag != null)
+            if (deserializedFlag != null)
                 deserializedFlag.Value = value;
         }
 
@@ -184,7 +214,7 @@ namespace RocketRegions.Model
 
                 var type = RegionFlag.GetFlagType(flag.Name);
 
-                var deserializedFlag = (RegionFlag) Activator.CreateInstance(type);
+                var deserializedFlag = (RegionFlag)Activator.CreateInstance(type);
                 deserializedFlag.Region = this;
                 deserializedFlag.Name = RegionFlag.GetFlagName(type);
                 deserializedFlag.Value = flag.Value;
@@ -216,7 +246,7 @@ namespace RocketRegions.Model
 
         public bool IsOwner(ulong id)
         {
-            return Owners.Any(owner => owner == id);
+            return GetOwners().Any(owner => owner == id);
         }
     }
 }

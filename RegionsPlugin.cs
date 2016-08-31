@@ -167,12 +167,6 @@ namespace RocketRegions
 
         private void OnPlayerUpdatePosition(IRocketPlayer player, Vector3 position)
         {
-            if (!(player is UnturnedPlayer))
-            {
-                StopListening();
-                throw new NotSupportedException();
-            }
-
             var id = PlayerUtil.GetId(player);
             var untPlayer = PlayerUtil.GetUnturnedPlayer(player);
 
@@ -186,23 +180,24 @@ namespace RocketRegions
                 lastPosition = _lastPositions[id];
             }
 
-            if (oldRegion != currentRegion)
+            if (oldRegion != null && oldRegion != currentRegion)
             {
                 //Left a region
-                currentRegion = _playersInRegions[id];
-                if (currentRegion.GetFlag<NoLeaveFlag>().GetValueSafe(currentRegion.GetGroup(player)) 
+                var flag = oldRegion.GetFlag<NoLeaveFlag>();
+                if (flag != null && flag.GetValueSafe(currentRegion.GetGroup(player)) 
                     && lastPosition != null)
                 {
                     //Todo: send message to player (can't leave region)
                     untPlayer.Teleport(lastPosition.Value, untPlayer.Rotation);
                     return;
                 }
-                OnPlayerLeftRegion(player, currentRegion);
+                OnPlayerLeftRegion(player, oldRegion);
             }
             else if (oldRegion == null && currentRegion != null)
             {
                 //Entered a region
-                if (currentRegion.GetFlag<NoEnterFlag>().GetValueSafe(currentRegion.GetGroup(player))
+                var flag = currentRegion.GetFlag<NoEnterFlag>();
+                if (flag != null && flag.GetValueSafe(currentRegion.GetGroup(player))
                     && lastPosition != null)
                 {
                     //Todo: send message to player (can't enter region)

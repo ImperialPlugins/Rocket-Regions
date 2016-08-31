@@ -14,6 +14,11 @@ namespace RocketRegions.Commands
     {
         public void Execute(IRocketPlayer caller, string[] command)
         {
+            if (command.Length < 2)
+            {
+                this.SendUsage(caller);
+                return;
+            }
             var name = command[0];
             var region = RegionsPlugin.Instance.GetRegion(name, true);
             if (region == null)
@@ -45,8 +50,8 @@ namespace RocketRegions.Commands
             }
 
             var hasFlagPermission = PermissionUtil.HasPermission(caller, "flag." + flagName);
-            var usage = "Usage: /rflag " + name + " " + f.Name + " " + f.Usage + " [group]";
-            if (command.Length == 2)
+            var usage = "Usage: /rflag " + name + " " + f.Name + " " + f.Usage + " [-g <group>]";
+            if (command.Length == 3 && command[2].Equals("--help"))
             {
                 var description = f.Description;
                 var value = f.GetValue<object>();
@@ -99,7 +104,7 @@ namespace RocketRegions.Commands
             }
 
             string shownValue;
-            if (!f.ParseValue(caller, region, args.ToArray(), out shownValue, group))
+            if (isValue || !f.ParseValue(caller, region, args.ToArray(), out shownValue, group))
             {
                 UnturnedChat.Say(caller, usage, Color.red);
                 return;
@@ -108,7 +113,14 @@ namespace RocketRegions.Commands
             region.SetFlag(f.Name, f.Value, f.GroupValues);
 
             if (shownValue != null)
-                UnturnedChat.Say(caller, $"Flag has been set to: {shownValue} for group {group}!", Color.green);
+            {
+                string msg = $"Flag has been set to: {shownValue}";
+                if (f.SupportsGroups)
+                    msg += $" for group {group}!";
+                UnturnedChat.Say(caller,  msg, Color.green);
+            }
+
+            RegionsPlugin.Instance.Configuration.Save();
         }
 
         public class FlagGroup
