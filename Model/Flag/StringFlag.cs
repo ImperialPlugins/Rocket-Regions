@@ -7,6 +7,10 @@ namespace RocketRegions.Model.Flag
     {
         public override bool ParseValue(IRocketPlayer caller, Region region, string[] command, out string shownValue, Group group = Group.ALL)
         {
+            shownValue = null;
+            if (command.Length == 0)
+                return false;
+
             string label = "";
             foreach (string s in command)
             {

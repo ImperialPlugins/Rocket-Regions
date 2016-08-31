@@ -10,6 +10,8 @@ namespace RocketRegions.Model.Flag
         {
             shownValue = null;
             int? value = command.GetInt32Parameter(0);
+            if (!value.HasValue)
+                return false;
             try
             {
                 shownValue = value.Value.ToString();
