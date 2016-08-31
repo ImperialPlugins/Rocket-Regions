@@ -27,10 +27,11 @@ namespace RocketRegions
         public List<Region> Regions => Configuration?.Instance?.Regions ?? new List<Region>();
         private IRocketPermissionsProvider _defaultPermissionsProvider;
         public event RegionsLoaded OnRegionsLoaded;
+        public const string VERSION = "1.2.6.0";
 
         protected override void Load()
         {
-            Logger.Log($"Regions version {Assembly.GetName().Version.ToString(4)}", ConsoleColor.Cyan);
+            Logger.Log($"Regions v{VERSION}", ConsoleColor.Cyan);
             Instance = this;
 
             RegionType.RegisterRegionType("rectangle", typeof(RectangleType));
