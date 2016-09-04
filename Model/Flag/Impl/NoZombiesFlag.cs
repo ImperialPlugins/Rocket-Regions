@@ -16,7 +16,7 @@ namespace RocketRegions.Model.Flag.Impl
         public override void UpdateState(List<UnturnedPlayer> players)
         {
             if (ZombieManager.ZombieRegions == null) return;
-
+            if(!GetValueSafe()) return;
             foreach (ZombieRegion t in ZombieManager.ZombieRegions.Where(t => t.Zombies != null))
             {
                 // ReSharper disable once MergeSequentialChecks
