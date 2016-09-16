@@ -16,6 +16,7 @@ using RocketRegions.Util;
 using SDG.Unturned;
 using Steamworks;
 using UnityEngine;
+using Logger = Rocket.Core.Logging.Logger;
 
 namespace RocketRegions
 {
@@ -27,7 +28,7 @@ namespace RocketRegions
         public List<Region> Regions => Configuration?.Instance?.Regions ?? new List<Region>();
         private IRocketPermissionsProvider _defaultPermissionsProvider;
         public event RegionsLoaded OnRegionsLoaded;
-        public const string VERSION = "1.2.6.0";
+        public const string VERSION = "1.2.7.0";
 
         protected override void Load()
         {

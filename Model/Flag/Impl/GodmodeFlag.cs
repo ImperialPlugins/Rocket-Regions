@@ -11,33 +11,6 @@ namespace RocketRegions.Model.Flag.Impl
         public override string Description => "Gives players godmode";
         private readonly Dictionary<ulong, byte> _lastHealth = new Dictionary<ulong, byte>();
 
-        protected override void OnValueUpdate(object oldValue, object newValue)
-        {
-            base.OnValueUpdate(oldValue, newValue);
-
-            if ((bool)newValue)
-            {
-                foreach (var player in Provider.clients)
-                {
-                    if (player?.player?.transform?.position == null) continue;
-                    if (Region.Type.IsInRegion(new SerializablePosition(player.player.transform.position)))
-                    {
-                        OnRegionEnter(UnturnedPlayer.FromSteamPlayer(player));
-                    }
-                }
-                return;
-            }
-
-            foreach (var player in Provider.clients)
-            {
-                if (player?.player?.transform?.position == null) continue;
-                if (Region.Type.IsInRegion(new SerializablePosition(player.player.transform.position)))
-                {
-                    OnRegionLeave(UnturnedPlayer.FromSteamPlayer(player));
-                }
-            }
-        }
-
         public override void UpdateState(List<UnturnedPlayer> players)
         {
             //do nothing

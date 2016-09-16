@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Rocket.API;
 using RocketRegions.Util;
 using System.Linq;
-using Rocket.Core.Logging;
 using Rocket.Unturned.Player;
 using UnityEngine;
+using Logger = Rocket.Core.Logging.Logger;
 
 namespace RocketRegions.Model.Flag
 {
@@ -64,21 +64,13 @@ namespace RocketRegions.Model.Flag
 
             var name = group.GetSerializableName();
             var v = GroupValues?.FirstOrDefault(g => g?.GroupName == name);
-            if (GroupValues != null && v != null)
+
+            if (v?.Value != null)
             {
-                if (v.Value == null)
-                {
-                    return default(T);
-                }
                 return (T)v.Value;
             }
 
-            if (Value == null && group != Group.ALL)
-            {
-                return GetValue<T>(Group.ALL);
-            }
-
-            return (T)Value;
+            return group != Group.ALL ? GetValue<T>(Group.ALL) : default(T);
         }
 
         public virtual T GetValue<T>()
