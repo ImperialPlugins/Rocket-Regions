@@ -62,6 +62,9 @@ namespace RocketRegions.Model.Flag
                 throw new InvalidCastException("Can't cast " + Value.GetType().Name + " to " + typeof(T).Name);
             }
 
+            if (group == Group.ALL)
+                return (T) Value;
+
             var name = group.GetSerializableName();
             var v = GroupValues?.FirstOrDefault(g => g?.GroupName == name);
 
