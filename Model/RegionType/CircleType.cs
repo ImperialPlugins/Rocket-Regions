@@ -50,7 +50,7 @@ namespace RocketRegions.Model.RegionType
 
         public override bool IsInRegion(SerializablePosition p)
         {
-            return GetDistance(p) <= Radius;
+            return GetDistanceToCenter(p) <= Radius;
         }
 
         public override bool OnRedefine(IRocketPlayer player, string[] args)
