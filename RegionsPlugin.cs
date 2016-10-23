@@ -108,9 +108,8 @@ namespace RocketRegions
             R.Permissions = _defaultPermissionsProvider;
             R.Plugins.OnPluginsLoaded -= OnPluginsLoaded;
             StopListening();
-            StopListening();
             Instance = null;
-            RegionType.RegistereTypes?.Clear();
+            RegionType.RegisteredTypes?.Clear();
             RegionFlag.RegisteredFlags?.Clear();
             _playersInRegions.Clear();
             _lastPositions.Clear();

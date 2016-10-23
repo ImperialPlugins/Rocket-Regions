@@ -126,7 +126,8 @@ namespace RocketRegions.Model.Flag
 
             if (RegisteredFlags.ContainsKey(name))
             {
-                throw new ArgumentException("\"" + name + "\" is already a registered flag type!");
+                //throw new ArgumentException("\"" + name + "\" is already a registered flag type!");
+                RegisteredFlags.Remove(name);
             }
 
             RegisteredFlags.Add(name, type);

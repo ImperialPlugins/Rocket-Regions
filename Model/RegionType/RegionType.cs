@@ -13,7 +13,7 @@ namespace RocketRegions.Model.RegionType
     [XmlType(TypeName = "RegionType")]
     public abstract class RegionType
     {
-        internal static readonly Dictionary<string, Type> RegistereTypes = new Dictionary<string, Type>();
+        internal static readonly Dictionary<string, Type> RegisteredTypes = new Dictionary<string, Type>();
 
         public static RegionType RegisterRegionType(string name)
         {
@@ -24,11 +24,11 @@ namespace RocketRegions.Model.RegionType
 
             name = name.ToLower();
 
-            if (!RegistereTypes.ContainsKey(name))
+            if (!RegisteredTypes.ContainsKey(name))
             {
                 return null;
             }
-            var t = RegistereTypes[name];
+            var t = RegisteredTypes[name];
             return (RegionType)Activator.CreateInstance(t);
         }
 
@@ -39,12 +39,13 @@ namespace RocketRegions.Model.RegionType
                 throw new ArgumentException(t.Name + " is not a RegionType!");
             }
 
-            if (RegistereTypes.ContainsKey(name))
+            if (RegisteredTypes.ContainsKey(name))
             {
-                throw new ArgumentException(name + " is already registered!");
+                //throw new ArgumentException(name + " is already registered!");
+                RegisteredTypes.Remove(name);
             }
 
-            RegistereTypes.Add(name, t);
+            RegisteredTypes.Add(name, t);
         }
 
         public abstract Region OnCreate(IRocketPlayer player, string name, string[] args);
@@ -55,7 +56,7 @@ namespace RocketRegions.Model.RegionType
 
         public static ReadOnlyCollection<string> GetTypes()
         {
-            return new ReadOnlyCollection<string>(new List<string>(RegistereTypes.Keys));
+            return new ReadOnlyCollection<string>(new List<string>(RegisteredTypes.Keys));
         }
     }
 }

@@ -18,10 +18,10 @@ namespace RocketRegions.Model.Flag.Impl
 
         public override void OnRegionLeave(UnturnedPlayer player)
         {
-            var val = GetValue<ushort?>();
-            if (val == null)
+            if (Value == null)
                 return;
-            player.TriggerEffect(val.Value);
+            var val = GetValue<ushort>(Region.GetGroup(player));
+            player.TriggerEffect(val);
         }
     }
 }
