@@ -16,7 +16,7 @@ namespace RocketRegions.Model.Flag.Impl
             foreach (var player in players)
             {
                 var id = PlayerUtil.GetId(player);
-                var veh = player.Player.Movement.getVehicle();
+                var veh = player.Player.movement.getVehicle();
                 var isInVeh = veh != null;
 
                 if (!_lastVehicleStates.ContainsKey(id))
@@ -32,7 +32,7 @@ namespace RocketRegions.Model.Flag.Impl
                 foreach (Passenger p in veh.passengers)
                 {
                     index++;
-                    if (p.player.SteamPlayerID.CSteamID == PlayerUtil.GetCSteamId(player))
+                    if (p.player.playerID.steamID== PlayerUtil.GetCSteamId(player))
                     {
                         break;
                     }

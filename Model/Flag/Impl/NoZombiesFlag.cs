@@ -15,12 +15,12 @@ namespace RocketRegions.Model.Flag.Impl
         public override bool SupportsGroups => false;
         public override void UpdateState(List<UnturnedPlayer> players)
         {
-            if (ZombieManager.ZombieRegions == null) return;
+            if (ZombieManager.regions == null) return;
             if(!GetValueSafe()) return;
-            foreach (ZombieRegion t in ZombieManager.ZombieRegions.Where(t => t.Zombies != null))
+            foreach (ZombieRegion t in ZombieManager.regions.Where(t => t.zombies != null))
             {
                 // ReSharper disable once MergeSequentialChecks
-                foreach (var zombie in t.Zombies.Where(z => z!= null && z.transform?.position != null))
+                foreach (var zombie in t.zombies.Where(z => z!= null && z.transform?.position != null))
                 {
                     if (zombie.isDead) continue;
                     Region region = RegionsPlugin.Instance?.GetRegionAt(zombie.transform.position);

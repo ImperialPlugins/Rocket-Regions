@@ -16,7 +16,7 @@ namespace RocketRegions.Model.Flag.Impl
             foreach (var p in from p in players
                               where PlayerUtil.GetCSteamId(p) != CSteamID.Nil
                               let playerGroup = Region.GetGroup(p)
-                              let equippedItem = p.Player.Equipment.useable
+                              let equippedItem = p.Player.equipment.useable
                               where (equippedItem is UseableBarricade || equippedItem is UseableStructure) 
                               && GetValueSafe(playerGroup)
                               select p)

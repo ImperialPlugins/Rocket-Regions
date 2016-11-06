@@ -62,7 +62,7 @@ namespace RocketRegions
             R.Permissions = new RegionsPermissionsProvider(_defaultPermissionsProvider);
             R.Plugins.OnPluginsLoaded += OnPluginsLoaded;
 
-            foreach (var untPlayer in Provider.clients.Select(p => UnturnedPlayer.FromCSteamID(p.SteamPlayerID.CSteamID)))
+            foreach (var untPlayer in Provider.clients.Select(p => UnturnedPlayer.FromCSteamID(p.playerID.steamID)))
             {
                 OnPlayerConnect(untPlayer);
             }
@@ -94,7 +94,7 @@ namespace RocketRegions
                 foreach (
                     var untPlayer in
                         Provider.clients.Select(
-                            p => UnturnedPlayer.FromCSteamID(p?.SteamPlayerID?.CSteamID ?? CSteamID.Nil)))
+                            p => UnturnedPlayer.FromCSteamID(p?.playerID?.steamID?? CSteamID.Nil)))
                 {
                     OnPlayerDisconnect(untPlayer);
                 }

@@ -24,8 +24,8 @@ namespace RocketRegions.Util
         {
             if (player == null) return CSteamID.Nil;
             //for some reason one of the fiels below can be null
-            var steamPlayerId= GetUnturnedPlayer(player)?.Player?.SteamChannel?.SteamPlayer?.SteamPlayerID;
-            return steamPlayerId?.CSteamID ?? CSteamID.Nil;
+            var steamPlayerId= GetUnturnedPlayer(player)?.Player?.channel?.owner?.playerID;
+            return steamPlayerId?.steamID ?? CSteamID.Nil;
         }
 
         public static ulong GetId(IRocketPlayer player)
@@ -37,7 +37,7 @@ namespace RocketRegions.Util
         public static ulong GetId(SteamPlayer player)
         {
             if (player == null) return CSteamID.Nil.m_SteamID;
-            var id = player.playerID.CSteamID;
+            var id = player.playerID.steamID;
             return id.GetAccountID().m_AccountID;
         }
 

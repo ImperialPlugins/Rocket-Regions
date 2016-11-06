@@ -11,13 +11,13 @@ namespace RocketRegions.Model.Flag.Impl
         {
             foreach (var player in players)
             {
-                if (player?.Player?.Equipment?.useable == null)
+                if (player?.Player?.equipment?.useable == null)
                     continue;
-                if (!player.Player.Equipment.isEquipped)
+                if (!player.Player.equipment.isEquipped)
                     continue;
                 if (!GetValueSafe(Region.GetGroup(player)))
                     continue;
-                player.Player.Equipment.dequip();
+                player.Player.equipment.dequip();
             }    
         }
 

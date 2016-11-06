@@ -15,9 +15,9 @@ namespace RocketRegions.Model.Flag.Impl
         {
 
             ushort maxHealth = ushort.MaxValue;
-            if (StructureManager.StructureRegions != null)
+            if (StructureManager.regions != null)
             {
-                foreach (var region in StructureManager.StructureRegions)
+                foreach (var region in StructureManager.regions)
                 {
                     if (region == null) continue;
                     foreach (var structure in region.structures)
@@ -40,9 +40,9 @@ namespace RocketRegions.Model.Flag.Impl
                 }
             }
 
-            if (BarricadeManager.BarricadeRegions!= null)
+            if (BarricadeManager.regions!= null)
             {
-                foreach (var region in BarricadeManager.BarricadeRegions)
+                foreach (var region in BarricadeManager.regions)
                 {
                     if (region == null) continue;
                     foreach (var barricade in region.barricades)
