@@ -241,7 +241,7 @@ namespace RocketRegions.Model
             {
                 return true;
             }
-            return IsOwner(PlayerUtil.GetId(player));
+            return player.HasPermission("regions.overrideowner") || IsOwner(PlayerUtil.GetId(player));
         }
 
         public bool IsOwner(ulong id)

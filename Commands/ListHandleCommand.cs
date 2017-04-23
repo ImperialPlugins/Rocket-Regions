@@ -30,6 +30,12 @@ namespace RocketRegions.Commands
                 return;
             }
 
+            if (!region.IsOwner(caller))
+            {
+                UnturnedChat.Say(caller, "You do not have permission to manage this region!", Color.red);
+                return;
+            }
+
             switch (command.GetStringParameter(0).ToLower())
             {
                 case "add":
