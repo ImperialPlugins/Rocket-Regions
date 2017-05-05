@@ -170,9 +170,10 @@ namespace RocketRegions
         {
             var id = PlayerUtil.GetId(player);
             var untPlayer = PlayerUtil.GetUnturnedPlayer(player);
-
+            if (untPlayer == null)
+                return;
+            
             var currentRegion = GetRegionAt(position);
-
             var oldRegion = _playersInRegions.ContainsKey(id) ? _playersInRegions[id] : null;
 
             Vector3? lastPosition = null;
@@ -185,8 +186,8 @@ namespace RocketRegions
             {
                 //Left a region
                 var flag = oldRegion.GetFlag<NoLeaveFlag>();
-                if (flag != null && flag.GetValueSafe(currentRegion.GetGroup(player)) 
-                    && lastPosition != null)
+                var value = flag?.GetValueSafe(currentRegion.GetGroup(player));
+                if (value.HasValue && value.Value && lastPosition != null)
                 {
                     //Todo: send message to player (can't leave region)
                     untPlayer.Teleport(lastPosition.Value, untPlayer.Rotation);
@@ -212,7 +213,7 @@ namespace RocketRegions
             {
                 foreach (RegionFlag f in currentRegion.ParsedFlags)
                 {
-                    f.OnPlayerUpdatePosition(untPlayer, position);
+                    f?.OnPlayerUpdatePosition(untPlayer, position);
                 }
             }
 
