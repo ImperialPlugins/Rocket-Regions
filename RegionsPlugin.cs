@@ -306,8 +306,14 @@ namespace RocketRegions
                 return;
 
             foreach (var player in Provider.clients)
-            {              
-                var lastPos = _lastPositions[player.playerID.steamID.m_SteamID];
+            {
+                var id = player.playerID.steamID.m_SteamID;
+                if (!_lastPositions.ContainsKey(id))
+                {
+                    _lastPositions.Add(id, player.player.transform.position);
+                    continue;
+                }
+                var lastPos = _lastPositions[id];
                 if (player.player.transform.position != lastPos)
                 {
                     OnPlayerUpdatePosition(UnturnedPlayer.FromSteamPlayer(player), player.player.transform.position);
