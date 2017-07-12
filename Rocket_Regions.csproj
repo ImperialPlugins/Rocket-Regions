@@ -96,6 +96,7 @@
     <Compile Include="Model\Flag\Impl\TeleportFlag.cs" />
     <Compile Include="Model\Flag\Impl\UnlimitedGeneratorFlag.cs" />
     <Compile Include="Model\Flag\IDFlag.cs" />
+    <Compile Include="Model\Flag\Impl\VanishFlag.cs" />
     <Compile Include="Model\Flag\RegionFlag.cs" />
     <Compile Include="Model\Flag\Impl\GodmodeFlag.cs" />
     <Compile Include="Model\Flag\Impl\EnterMessageFlag.cs" />

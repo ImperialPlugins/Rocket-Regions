@@ -54,6 +54,7 @@ namespace RocketRegions
             RegionFlag.RegisterFlag("LeaveEffect", typeof(LeaveEffectFlag));
             RegionFlag.RegisterFlag("EnterURL", typeof(EnterURLFlag));
             RegionFlag.RegisterFlag("LeaveURL", typeof(LeaveURLFlag));
+            RegionFlag.RegisterFlag("VanishFlag", typeof(VanishFlag));
 
             Configuration.Load();
 

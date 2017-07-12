@@ -18,7 +18,7 @@ namespace RocketRegions.Model.Flag
             {
                 return _region;
             }
-            internal set
+            set
             {
                 if (value == null) throw new ArgumentNullException(nameof(value), "Region value can not be null");
                 if (_region == null)
