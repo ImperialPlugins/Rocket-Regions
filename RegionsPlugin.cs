@@ -302,9 +302,6 @@ namespace RocketRegions
             if (_frame % Configuration.Instance.UpdateFrameCount != 0)
                 return;
 
-            if (Level.isLoading || !Level.isLoaded)
-                return;
-
             foreach (var player in Provider.clients)
             {
                 var id = player.playerID.steamID.m_SteamID;
