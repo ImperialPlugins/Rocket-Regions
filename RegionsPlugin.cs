@@ -301,6 +301,9 @@ namespace RocketRegions
             if (_frame % Configuration.Instance.UpdateFrameCount != 0)
                 return;
 
+            if (Level.isLoading || !Level.isLoaded)
+                return;
+
             foreach (var player in Provider.clients)
             {              
                 var lastPos = _lastPositions[player.playerID.steamID.m_SteamID];

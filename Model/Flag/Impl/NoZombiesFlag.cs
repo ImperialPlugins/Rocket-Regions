@@ -24,7 +24,7 @@ namespace RocketRegions.Model.Flag.Impl
                 {
                     if (zombie.isDead) continue;
                     Region region = RegionsPlugin.Instance?.GetRegionAt(zombie.transform.position);
-                    if (region == null || !GetValueSafe()) continue;
+                    if (region == null) continue;
                     zombie.gear = 0;
                     zombie.isDead = true;
                     Vector3 ragdoll = (Vector3)typeof(Zombie).GetField("ragdoll", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(zombie);
