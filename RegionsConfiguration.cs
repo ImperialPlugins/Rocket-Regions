@@ -13,7 +13,7 @@ namespace RocketRegions
         public void LoadDefaults()
         {
             Regions = new List<Region>();
-            UpdateFrameCount = 1;
+            UpdateFrameCount = 10;
             UrlOpenMessage = "Visit webpage";
         }
     }
