@@ -11,13 +11,13 @@ namespace RocketRegions.Model.Flag
         public override bool ParseValue(IRocketPlayer caller, Region region, string[] command, out string shownValue, Group group = Group.ALL)
         {
             shownValue = null;
-            int? value = command.GetUInt16Parameter(0);
+            ushort? value = command.GetUInt16Parameter(0);
             if (!value.HasValue)
                 return false;
             try
             {
                 shownValue = value.Value.ToString();
-                SetValue(Convert.ToInt32(value.Value), group);
+                SetValue(value.Value, group);
                 return true;
             }
             catch (Exception)
