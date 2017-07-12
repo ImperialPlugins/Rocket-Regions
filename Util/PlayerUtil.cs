@@ -38,7 +38,7 @@ namespace RocketRegions.Util
         {
             if (player == null) return CSteamID.Nil.m_SteamID;
             var id = player.playerID.steamID;
-            return id.GetAccountID().m_AccountID;
+            return id.m_SteamID;
         }
 
         public static void OpenUrl(UnturnedPlayer player, string msg, string url)
