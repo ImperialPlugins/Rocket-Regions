@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Rocket.API;
+﻿using Rocket.API;
 using Rocket.Core;
-using Rocket.Core.Logging;
 using Rocket.Core.Plugins;
 using Rocket.Unturned;
 using Rocket.Unturned.Events;
@@ -15,6 +11,9 @@ using RocketRegions.Model.RegionType;
 using RocketRegions.Util;
 using SDG.Unturned;
 using Steamworks;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Logger = Rocket.Core.Logging.Logger;
 
@@ -28,7 +27,7 @@ namespace RocketRegions
         public List<Region> Regions => Configuration?.Instance?.Regions ?? new List<Region>();
         private IRocketPermissionsProvider _defaultPermissionsProvider;
         public event RegionsLoaded OnRegionsLoaded;
-        public const string VERSION = "1.2.7.1";
+        public const string VERSION = "1.3.0.0";
 
         protected override void Load()
         {
@@ -37,7 +36,7 @@ namespace RocketRegions
 
             RegionType.RegisterRegionType("rectangle", typeof(RectangleType));
             RegionType.RegisterRegionType("circle", typeof(CircleType));
-            
+
             RegionFlag.RegisterFlag("Godmode", typeof(GodmodeFlag));
             RegionFlag.RegisterFlag("NoEnter", typeof(NoEnterFlag));
             RegionFlag.RegisterFlag("NoLeave", typeof(NoLeaveFlag));
@@ -94,7 +93,7 @@ namespace RocketRegions
                 foreach (
                     var untPlayer in
                         Provider.clients.Select(
-                            p => UnturnedPlayer.FromCSteamID(p?.playerID?.steamID?? CSteamID.Nil)))
+                            p => UnturnedPlayer.FromCSteamID(p?.playerID?.steamID ?? CSteamID.Nil)))
                 {
                     OnPlayerDisconnect(untPlayer);
                 }
@@ -119,7 +118,7 @@ namespace RocketRegions
         public void StartListening()
         {
             //Start listening to events
-            UnturnedPlayerEvents.OnPlayerUpdatePosition += OnPlayerUpdatePosition;
+            //UnturnedPlayerEvents.OnPlayerUpdatePosition += OnPlayerUpdatePosition;
             U.Events.OnPlayerConnected += OnPlayerConnect;
             U.Events.OnPlayerDisconnected += OnPlayerDisconnect;
         }
@@ -127,7 +126,7 @@ namespace RocketRegions
         public void StopListening()
         {
             //Stop listening to events
-            UnturnedPlayerEvents.OnPlayerUpdatePosition -= OnPlayerUpdatePosition;
+            //UnturnedPlayerEvents.OnPlayerUpdatePosition -= OnPlayerUpdatePosition;
             U.Events.OnPlayerConnected -= OnPlayerConnect;
             U.Events.OnPlayerDisconnected -= OnPlayerDisconnect;
         }
@@ -153,6 +152,7 @@ namespace RocketRegions
         private void OnPlayerConnect(IRocketPlayer player)
         {
             var untPlayer = PlayerUtil.GetUnturnedPlayer(player);
+            _lastPositions.Add(PlayerUtil.GetId(player), untPlayer.Position);
             var region = GetRegionAt(untPlayer.Position);
             if (region != null)
             {
@@ -162,6 +162,7 @@ namespace RocketRegions
 
         private void OnPlayerDisconnect(IRocketPlayer player)
         {
+            _lastPositions.Remove(PlayerUtil.GetId(player));
             if (!_playersInRegions.ContainsKey(PlayerUtil.GetId(player))) return;
             OnPlayerLeftRegion(player, _playersInRegions[PlayerUtil.GetId(player)]);
         }
@@ -171,8 +172,14 @@ namespace RocketRegions
             var id = PlayerUtil.GetId(player);
             var untPlayer = PlayerUtil.GetUnturnedPlayer(player);
             if (untPlayer == null)
+            {
+#if DEBUG
+                Logger.LogError("untplayer == null OnPlayerUpdatePosition");
+#endif
                 return;
-            
+            }
+
+
             var currentRegion = GetRegionAt(position);
             var oldRegion = _playersInRegions.ContainsKey(id) ? _playersInRegions[id] : null;
 
@@ -293,6 +300,15 @@ namespace RocketRegions
             _frame++;
             if (_frame % Configuration.Instance.UpdateFrameCount != 0)
                 return;
+
+            foreach (var player in Provider.clients)
+            {              
+                var lastPos = _lastPositions[player.playerID.steamID.m_SteamID];
+                if (player.player.transform.position != lastPos)
+                {
+                    OnPlayerUpdatePosition(UnturnedPlayer.FromSteamPlayer(player), player.player.transform.position);
+                }
+            }
 
             foreach (var region in Regions)
             {
