@@ -220,7 +220,7 @@ namespace RocketRegions
             _playersInRegions.Add(id, region);
 
             foreach (RegionFlag f in region.ParsedFlags)
-                f.OnRegionEnter((UnturnedPlayer) player);
+                f.OnRegionEnter((UnturnedPlayer)player);
         }
 
         internal void OnPlayerLeftRegion(IRocketPlayer player, Region region)
@@ -229,7 +229,18 @@ namespace RocketRegions
             _playersInRegions.Remove(id);
 
             foreach (RegionFlag f in region.ParsedFlags)
-                f.OnRegionLeave((UnturnedPlayer) player);
+            {
+                try
+                {
+                    f.OnRegionLeave((UnturnedPlayer) player);
+                }
+                catch(Exception e)
+                {
+#if DEBUG
+                    Logger.LogException(e);
+#endif
+                }
+            }
         }
 
         private static bool IsInRegion(Vector3 pos, Region region) => region.Type.IsInRegion(new SerializablePosition(pos));
@@ -268,10 +279,10 @@ namespace RocketRegions
 
             foreach (var player in Provider.clients)
             {
-                if(player?.playerID?.steamID == null)
+                if (player?.playerID?.steamID == null)
                     continue;
-                
-                if(player?.player?.transform == null)
+
+                if (player?.player?.transform == null)
                     continue;
 
                 var id = player.playerID.steamID.m_SteamID;
