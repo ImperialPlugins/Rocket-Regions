@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Rocket.Unturned.Player;
-using Steamworks;
 
 namespace RocketRegions.Model.Flag.Impl
 {

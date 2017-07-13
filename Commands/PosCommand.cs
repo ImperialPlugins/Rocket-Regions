@@ -4,7 +4,6 @@ using Rocket.Unturned.Chat;
 using RocketRegions.Model;
 using RocketRegions.Model.RegionType;
 using RocketRegions.Util;
-using UnityEngine;
 
 namespace RocketRegions.Commands
 {

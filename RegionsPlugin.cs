@@ -2,7 +2,6 @@
 using Rocket.Core;
 using Rocket.Core.Plugins;
 using Rocket.Unturned;
-using Rocket.Unturned.Events;
 using Rocket.Unturned.Player;
 using RocketRegions.Model;
 using RocketRegions.Model.Flag;

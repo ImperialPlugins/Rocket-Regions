@@ -3,7 +3,6 @@ using System.Linq;
 using System.Reflection;
 using Rocket.Unturned.Player;
 using SDG.Unturned;
-using Steamworks;
 using UnityEngine;
 
 namespace RocketRegions.Model.Flag.Impl
