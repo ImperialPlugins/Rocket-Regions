@@ -8,7 +8,10 @@ namespace RocketRegions.Util
     {
         private readonly IRocketPermissionsProvider _basePermissionProvider;
 
-        internal RegionsPermissionsProvider(IRocketPermissionsProvider basePermissionProvider) => _basePermissionProvider = basePermissionProvider;
+        internal RegionsPermissionsProvider(IRocketPermissionsProvider basePermissionProvider)
+        {
+            _basePermissionProvider = basePermissionProvider;
+        }
 
         public RocketPermissionsProviderResult AddGroup(RocketPermissionsGroup group) => _basePermissionProvider.AddGroup(@group);
 

@@ -14,15 +14,15 @@ namespace RocketRegions.Model.Flag
         private Region _region;
         public Region Region
         {
-            get => _region;
+            get { return _region; }
             set
             {
                 if (value == null) throw new ArgumentNullException(nameof(value), "Region value can not be null");
                 if (_region == null)
                     _region = value;
-                else 
+                else
                     Logger.Log($"Flag \"{Name}\": Tried to set new region value! Old value: {_region.Name}, new value: {value.Name}");
-            } 
+            }
         }
 
         internal static readonly Dictionary<string, Type> RegisteredFlags = new Dictionary<string, Type>();
@@ -31,7 +31,7 @@ namespace RocketRegions.Model.Flag
 
         public virtual object Value
         {
-            get => _value;
+            get { return _value; }
             internal set
             {
                 OnValueUpdate(_value, value);
@@ -57,7 +57,7 @@ namespace RocketRegions.Model.Flag
             }
 
             if (group == Group.ALL)
-                return (T) Value;
+                return (T)Value;
 
             var name = group.GetSerializableName();
             var v = GroupValues?.FirstOrDefault(g => g?.GroupName == name);

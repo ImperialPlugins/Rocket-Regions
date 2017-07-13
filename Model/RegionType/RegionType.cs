@@ -17,7 +17,10 @@ namespace RocketRegions.Model.RegionType
 
         public static RegionType RegisterRegionType(string name)
         {
-            name = name?.ToLower() ?? throw new ArgumentNullException(nameof(name));
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            name = name.ToLower();
 
             if (!RegisteredTypes.ContainsKey(name))
                 return null;
