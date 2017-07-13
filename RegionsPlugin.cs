@@ -304,6 +304,12 @@ namespace RocketRegions
 
             foreach (var player in Provider.clients)
             {
+                if(player?.playerID?.steamID == null)
+                    continue;
+                
+                if(player?.player?.transform == null)
+                    continue;
+
                 var id = player.playerID.steamID.m_SteamID;
                 if (!_lastPositions.ContainsKey(id))
                 {
