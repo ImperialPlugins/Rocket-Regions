@@ -10,12 +10,13 @@ namespace RocketRegions.Model.Flag.Impl
 
         public override void UpdateState(List<UnturnedPlayer> players)
         {
-            foreach (var player in players)
+            for (var i = 0; i < players.Count; i++)
             {
-                if(player?.Player?.equipment?.useable == null)
+                var player = players[i];
+                if (player?.Player?.equipment?.useable == null)
                     continue;
 
-                if(!GetValueSafe(Region.GetGroup(player)))
+                if (!GetValueSafe(Region.GetGroup(player)))
                     continue;
 
                 if (!player.Player.equipment.isEquipped) continue;

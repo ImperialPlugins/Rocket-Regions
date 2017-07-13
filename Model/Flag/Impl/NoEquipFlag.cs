@@ -9,8 +9,9 @@ namespace RocketRegions.Model.Flag.Impl
 
         public override void UpdateState(List<UnturnedPlayer> players)
         {
-            foreach (var player in players)
+            for (var i = 0; i < players.Count; i++)
             {
+                var player = players[i];
                 if (player?.Player?.equipment?.useable == null)
                     continue;
                 if (!player.Player.equipment.isEquipped)
@@ -18,7 +19,7 @@ namespace RocketRegions.Model.Flag.Impl
                 if (!GetValueSafe(Region.GetGroup(player)))
                     continue;
                 player.Player.equipment.dequip();
-            }    
+            }
         }
 
         public override void OnRegionEnter(UnturnedPlayer player)

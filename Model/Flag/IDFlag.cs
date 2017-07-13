@@ -20,10 +20,7 @@ namespace RocketRegions.Model.Flag
                 SetValue(value.Value, group);
                 return true;
             }
-            catch (Exception)
-            {
-                return false;
-            }
+            catch (Exception) { return false; }
         }
     }
 }

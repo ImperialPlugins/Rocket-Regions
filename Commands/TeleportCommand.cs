@@ -19,7 +19,7 @@ namespace RocketRegions.Commands
                 return;
             }
 
-            var player = (UnturnedPlayer)caller;
+            var player = (UnturnedPlayer) caller;
             if (command.Length > 1)
             {
                 string playerName = command.GetStringParameter(1);
@@ -49,19 +49,29 @@ namespace RocketRegions.Commands
             var pos = flag.Deserialize(region.GetGroup(caller));
             if (pos == default(Vector3))
             {
-                UnturnedChat.Say(caller, "Region \"" + regionName + "\" does not have teleport positions for your group!", Color.red);
+                UnturnedChat.Say(caller,
+                    "Region \"" + regionName + "\" does not have teleport positions for your group!", Color.red);
                 return;
             }
 
             UnturnedChat.Say(caller, "Teleporting...", Color.green);
             player.Teleport(pos, player.Rotation);
         }
+        
+        #region Properties
 
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
+
         public string Name => "regionteleport";
+
         public string Help => "Teleport to a region";
+
         public string Syntax => "<region> [player]";
+
         public List<string> Aliases => new List<string> {"rteleport"};
-        public List<string> Permissions => new List<string> { "regions.command.teleport" };
-}
+
+        public List<string> Permissions => new List<string> {"regions.command.teleport"};
+
+        #endregion Properties
+    }
 }

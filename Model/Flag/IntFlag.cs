@@ -18,10 +18,7 @@ namespace RocketRegions.Model.Flag
                 SetValue(Convert.ToInt32(value.Value), group);
                 return true;
             }
-            catch (Exception)
-            {
-                return false;
-            }
+            catch (Exception) { return false; }
         }
     }
 }

@@ -58,11 +58,9 @@ namespace RocketRegions.Commands
 
                 UnturnedChat.Say(caller, "Flag: " + f.Name, Color.blue);
                 UnturnedChat.Say(caller, "Description: " + description, Color.blue);
-                if (hasFlagPermission)
-                {
-                    UnturnedChat.Say(caller, usage);
-                    UnturnedChat.Say(caller, "Value: " + (value ?? "null"), Color.blue);
-                }
+                if (!hasFlagPermission) return;
+                UnturnedChat.Say(caller, usage);
+                UnturnedChat.Say(caller, "Value: " + (value ?? "null"), Color.blue);
                 return;
             }
 
@@ -127,6 +125,8 @@ namespace RocketRegions.Commands
         {
             public Group Group { get; set; }
         }
+        
+        #region Properties
 
         public AllowedCaller AllowedCaller => AllowedCaller.Both;
 
@@ -139,5 +139,7 @@ namespace RocketRegions.Commands
         public List<string> Aliases => new List<string> { "rflag" };
 
         public List<string> Permissions => new List<string> { "regions.command.flag" };
+        
+        #endregion
     }
 }

@@ -52,12 +52,11 @@ namespace RocketRegions.Model.RegionType
                     var diff = point - new Vector2(xMin, yMin);
                     return diff.magnitude;
                 }
-                if (pos.Y > yMax)
-                { 
+                if (!(pos.Y > yMax)) return xMin - pos.X;
+                {
                     var diff = point - new Vector2(xMin, yMax);
                     return diff.magnitude;
                 }
-                return xMin - pos.X;
             }
             if (pos.X > xMax)
             {
@@ -66,12 +65,11 @@ namespace RocketRegions.Model.RegionType
                     var diff = point - new Vector2(xMax, yMin);
                     return diff.magnitude;
                 }
-                if (pos.Y > yMax)
-                { 
+                if (!(pos.Y > yMax)) return pos.X - xMax;
+                {
                     var diff = point - new Vector2(xMax, yMax);
                     return diff.magnitude;
                 }
-                return pos.X - xMax;
             }
             if (pos.Y < yMin)
             { 
@@ -135,19 +133,10 @@ namespace RocketRegions.Model.RegionType
             SecondsPositions.Add(PlayerUtil.GetId(player), pos);
         }
 
-        public static bool HasPositionSet(IRocketPlayer player)
-        {
-            return FirstPositions.ContainsKey(PlayerUtil.GetId(player)) && SecondsPositions.ContainsKey(PlayerUtil.GetId(player));
-        }
+        public static bool HasPositionSet(IRocketPlayer player) => FirstPositions.ContainsKey(PlayerUtil.GetId(player)) && SecondsPositions.ContainsKey(PlayerUtil.GetId(player));
 
-        public static SerializablePosition GetPosition1(IRocketPlayer caller)
-        {
-            return FirstPositions[PlayerUtil.GetId(caller)];
-        }
+        public static SerializablePosition GetPosition1(IRocketPlayer caller) => FirstPositions[PlayerUtil.GetId(caller)];
 
-        public static SerializablePosition GetPosition2(IRocketPlayer caller)
-        {
-            return SecondsPositions[PlayerUtil.GetId(caller)];
-        }
+        public static SerializablePosition GetPosition2(IRocketPlayer caller) => SecondsPositions[PlayerUtil.GetId(caller)];
     }
 }

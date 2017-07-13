@@ -13,10 +13,11 @@ namespace RocketRegions.Model.Flag.Impl
         public override void UpdateState(List<UnturnedPlayer> players)
         {
             var generators = Object.FindObjectsOfType<InteractableGenerator>();
-            foreach (var generator in generators)
+            for (var i = 0; i < generators.Length; i++)
             {
+                var generator = generators[i];
                 var pos = generator.gameObject.transform.position;
-                if(RegionsPlugin.Instance.GetRegionAt(pos) != Region)
+                if (RegionsPlugin.Instance.GetRegionAt(pos) != Region)
                     continue;
 
                 ushort oldFuel = generator.fuel;
@@ -30,7 +31,7 @@ namespace RocketRegions.Model.Flag.Impl
                     newFuel = generator.capacity;
                 }
 
-                if(newFuel == oldFuel) //Prevent spamming packets to clients
+                if (newFuel == oldFuel) //Prevent spamming packets to clients
                     continue;
 
                 BarricadeManager.sendFuel(generator.transform, newFuel);

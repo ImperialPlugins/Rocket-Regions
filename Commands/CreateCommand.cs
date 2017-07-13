@@ -33,8 +33,9 @@ namespace RocketRegions.Commands
             if (type == null)
             {
                 var types = "";
-                foreach (var t in RegionType.GetTypes())
+                for (int i = 0; i < RegionType.GetTypes().Count; i++)
                 {
+                    var t = RegionType.GetTypes()[i];
                     if (types == "")
                     {
                         types = t;
@@ -67,6 +68,8 @@ namespace RocketRegions.Commands
             UnturnedChat.Say(caller, "Successfully created region: " + name, Color.green);
         }
         
+        #region Properties
+        
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
 
         public string Name => "regioncreate";
@@ -78,5 +81,7 @@ namespace RocketRegions.Commands
         public List<string> Aliases => new List<string> { "rcreate" };
 
         public List<string> Permissions => new List<string> { "regions.command.create" };
+        
+        #endregion
     }
 }

@@ -39,13 +39,9 @@ namespace RocketRegions.Model.Flag.Impl
             
             var currentHealth = player.Health;
             if (currentHealth < health)
-            {
                 player.Heal((byte)(health - currentHealth));
-            }
             else
-            {
                 player.Damage((byte)(currentHealth - health), Vector3.zero, EDeathCause.KILL, ELimb.SPINE, CSteamID.Nil);
-            }
         }
     }
 }
