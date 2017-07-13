@@ -15,30 +15,26 @@ namespace RocketRegions.Model
     {
         public static Group GetGroup(string name)
         {
-            name = name.Trim().ToLower();
-            switch (name)
+            switch (name.Trim().ToUpperInvariant())
             {
-                case "all":
+                case "ALL":
                     return Group.ALL;
-                case "owners":
-                case "owner":
+                case "OWNERS":
+                case "OWNER":
                     return Group.OWNERS;
-                case "members":
-                case "member":
+                case "MEMBERS":
+                case "MEMBER":
                     return Group.MEMBERS;
-                case "nonmembers":
-                case "non-members":
-                case "nonmember":
-                case "non-member":
+                case "NONMEMBERS":
+                case "NON-MEMBERS":
+                case "NONMEMBER":
+                case "NON-MEMBER":
                     return Group.NONMEMBERS;
             }
 
             return Group.ALL;
         }
 
-        public static string GetSerializableName(this Group group)
-        {
-            return group.ToString().ToLower();
-        }
+        public static string GetSerializableName(this Group group) => @group.ToString().ToLower();
     }
 }

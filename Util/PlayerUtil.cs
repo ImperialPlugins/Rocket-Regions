@@ -13,9 +13,7 @@ namespace RocketRegions.Util
         {
             if (player == null) return null;
             if (!(player is UnturnedPlayer))
-            {
                 throw new NotSupportedException("This plugin is for Unturned!");
-            }
 
             return (UnturnedPlayer)player;
         }
@@ -41,9 +39,6 @@ namespace RocketRegions.Util
             return id.m_SteamID;
         }
 
-        public static void OpenUrl(UnturnedPlayer player, string msg, string url)
-        {
-            player.Player.channel.send("askBrowserRequest", player.CSteamID, ESteamPacket.UPDATE_RELIABLE_BUFFER, msg, url);
-        }
+        public static void OpenUrl(UnturnedPlayer player, string msg, string url) => player.Player.channel.send("askBrowserRequest", player.CSteamID, ESteamPacket.UPDATE_RELIABLE_BUFFER, msg, url);
     }
 }

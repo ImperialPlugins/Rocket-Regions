@@ -14,9 +14,16 @@ namespace RocketRegions.Commands
         protected override List<ulong> GetList(Region region)
             => region.GetOwners();
 
+        #region Properties
+        
         public override List<string> Aliases => new List<string> { "regionsowner" };
+        
         public override List<string> Permissions => new List<string>() { "regions.command.owner" };
+        
         public override string Name => "rowner";
+        
         public override string Help => "Add or remove owners from a region";
+        
+        #endregion
     }
 }

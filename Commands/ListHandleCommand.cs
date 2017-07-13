@@ -36,9 +36,9 @@ namespace RocketRegions.Commands
                 return;
             }
 
-            switch (command.GetStringParameter(0).ToLower())
+            switch (command.GetStringParameter(0).ToUpperInvariant()) // Turkey test faggot
             {
-                case "add":
+                case "ADD":
                     {
                         string name;
                         CSteamID target = GetTarget(command.GetStringParameter(2), out name);
@@ -52,7 +52,7 @@ namespace RocketRegions.Commands
                         UnturnedChat.Say(caller, "Done", Color.green);
                         break;
                     }
-                case "remove":
+                case "REMOVE":
                     {
                         string name;
                         CSteamID target = GetTarget(command.GetStringParameter(2), out name);
@@ -66,7 +66,7 @@ namespace RocketRegions.Commands
                         break;
                     }
 
-                case "list":
+                case "LIST":
                 {
                     var list = GetList(region);
                     if (list.Count == 0)
@@ -75,8 +75,9 @@ namespace RocketRegions.Commands
                         return;
                     }
 
-                    foreach (ulong id in list)
+                    for (var i = 0; i < list.Count; i++)
                     {
+                        ulong id = list[i];
                         UnturnedPlayer player = null;
                         try
                         {
@@ -84,10 +85,7 @@ namespace RocketRegions.Commands
                             if (player?.Player == null)
                                 player = null;
                         }
-                        catch (Exception)
-                        {
-
-                        }
+                        catch (Exception) { }
 
                         if (player != null)
                         {
@@ -130,12 +128,21 @@ namespace RocketRegions.Commands
             name = val.ToString();
             return new CSteamID(val);
         }
+        
+        #region Properties
 
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
+        
         public abstract string Name { get; }
+        
         public abstract string Help { get; }
+        
         public string Syntax => "<add/remove/list> <region> <name/SteamID>";
+        
         public abstract List<string> Aliases { get; }
+        
         public abstract List<string> Permissions { get; }
+     
+        #endregion
     }
 }

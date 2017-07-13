@@ -36,10 +36,7 @@ namespace RocketRegions.Model.Flag.Impl
             return new Vector3(x, y, z);
         }
 
-        public string Serialize(Vector3 raw)
-        {
-            return raw.x + "," + raw.y + "," + raw.z;
-        }
+        public string Serialize(Vector3 raw) => raw.x + "," + raw.y + "," + raw.z;
 
         public override string Usage => "";
 

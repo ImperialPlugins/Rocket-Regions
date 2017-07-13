@@ -12,19 +12,18 @@ namespace RocketRegions.Commands
             UnturnedChat.Say(caller, "Regions:", Color.green);
 
             var bRegionsFound = false;
-            foreach (var region in RegionsPlugin.Instance.Regions)
+            for (var i = 0; i < RegionsPlugin.Instance.Regions.Count; i++)
             {
-                UnturnedChat.Say(caller, "• " + region.Name, Color.green);
+                UnturnedChat.Say(caller, "• " + RegionsPlugin.Instance.Regions[i].Name, Color.green);
                 bRegionsFound = true;
             }
 
             if (!bRegionsFound)
-            {
                 UnturnedChat.Say(caller, "No regions found", Color.red);
-            }
         }
 
-
+        #region Properties
+        
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
 
         public string Name => "regionlist";
@@ -36,5 +35,7 @@ namespace RocketRegions.Commands
         public List<string> Aliases => new List<string> { "rlist" };
 
         public List<string> Permissions => new List<string> { "regions.command.list" };
+        
+        #endregion
     }
 }

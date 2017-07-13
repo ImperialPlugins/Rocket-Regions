@@ -14,6 +14,8 @@ namespace RocketRegions.Commands
             var pos = player.Position;
             UnturnedChat.Say(caller, $"Position: X: {pos.x}, Y: {pos.y}, Z: {pos.z}; + Rotation: {player.Player.transform.rotation.eulerAngles.y}", Color.green);
         }
+        
+        #region Properties
 
         public string Name => "coords";
 
@@ -26,5 +28,7 @@ namespace RocketRegions.Commands
         public List<string> Permissions => new List<string> { "regions.command.coords" };
 
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
+        
+        #endregion
     }
 }

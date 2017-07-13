@@ -10,15 +10,10 @@ namespace RocketRegions.Util
         {
             var unturnedPlayer = player as UnturnedPlayer;
             if (unturnedPlayer != null && unturnedPlayer.IsAdmin)
-            {
                 return true;
-            }
             return player.HasPermission("regions." + permission);
         }
 
-        public static void SendUsage(this IRocketCommand command, IRocketPlayer caller)
-        {
-            UnturnedChat.Say(caller, "Usage: " + command.Name + " " + command.Syntax);
-        }
+        public static void SendUsage(this IRocketCommand command, IRocketPlayer caller) => UnturnedChat.Say(caller, "Usage: " + command.Name + " " + command.Syntax);
     }
 }

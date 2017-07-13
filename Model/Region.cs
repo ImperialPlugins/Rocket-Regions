@@ -79,8 +79,9 @@ namespace RocketRegions.Model
             if (Members.Contains(CSteamID.Nil.m_SteamID))
                 Members.Remove(CSteamID.Nil.m_SteamID);
 
-            foreach (var owner in Owners)
+            for (var i = 0; i < Owners.Count; i++)
             {
+                var owner = Owners[i];
                 if (!Members.Contains(owner))
                     continue;
                 Members.Remove(owner);
@@ -121,16 +122,11 @@ namespace RocketRegions.Model
         {
             _flags = new List<RegionFlag>();
 
-            foreach (var serializedFlag in Flags)
-            {
-                DeserializeFlag(serializedFlag);
-            }
+            for (var i = 0; i < Flags.Count; i++)
+                DeserializeFlag(Flags[i]);
         }
 
-        public T GetFlag<T>() where T : RegionFlag
-        {
-            return (T)GetFlag(typeof(T));
-        }
+        public T GetFlag<T>() where T : RegionFlag => (T)GetFlag(typeof(T));
 
         public RegionFlag GetFlag(Type t)
         {
@@ -139,13 +135,9 @@ namespace RocketRegions.Model
                 throw new ArgumentException("Can't get type " + t.Name + " as flag!");
             }
 
-            if (ParsedFlags != null && ParsedFlags.Count > 0)
-            {
-                var match = ParsedFlags.FirstOrDefault(c => c.GetType() == t);
-                if (match != null) return match;
-            }
-
-            return null;
+            if (ParsedFlags == null || ParsedFlags.Count <= 0) return null;
+            var match = ParsedFlags.FirstOrDefault(c => c.GetType() == t);
+            return match ?? null;
         }
 
         public Group GetGroup(IRocketPlayer player)
@@ -190,9 +182,7 @@ namespace RocketRegions.Model
             };
             Flags.Add(flag);
             if (save)
-            {
                 RegionsPlugin.Instance.Configuration.Save();
-            }
 
             if (_flags == null) _flags = new List<RegionFlag>();
             foreach (RegionFlag f in ParsedFlags.Where(f => f.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)))
@@ -219,34 +209,24 @@ namespace RocketRegions.Model
                 deserializedFlag.Name = RegionFlag.GetFlagName(type);
                 deserializedFlag.Value = flag.Value;
 
-                foreach (var value in flag.GroupValues)
-                {
-                    deserializedFlag.SetValue(value.Value, GroupExtensions.GetGroup(value.GroupName));
-                }
+                for (var i = 0; i < flag.GroupValues.Count; i++)
+                    deserializedFlag.SetValue(flag.GroupValues[i].Value, GroupExtensions.GetGroup(flag.GroupValues[i].GroupName));
 
                 deserializedFlag.GroupValues = flag.GroupValues ?? new List<GroupValue>();
                 _flags.Add(deserializedFlag);
                 return deserializedFlag;
             }
-            catch (Exception)
-            {
-                //ignored
-            }
+            catch (Exception) { /*ignored*/ }
             return null;
         }
 
         public bool IsOwner(IRocketPlayer player)
         {
             if (player is ConsolePlayer)
-            {
                 return true;
-            }
             return player.HasPermission("regions.overrideowner") || IsOwner(PlayerUtil.GetId(player));
         }
 
-        public bool IsOwner(ulong id)
-        {
-            return GetOwners().Any(owner => owner == id);
-        }
+        public bool IsOwner(ulong id) => GetOwners().Any(owner => owner == id);
     }
 }

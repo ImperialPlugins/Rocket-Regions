@@ -38,20 +38,11 @@ namespace RocketRegions.Model.RegionType
             return region;
         }
 
-        public override double GetDistance(SerializablePosition p)
-        {
-            return GetDistanceToCenter(p) - Radius;
-        }
+        public override double GetDistance(SerializablePosition p) => GetDistanceToCenter(p) - Radius;
 
-        public double GetDistanceToCenter(SerializablePosition p)
-        {
-            return Math.Sqrt(Math.Pow(p.X - Center.X, 2) + Math.Pow(p.Y - Center.Y, 2));
-        }
+        public double GetDistanceToCenter(SerializablePosition p) => Math.Sqrt(Math.Pow(p.X - Center.X, 2) + Math.Pow(p.Y - Center.Y, 2));
 
-        public override bool IsInRegion(SerializablePosition p)
-        {
-            return GetDistanceToCenter(p) <= Radius;
-        }
+        public override bool IsInRegion(SerializablePosition p) => GetDistanceToCenter(p) <= Radius;
 
         public override bool OnRedefine(IRocketPlayer player, string[] args)
         {

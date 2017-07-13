@@ -14,10 +14,7 @@ namespace RocketRegions.Model.Flag
         private Region _region;
         public Region Region
         {
-            get
-            {
-                return _region;
-            }
+            get => _region;
             set
             {
                 if (value == null) throw new ArgumentNullException(nameof(value), "Region value can not be null");
@@ -34,10 +31,7 @@ namespace RocketRegions.Model.Flag
 
         public virtual object Value
         {
-            get
-            {
-                return _value;
-            }
+            get => _value;
             internal set
             {
                 OnValueUpdate(_value, value);
@@ -132,16 +126,14 @@ namespace RocketRegions.Model.Flag
 
             RegisteredFlags.Add(name, type);
             if (aliases == null || aliases.Count == 0) return;
-            foreach (string s in aliases)
+            for (var i = 0; i < aliases.Count; i++)
             {
+                string s = aliases[i];
                 RegisteredFlags.Add(s.ToLower(), type);
             }
         }
 
-        public static Type GetFlagType(string name)
-        {
-            return (from f in RegisteredFlags where f.Key.Equals(name, StringComparison.CurrentCultureIgnoreCase) select f.Value).FirstOrDefault();
-        }
+        public static Type GetFlagType(string name) => (from f in RegisteredFlags where f.Key.Equals(name, StringComparison.CurrentCultureIgnoreCase) select f.Value).FirstOrDefault();
 
         public static string GetPrimaryFlagName(string alias)
         {
@@ -153,15 +145,9 @@ namespace RocketRegions.Model.Flag
         public abstract void OnRegionEnter(UnturnedPlayer player);
         public abstract void OnRegionLeave(UnturnedPlayer player);
 
-        public static string GetFlagName(Type type)
-        {
-            return RegisteredFlags.FirstOrDefault(c => c.Value == type).Key;
-        }
+        public static string GetFlagName(Type type) => RegisteredFlags.FirstOrDefault(c => c.Value == type).Key;
 
-        public static bool IsRegistered(string name)
-        {
-            return RegisteredFlags.ContainsKey(name.ToLower().Trim());
-        }
+        public static bool IsRegistered(string name) => RegisteredFlags.ContainsKey(name.ToLower().Trim());
 
         public static void UnregisterFlag(string name)
         {

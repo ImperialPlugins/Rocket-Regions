@@ -13,26 +13,26 @@ namespace RocketRegions.Model.Flag.Impl
 
         public override void UpdateState(List<UnturnedPlayer> players)
         {
-            foreach (var player in players)
+            for (int i = 0; i < players.Count; i++)
             {
+                var player = players[i];
                 var id = PlayerUtil.GetId(player);
                 var veh = player.Player.movement.getVehicle();
                 var isInVeh = veh != null;
 
                 if (!_lastVehicleStates.ContainsKey(id))
-                {
                     _lastVehicleStates.Add(id, veh);
-                }
 
                 var wasDriving = _lastVehicleStates[id];
 
                 if (!isInVeh || wasDriving ||
                     !GetValueSafe(Region.GetGroup(player))) continue;
                 sbyte index = -1;
-                foreach (Passenger p in veh.passengers)
+                for (var i1 = 0; i1 < veh.passengers.Length; i1++)
                 {
+                    Passenger p = veh.passengers[i1];
                     index++;
-                    if (p.player.playerID.steamID== PlayerUtil.GetCSteamId(player))
+                    if (p.player.playerID.steamID == PlayerUtil.GetCSteamId(player))
                     {
                         break;
                     }
