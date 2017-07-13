@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Rocket.API;
 using Rocket.API.Extensions;
@@ -36,9 +37,9 @@ namespace RocketRegions.Commands
                 return;
             }
 
-            switch (command.GetStringParameter(0).ToUpperInvariant()) // Turkey test faggot
+            switch (command.GetStringParameter(0).ToLower(CultureInfo.InvariantCulture))
             {
-                case "ADD":
+                case "add":
                     {
                         string name;
                         CSteamID target = GetTarget(command.GetStringParameter(2), out name);
@@ -52,7 +53,7 @@ namespace RocketRegions.Commands
                         UnturnedChat.Say(caller, "Done", Color.green);
                         break;
                     }
-                case "REMOVE":
+                case "remove":
                     {
                         string name;
                         CSteamID target = GetTarget(command.GetStringParameter(2), out name);
@@ -66,7 +67,7 @@ namespace RocketRegions.Commands
                         break;
                     }
 
-                case "LIST":
+                case "list":
                 {
                     var list = GetList(region);
                     if (list.Count == 0)
@@ -75,9 +76,8 @@ namespace RocketRegions.Commands
                         return;
                     }
 
-                    for (var i = 0; i < list.Count; i++)
+                    foreach (ulong id in list)
                     {
-                        ulong id = list[i];
                         UnturnedPlayer player = null;
                         try
                         {

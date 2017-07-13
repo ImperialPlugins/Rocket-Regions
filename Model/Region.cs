@@ -79,9 +79,8 @@ namespace RocketRegions.Model
             if (Members.Contains(CSteamID.Nil.m_SteamID))
                 Members.Remove(CSteamID.Nil.m_SteamID);
 
-            for (var i = 0; i < Owners.Count; i++)
+            foreach (var owner in Owners)
             {
-                var owner = Owners[i];
                 if (!Members.Contains(owner))
                     continue;
                 Members.Remove(owner);
@@ -122,8 +121,8 @@ namespace RocketRegions.Model
         {
             _flags = new List<RegionFlag>();
 
-            for (var i = 0; i < Flags.Count; i++)
-                DeserializeFlag(Flags[i]);
+            foreach (SerializableFlag t in Flags)
+                DeserializeFlag(t);
         }
 
         public T GetFlag<T>() where T : RegionFlag => (T)GetFlag(typeof(T));
@@ -209,8 +208,8 @@ namespace RocketRegions.Model
                 deserializedFlag.Name = RegionFlag.GetFlagName(type);
                 deserializedFlag.Value = flag.Value;
 
-                for (var i = 0; i < flag.GroupValues.Count; i++)
-                    deserializedFlag.SetValue(flag.GroupValues[i].Value, GroupExtensions.GetGroup(flag.GroupValues[i].GroupName));
+                foreach (GroupValue t in flag.GroupValues)
+                    deserializedFlag.SetValue(t.Value, GroupExtensions.GetGroup(t.GroupName));
 
                 deserializedFlag.GroupValues = flag.GroupValues ?? new List<GroupValue>();
                 _flags.Add(deserializedFlag);

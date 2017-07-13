@@ -13,9 +13,8 @@ namespace RocketRegions.Model.Flag.Impl
         public override void UpdateState(List<UnturnedPlayer> players)
         {
             var generators = Object.FindObjectsOfType<InteractableGenerator>();
-            for (var i = 0; i < generators.Length; i++)
+            foreach (var generator in generators)
             {
-                var generator = generators[i];
                 var pos = generator.gameObject.transform.position;
                 if (RegionsPlugin.Instance.GetRegionAt(pos) != Region)
                     continue;

@@ -33,9 +33,8 @@ namespace RocketRegions.Commands
             if (type == null)
             {
                 var types = "";
-                for (int i = 0; i < RegionType.GetTypes().Count; i++)
+                foreach (var t in RegionType.GetTypes())
                 {
-                    var t = RegionType.GetTypes()[i];
                     if (types == "")
                     {
                         types = t;

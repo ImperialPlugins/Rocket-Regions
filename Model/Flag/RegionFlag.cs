@@ -126,9 +126,8 @@ namespace RocketRegions.Model.Flag
 
             RegisteredFlags.Add(name, type);
             if (aliases == null || aliases.Count == 0) return;
-            for (var i = 0; i < aliases.Count; i++)
+            foreach (string s in aliases)
             {
-                string s = aliases[i];
                 RegisteredFlags.Add(s.ToLower(), type);
             }
         }

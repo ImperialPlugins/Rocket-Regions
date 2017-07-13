@@ -17,18 +17,15 @@ namespace RocketRegions.Model.Flag.Impl
             ushort maxHealth = ushort.MaxValue;
             if (StructureManager.regions != null)
             {
-                for (var i0 = 0; i0 < StructureManager.regions.GetLength(0); i0++)
-                for (var i1 = 0; i1 < StructureManager.regions.GetLength(1); i1++)
+                foreach (var region in StructureManager.regions)
                 {
-                    var region = StructureManager.regions[i0, i1];
                     if (region == null) continue;
-                    for (var i = 0; i < region.structures.Count; i++)
+                    foreach (var structure in region.structures)
                     {
-                        var structure = region.structures[i];
                         if (structure?.structure == null) continue;
                         if (!Region.Type.IsInRegion(new SerializablePosition(structure.point))) continue;
 
-                        var asset = (ItemStructureAsset) Assets.find(EAssetType.ITEM, structure.structure.id);
+                        var asset = (ItemStructureAsset)Assets.find(EAssetType.ITEM, structure.structure.id);
                         if (asset == null) continue;
 
                         if (GetValueSafe() && structure.structure.health < maxHealth)
@@ -45,18 +42,15 @@ namespace RocketRegions.Model.Flag.Impl
 
             if (BarricadeManager.regions == null) return;
             {
-                for (var i0 = 0; i0 < BarricadeManager.regions.GetLength(0); i0++)
-                for (var i1 = 0; i1 < BarricadeManager.regions.GetLength(1); i1++)
+                foreach (var region in BarricadeManager.regions)
                 {
-                    var region = BarricadeManager.regions[i0, i1];
                     if (region == null) continue;
-                    for (var i = 0; i < region.barricades.Count; i++)
+                    foreach (var barricade in region.barricades)
                     {
-                        var barricade = region.barricades[i];
                         if (barricade?.barricade == null) continue;
                         if (!Region.Type.IsInRegion(new SerializablePosition(barricade.point))) continue;
 
-                        var asset = (ItemBarricadeAsset) Assets.find(EAssetType.ITEM, barricade.barricade.id);
+                        var asset = (ItemBarricadeAsset)Assets.find(EAssetType.ITEM, barricade.barricade.id);
                         if (asset == null) continue;
 
                         if (asset.build == EBuild.FARM)

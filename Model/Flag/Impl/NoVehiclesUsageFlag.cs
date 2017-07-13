@@ -13,9 +13,8 @@ namespace RocketRegions.Model.Flag.Impl
 
         public override void UpdateState(List<UnturnedPlayer> players)
         {
-            for (int i = 0; i < players.Count; i++)
+            foreach (var player in players)
             {
-                var player = players[i];
                 var id = PlayerUtil.GetId(player);
                 var veh = player.Player.movement.getVehicle();
                 var isInVeh = veh != null;
@@ -28,9 +27,8 @@ namespace RocketRegions.Model.Flag.Impl
                 if (!isInVeh || wasDriving ||
                     !GetValueSafe(Region.GetGroup(player))) continue;
                 sbyte index = -1;
-                for (var i1 = 0; i1 < veh.passengers.Length; i1++)
+                foreach (Passenger p in veh.passengers)
                 {
-                    Passenger p = veh.passengers[i1];
                     index++;
                     if (p.player.playerID.steamID == PlayerUtil.GetCSteamId(player))
                     {

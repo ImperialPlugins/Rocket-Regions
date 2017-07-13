@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Rocket.API;
 using Rocket.Unturned.Chat;
+using RocketRegions.Model;
 using UnityEngine;
 
 namespace RocketRegions.Commands
@@ -12,9 +13,9 @@ namespace RocketRegions.Commands
             UnturnedChat.Say(caller, "Regions:", Color.green);
 
             var bRegionsFound = false;
-            for (var i = 0; i < RegionsPlugin.Instance.Regions.Count; i++)
+            foreach (Region region in RegionsPlugin.Instance.Regions)
             {
-                UnturnedChat.Say(caller, "• " + RegionsPlugin.Instance.Regions[i].Name, Color.green);
+                UnturnedChat.Say(caller, "• " + region.Name, Color.green);
                 bRegionsFound = true;
             }
 

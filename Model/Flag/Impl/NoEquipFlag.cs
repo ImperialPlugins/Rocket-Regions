@@ -9,9 +9,8 @@ namespace RocketRegions.Model.Flag.Impl
 
         public override void UpdateState(List<UnturnedPlayer> players)
         {
-            for (var i = 0; i < players.Count; i++)
+            foreach (var player in players)
             {
-                var player = players[i];
                 if (player?.Player?.equipment?.useable == null)
                     continue;
                 if (!player.Player.equipment.isEquipped)

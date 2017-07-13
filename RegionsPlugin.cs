@@ -75,8 +75,8 @@ namespace RocketRegions
                 Configuration.Save();
             }
 
-            for (var i = 0; i < Regions.Count; i++)
-                Regions[i].RebuildFlags();
+            foreach (Region r in Regions)
+                r.RebuildFlags();
 
             if (Regions.Count < 1) return;
             StartListening();
@@ -94,8 +94,8 @@ namespace RocketRegions
                     OnPlayerDisconnect(untPlayer);
             }
 
-            for (var i = 0; i < Regions.Count; i++)
-                OnRegionRemoved(Regions[i]);
+            foreach (Region r in Regions)
+                OnRegionRemoved(r);
 
             R.Permissions = _defaultPermissionsProvider;
             R.Plugins.OnPluginsLoaded -= OnPluginsLoaded;
@@ -205,8 +205,8 @@ namespace RocketRegions
 
             if (currentRegion != null)
             {
-                for (var i = 0; i < currentRegion.ParsedFlags.Count; i++)
-                    currentRegion.ParsedFlags[i]?.OnPlayerUpdatePosition(untPlayer, position);
+                foreach (RegionFlag f in currentRegion.ParsedFlags)
+                    f?.OnPlayerUpdatePosition(untPlayer, position);
             }
 
             if (lastPosition == null)
@@ -220,8 +220,8 @@ namespace RocketRegions
             var id = PlayerUtil.GetId(player);
             _playersInRegions.Add(id, region);
 
-            for (var i = 0; i < region.ParsedFlags.Count; i++)
-                region.ParsedFlags[i].OnRegionEnter((UnturnedPlayer) player);
+            foreach (RegionFlag f in region.ParsedFlags)
+                f.OnRegionEnter((UnturnedPlayer) player);
         }
 
         internal void OnPlayerLeftRegion(IRocketPlayer player, Region region)
@@ -229,8 +229,8 @@ namespace RocketRegions
             var id = PlayerUtil.GetId(player);
             _playersInRegions.Remove(id);
 
-            for (var i = 0; i < region.ParsedFlags.Count; i++)
-                region.ParsedFlags[i].OnRegionLeave((UnturnedPlayer) player);
+            foreach (RegionFlag f in region.ParsedFlags)
+                f.OnRegionLeave((UnturnedPlayer) player);
         }
 
         private static bool IsInRegion(Vector3 pos, Region region) => region.Type.IsInRegion(new SerializablePosition(pos));
@@ -241,9 +241,8 @@ namespace RocketRegions
         {
             if (Regions == null || Regions.Count == 0) return null;
 
-            for (var i = 0; i < Regions.Count; i++)
+            foreach (var region in Regions)
             {
-                var region = Regions[i];
                 if (exact)
                 {
                     if (region.Name.Equals(regionName, StringComparison.CurrentCultureIgnoreCase))
@@ -268,9 +267,8 @@ namespace RocketRegions
             if (_frame % Configuration.Instance.UpdateFrameCount != 0)
                 return;
 
-            for (var i = 0; i < Provider.clients.Count; i++)
+            foreach (var player in Provider.clients)
             {
-                var player = Provider.clients[i];
                 if(player?.playerID?.steamID == null)
                     continue;
                 
@@ -288,14 +286,14 @@ namespace RocketRegions
                     OnPlayerUpdatePosition(UnturnedPlayer.FromSteamPlayer(player), player.player.transform.position);
             }
 
-            for (var i = 0; i < Regions.Count; i++)
+            foreach (var region in Regions)
             {
-                var region = Regions[i];
                 var flags = region.ParsedFlags;
-                var players = _playersInRegions.Where(c => c.Value == region)
+                var region1 = region;
+                var players = _playersInRegions.Where(c => c.Value == region1)
                     .Select(player => UnturnedPlayer.FromCSteamID(new CSteamID(player.Key))).ToList();
-                for (var i1 = 0; i1 < flags.Count; i1++)
-                    flags[i1].UpdateState(players);
+                foreach (RegionFlag f in flags)
+                    f.UpdateState(players);
             }
         }
     }
