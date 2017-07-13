@@ -179,7 +179,7 @@ namespace RocketRegions
             {
                 //Left a region
                 var flag = oldRegion.GetFlag<NoLeaveFlag>();
-                var value = flag?.GetValueSafe(currentRegion.GetGroup(player));
+                var value = flag?.GetValueSafe(oldRegion.GetGroup(player));
                 if (value.HasValue && value.Value && lastPosition != null)
                 {
                     //Todo: send message to player (can't leave region)
