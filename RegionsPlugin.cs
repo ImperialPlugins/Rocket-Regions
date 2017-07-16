@@ -298,12 +298,14 @@ namespace RocketRegions
 
             foreach (var region in Regions)
             {
-                var flags = region.ParsedFlags;
-                var region1 = region;
-                var players = _playersInRegions.Where(c => c.Value == region1)
+                var flags = region?.ParsedFlags;
+                if(flags == null)
+                    continue;
+
+                var players = _playersInRegions.Where(c => c.Value == region)
                     .Select(player => UnturnedPlayer.FromCSteamID(new CSteamID(player.Key))).ToList();
                 foreach (RegionFlag f in flags)
-                    f.UpdateState(players);
+                    f.UpdateState(players.Where(c => c.Player != null).ToList());
             }
         }
     }
