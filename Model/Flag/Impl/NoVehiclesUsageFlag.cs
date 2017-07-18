@@ -2,6 +2,7 @@
 using Rocket.Unturned.Player;
 using RocketRegions.Util;
 using SDG.Unturned;
+using UnityEngine;
 
 namespace RocketRegions.Model.Flag.Impl
 {
@@ -26,17 +27,11 @@ namespace RocketRegions.Model.Flag.Impl
 
                 if (!isInVeh || wasDriving ||
                     !GetValueSafe(Region.GetGroup(player))) continue;
-                sbyte index = -1;
-                foreach (Passenger p in veh.passengers)
-                {
-                    index++;
-                    if (p.player.playerID.steamID == PlayerUtil.GetCSteamId(player))
-                    {
-                        break;
-                    }
-                }
 
-                veh.kickPlayer((byte) index);
+                byte seat;
+                Vector3 point;
+                byte angle;
+                veh.forceRemovePlayer(out seat, PlayerUtil.GetCSteamId(player), out point, out angle);
             }
         }
 
