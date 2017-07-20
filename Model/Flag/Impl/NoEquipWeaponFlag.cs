@@ -18,7 +18,13 @@ namespace RocketRegions.Model.Flag.Impl
                 if (!GetValueSafe(Region.GetGroup(player)))
                     continue;
 
-                if (!player.Player.equipment.isEquipped) continue;
+                if (!player.Player.equipment.isEquipped)
+                    continue;
+
+                if(RegionsPlugin.Instance.Configuration.Instance.NoEquipWeaponIgnoredItems
+                    .Contains(player.Player.equipment.asset.id))
+                    continue;
+
                 if (player.Player.equipment.useable is UseableGun ||
                     player.Player.equipment.useable is UseableMelee
                     || player.Player.equipment.useable is UseableThrowable)

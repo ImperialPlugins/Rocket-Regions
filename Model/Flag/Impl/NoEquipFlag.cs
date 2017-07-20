@@ -17,6 +17,11 @@ namespace RocketRegions.Model.Flag.Impl
                     continue;
                 if (!GetValueSafe(Region.GetGroup(player)))
                     continue;
+
+                if (RegionsPlugin.Instance.Configuration.Instance.NoEquipIgnoredItems
+                 .Contains(player.Player.equipment.asset.id))
+                    continue;
+
                 player.Player.equipment.dequip();
             }
         }

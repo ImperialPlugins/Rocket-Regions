@@ -54,6 +54,7 @@ namespace RocketRegions
             RegionFlag.RegisterFlag("EnterURL", typeof(EnterURLFlag));
             RegionFlag.RegisterFlag("LeaveURL", typeof(LeaveURLFlag));
             RegionFlag.RegisterFlag("VanishFlag", typeof(VanishFlag));
+            RegionFlag.RegisterFlag("NoDecay", typeof(NoDecayFlag));
 
             Configuration.Load();
 
