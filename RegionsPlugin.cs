@@ -274,6 +274,9 @@ namespace RocketRegions
         private int _frame;
         private void Update()
         {
+            if (Configuration?.Instance == null || Provider.clients == null || _lastPositions == null || _playersInRegions == null)
+                return;
+
             _frame++;
             if (_frame % Configuration.Instance.UpdateFrameCount != 0)
                 return;
@@ -306,7 +309,7 @@ namespace RocketRegions
                 var players = _playersInRegions.Where(c => c.Value == region)
                     .Select(player => UnturnedPlayer.FromCSteamID(new CSteamID(player.Key))).ToList();
                 foreach (RegionFlag f in flags)
-                    f.UpdateState(players.Where(c => c.Player != null).ToList());
+                    f?.UpdateState(players.Where(c => c.Player != null).ToList());
             }
         }
     }

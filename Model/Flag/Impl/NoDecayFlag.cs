@@ -7,11 +7,11 @@ namespace RocketRegions.Model.Flag.Impl
 {
     public class NoDecayFlag : BoolFlag
     {
-        private DateTime lastRun = DateTime.Now;
+        private DateTime _lastRun = DateTime.Now;
         public override string Description => "Prevents decay of barricades";
         public override void UpdateState(List<UnturnedPlayer> players)
         {
-            if ((DateTime.Now - lastRun).TotalSeconds < 60)
+            if ((DateTime.Now - _lastRun).TotalSeconds < 60)
                 return;
 
             if (StructureManager.regions != null)
@@ -51,7 +51,7 @@ namespace RocketRegions.Model.Flag.Impl
                 }
             }
 
-            lastRun = DateTime.Now;
+            _lastRun = DateTime.Now;
         }
 
         public override void OnRegionEnter(UnturnedPlayer player)
