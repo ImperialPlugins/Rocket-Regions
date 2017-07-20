@@ -9,6 +9,7 @@ namespace RocketRegions.Model.Flag.Impl
     public class NoVehiclesUsageFlag : BoolFlag
     {
         public override string Description => "Allow/Disallow usage of vehicles in region";
+        public override bool SupportsGroups => true;
 
         private readonly Dictionary<ulong, bool> _lastVehicleStates = new Dictionary<ulong, bool>();
 
@@ -16,6 +17,10 @@ namespace RocketRegions.Model.Flag.Impl
         {
             foreach (var player in players)
             {
+                var group = Region.GetGroup(player);
+                if(!GetValueSafe(group))
+                    continue;
+
                 var id = PlayerUtil.GetId(player);
                 var veh = player.Player.movement.getVehicle();
                 var isInVeh = veh != null;
