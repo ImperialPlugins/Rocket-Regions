@@ -26,12 +26,18 @@ namespace RocketRegions
         public List<Region> Regions => Configuration?.Instance?.Regions ?? new List<Region>();
         private IRocketPermissionsProvider _defaultPermissionsProvider;
         public event RegionsLoaded OnRegionsLoaded;
-        public const string VERSION = "1.4.0.0";
+        public const string VERSION = "1.4.5.0";
 
         protected override void Load()
         {
             Logger.Log($"Regions v{VERSION}", ConsoleColor.Cyan);
             Instance = this;
+
+            if(Configuration.Instance.NoEquipIgnoredItems == null)
+                Configuration.Instance.NoEquipIgnoredItems = new List<ushort>();
+
+            if(Configuration.Instance.NoEquipWeaponIgnoredItems == null)
+                Configuration.Instance.NoEquipWeaponIgnoredItems = new List<ushort>();
 
             RegionType.RegisterRegionType("rectangle", typeof(RectangleType));
             RegionType.RegisterRegionType("circle", typeof(CircleType));
