@@ -9,11 +9,8 @@ namespace RocketRegions
     {
         public int UpdateFrameCount { get; set; }
         public List<Region> Regions { get; set; }
-        [XmlArray("Item")]
         public List<ushort> NoEquipWeaponIgnoredItems { get; set; }
         public string UrlOpenMessage { get; set; }
-
-        [XmlArray("Item")]
         public List<ushort> NoEquipIgnoredItems { get; set; }
 
         public void LoadDefaults()
