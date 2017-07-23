@@ -7,7 +7,7 @@ namespace RocketRegions.Model.Flag.Impl
 {
     public class DecayFlag : IntFlag
     {
-        public override string Description => "Decreases health of barricades and structures by 1 every x milliseconds";
+        public override string Description => "Decreases health of barricades and structures by 10 every x milliseconds";
         public override string Usage => "<interval in seconds>";
         public override bool SupportsGroups => false;
 
@@ -38,7 +38,7 @@ namespace RocketRegions.Model.Flag.Impl
                         var asset = (ItemStructureAsset)Assets.find(EAssetType.ITEM, structure.structure.id);
                         if (asset == null) continue;
 
-                        structure.structure.health -= 1;
+                        structure.structure.health -= 10;
                     }
                 }
             }
@@ -56,7 +56,7 @@ namespace RocketRegions.Model.Flag.Impl
                         var asset = (ItemBarricadeAsset)Assets.find(EAssetType.ITEM, barricade.barricade.id);
                         if (asset == null) continue;
 
-                        barricade.barricade.health -= 1;
+                        barricade.barricade.health -= 10;
                     }
                 }
             }
