@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Rocket.Unturned.Player;
 using SDG.Unturned;
+using UnityEngine;
 
 namespace RocketRegions.Model.Flag.Impl
 {
@@ -30,15 +32,20 @@ namespace RocketRegions.Model.Flag.Impl
                 foreach (var region in StructureManager.regions)
                 {
                     if (region == null) continue;
-                    foreach (var structure in region.structures)
+
+                    byte index = 0;
+                    foreach (var drop in region.drops)
                     {
+                        var structure = region.structures.ElementAt(index);
+                        index++;
+
                         if (structure?.structure == null) continue;
                         if (!Region.Type.IsInRegion(new SerializablePosition(structure.point))) continue;
 
                         var asset = (ItemStructureAsset)Assets.find(EAssetType.ITEM, structure.structure.id);
                         if (asset == null) continue;
-
-                        structure.structure.health -= 10;
+                        
+                        StructureManager.damage(drop.model, Vector3.zero, 10f, 1f, true);
                     }
                 }
             }
@@ -48,15 +55,20 @@ namespace RocketRegions.Model.Flag.Impl
                 foreach (var region in BarricadeManager.regions)
                 {
                     if (region == null) continue;
-                    foreach (var barricade in region.barricades)
+
+                    byte index = 0;
+                    foreach (var drop in region.drops)
                     {
+                        var barricade = region.barricades.ElementAt(index);
+                        index++;
+
                         if (barricade?.barricade == null) continue;
                         if (!Region.Type.IsInRegion(new SerializablePosition(barricade.point))) continue;
 
                         var asset = (ItemBarricadeAsset)Assets.find(EAssetType.ITEM, barricade.barricade.id);
                         if (asset == null) continue;
 
-                        barricade.barricade.health -= 10;
+                        BarricadeManager.damage(drop.model, 10f, 1f, true);
                     }
                 }
             }
