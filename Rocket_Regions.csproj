@@ -86,6 +86,7 @@
     <Compile Include="Commands\RemoveCommand.cs" />
     <Compile Include="Commands\TeleportCommand.cs" />
     <Compile Include="Model\Flag\BoolFlag.cs" />
+    <Compile Include="Model\Flag\Impl\DecayFlag.cs" />
     <Compile Include="Model\Flag\Impl\EnterEffectFlag.cs" />
     <Compile Include="Model\Flag\Impl\EnterAddGroupFlag.cs" />
     <Compile Include="Model\Flag\Impl\EnterRemoveGroupFlag.cs" />

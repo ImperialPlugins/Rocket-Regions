@@ -65,7 +65,7 @@ namespace RocketRegions
             RegionFlag.RegisterFlag("EnterRemoveGroup", typeof(EnterRemoveGroupFlag));
             RegionFlag.RegisterFlag("LeaveAddGroup", typeof(LeaveAddGroupFlag));
             RegionFlag.RegisterFlag("LeaveRemoveGroup", typeof(LeaveRemoveGroupFlag));
-
+            RegionFlag.RegisterFlag("Decay", typeof(DecayFlag));
             Configuration.Load();
 
             _defaultPermissionsProvider = R.Permissions;
