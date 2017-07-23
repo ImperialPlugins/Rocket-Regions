@@ -34,9 +34,9 @@ namespace RocketRegions.Model.Flag.Impl
                     if (region == null) continue;
 
                     byte index = 0;
-                    foreach (var drop in region.drops)
+                    foreach (var drop in region.drops.ToList())
                     {
-                        var structure = region.structures.ElementAt(index);
+                        var structure = region.structures.ToList().ElementAt(index);
                         index++;
 
                         if (structure?.structure == null) continue;
@@ -57,9 +57,9 @@ namespace RocketRegions.Model.Flag.Impl
                     if (region == null) continue;
 
                     byte index = 0;
-                    foreach (var drop in region.drops)
+                    foreach (var drop in region.drops.ToList())
                     {
-                        var barricade = region.barricades.ElementAt(index);
+                        var barricade = region.barricades.ToList().ElementAt(index);
                         index++;
 
                         if (barricade?.barricade == null) continue;
