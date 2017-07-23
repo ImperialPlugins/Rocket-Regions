@@ -87,8 +87,12 @@
     <Compile Include="Commands\TeleportCommand.cs" />
     <Compile Include="Model\Flag\BoolFlag.cs" />
     <Compile Include="Model\Flag\Impl\EnterEffectFlag.cs" />
+    <Compile Include="Model\Flag\Impl\EnterAddGroupFlag.cs" />
+    <Compile Include="Model\Flag\Impl\EnterRemoveGroupFlag.cs" />
     <Compile Include="Model\Flag\Impl\EnterURLFlag.cs" />
+    <Compile Include="Model\Flag\Impl\LeaveAddGroupFlag.cs" />
     <Compile Include="Model\Flag\Impl\LeaveEffectFlag.cs" />
+    <Compile Include="Model\Flag\Impl\LeaveRemoveGroupFlag.cs" />
     <Compile Include="Model\Flag\Impl\LeaveURLFlag.cs" />
     <Compile Include="Model\Flag\Impl\NoDecayFlag.cs" />
     <Compile Include="Model\Flag\Impl\NoDestroyFlag.cs" />

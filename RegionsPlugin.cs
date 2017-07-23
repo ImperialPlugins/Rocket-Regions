@@ -61,6 +61,10 @@ namespace RocketRegions
             RegionFlag.RegisterFlag("LeaveURL", typeof(LeaveURLFlag));
             RegionFlag.RegisterFlag("VanishFlag", typeof(VanishFlag));
             RegionFlag.RegisterFlag("NoDecay", typeof(NoDecayFlag));
+            RegionFlag.RegisterFlag("EnterAddGroup", typeof(EnterAddGroupFlag));
+            RegionFlag.RegisterFlag("EnterRemoveGroup", typeof(EnterRemoveGroupFlag));
+            RegionFlag.RegisterFlag("LeaveAddGroup", typeof(LeaveAddGroupFlag));
+            RegionFlag.RegisterFlag("LeaveRemoveGroup", typeof(LeaveRemoveGroupFlag));
 
             Configuration.Load();
 
