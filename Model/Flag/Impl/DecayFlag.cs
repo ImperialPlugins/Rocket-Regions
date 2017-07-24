@@ -66,7 +66,7 @@ namespace RocketRegions.Model.Flag.Impl
 
                     byte index = 0;
                     var dropsList = region.drops.ToList();
-                    foreach (var drop in region.drops.ToList())
+                    foreach (var drop in dropsList)
                     {
                         if (dropsList.Count != region.drops.Count)
                             break;
