@@ -7,7 +7,7 @@ Feels free to [open pull requests](https://github.com/Trojaner25/Rocket-Regions/
 
 Important:
 
-Altough Rocket-Regions is licensed as  AGPL v3, you are not allowed to use any parts of Rocket-Regions commercially without written permission. This includes dynamic or static linking or using/copying any code of it. This also includes modified versions.
+Although Rocket-Regions is licensed as  AGPL v3, you are not allowed to use any parts of Rocket-Regions commercially without written permission. This includes dynamic or static linking or using/copying any code of it. This also includes modified versions.
 
 In a nutshell:
 
