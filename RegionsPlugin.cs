@@ -33,10 +33,10 @@ namespace RocketRegions
             Logger.Log($"Regions v{VERSION}", ConsoleColor.Cyan);
             Instance = this;
 
-            if(Configuration.Instance.NoEquipIgnoredItems == null)
+            if (Configuration.Instance.NoEquipIgnoredItems == null)
                 Configuration.Instance.NoEquipIgnoredItems = new List<ushort>();
 
-            if(Configuration.Instance.NoEquipWeaponIgnoredItems == null)
+            if (Configuration.Instance.NoEquipWeaponIgnoredItems == null)
                 Configuration.Instance.NoEquipWeaponIgnoredItems = new List<ushort>();
 
             RegionType.RegisterRegionType("rectangle", typeof(RectangleType));
@@ -122,6 +122,8 @@ namespace RocketRegions
         {
             //Start listening to events
             //UnturnedPlayerEvents.OnPlayerUpdatePosition += OnPlayerUpdatePosition;
+            StructureManager.onDamageStructureRequested += OnDamageStruct;
+            BarricadeManager.onDamageBarricadeRequested += OnDamageBarric;
             U.Events.OnPlayerConnected += OnPlayerConnect;
             U.Events.OnPlayerDisconnected += OnPlayerDisconnect;
         }
@@ -130,8 +132,34 @@ namespace RocketRegions
         {
             //Stop listening to events
             //UnturnedPlayerEvents.OnPlayerUpdatePosition -= OnPlayerUpdatePosition;
+            StructureManager.onDamageStructureRequested -= OnDamageStruct;
+            BarricadeManager.onDamageBarricadeRequested -= OnDamageBarric;
             U.Events.OnPlayerConnected -= OnPlayerConnect;
             U.Events.OnPlayerDisconnected -= OnPlayerDisconnect;
+        }
+
+        private void OnDamageStruct(CSteamID instigatorSteamID, Transform structureTransform, ref ushort pendingTotalDamage, ref bool shouldAllow, EDamageOrigin damageOrigin)
+        {
+            StructureManager.tryGetInfo(structureTransform, out byte x, out byte y, out ushort Index, out StructureRegion StRegion);
+            var currentRegion = GetRegionAt(StRegion.structures[Index].point);
+            if (currentRegion == null)
+                return;
+            if (currentRegion.Flags.Exists(fg => fg.Name == "NoDestroy"))
+                shouldAllow = false;
+            else
+                return;
+        }
+
+        private void OnDamageBarric(CSteamID instigatorSteamID, Transform structureTransform, ref ushort pendingTotalDamage, ref bool shouldAllow, EDamageOrigin damageOrigin)
+        {
+            BarricadeManager.tryGetInfo(structureTransform, out byte x, out byte y, out ushort plant, out ushort Index, out BarricadeRegion BarRegion);
+            var currentRegion = GetRegionAt(BarRegion.barricades[Index].point);
+            if (currentRegion == null)
+                return;
+            if (currentRegion.Flags.Exists(fg => fg.Name == "NoDestroy"))
+                shouldAllow = false;
+            else
+                return;
         }
 
         internal void OnRegionCreated(Region region)
