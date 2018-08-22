@@ -12,6 +12,8 @@ namespace RocketRegions
         public List<ushort> NoEquipWeaponIgnoredItems { get; set; }
         public string UrlOpenMessage { get; set; }
         public List<ushort> NoEquipIgnoredItems { get; set; }
+        public List<ushort> NoDestroyIgnoredItems { get; set; }
+        public string NoDestroyIgnorePermission { get; set; }
 
         public void LoadDefaults()
         {
@@ -20,6 +22,8 @@ namespace RocketRegions
             UrlOpenMessage = "Visit webpage";
             NoEquipWeaponIgnoredItems = new List<ushort> {1337};
             NoEquipIgnoredItems = new List<ushort> { 1337 };
+            NoDestroyIgnoredItems = new List<ushort> { 369 };
+            NoDestroyIgnorePermission = "regions.nodestroy.ignore";
         }
     }
 }
