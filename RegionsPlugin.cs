@@ -144,7 +144,7 @@ namespace RocketRegions
             var currentRegion = GetRegionAt(StRegion.structures[Index].point);
             if (currentRegion == null)
                 return;
-            if (currentRegion.Flags.Exists(fg => fg.Name == "NoDestroy"))
+            if (currentRegion.Flags.Exists(fg => fg.Name == "NoDestroy") && !R.Permissions.HasPermission(new RocketPlayer(instigatorSteamID.m_SteamID.ToString()), Configuration.Instance.NoDestroyIgnorePermission) && !Configuration.Instance.NoDestroyIgnoredItems.Exists(k => k == StRegion.structures[Index].structure.id))
                 shouldAllow = false;
             else
                 return;
@@ -156,7 +156,7 @@ namespace RocketRegions
             var currentRegion = GetRegionAt(BarRegion.barricades[Index].point);
             if (currentRegion == null)
                 return;
-            if (currentRegion.Flags.Exists(fg => fg.Name == "NoDestroy"))
+            if (currentRegion.Flags.Exists(fg => fg.Name == "NoDestroy") && !R.Permissions.HasPermission(new RocketPlayer(instigatorSteamID.m_SteamID.ToString()), Configuration.Instance.NoDestroyIgnorePermission) && !Configuration.Instance.NoDestroyIgnoredItems.Exists(k => k == BarRegion.barricades[Index].barricade.id))
                 shouldAllow = false;
             else
                 return;
