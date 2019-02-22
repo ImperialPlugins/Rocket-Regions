@@ -13,6 +13,7 @@ namespace RocketRegions.Commands
             var player = PlayerUtil.GetUnturnedPlayer(caller);
             var pos = player.Position;
             UnturnedChat.Say(caller, $"Position: X: {pos.x}, Y: {pos.y}, Z: {pos.z}; + Rotation: {player.Player.transform.rotation.eulerAngles.y}", Color.green);
+            //UnturnedChat.Say(caller, $"Position: X: {pos.x}, Y: {pos.y}, Z: {pos.z}; + Rotation: {player.Player.transform.rotation.eulerAngles.y}", Color.green);
         }
         
         #region Properties
