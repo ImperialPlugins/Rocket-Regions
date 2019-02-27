@@ -26,7 +26,7 @@ namespace RocketRegions
         public List<Region> Regions => Configuration?.Instance?.Regions ?? new List<Region>();
         private IRocketPermissionsProvider _defaultPermissionsProvider;
         public event RegionsLoaded OnRegionsLoaded;
-        public const string VERSION = "1.4.5.0";
+        public const string VERSION = "1.5.0.0";
 
         protected override void Load()
         {
