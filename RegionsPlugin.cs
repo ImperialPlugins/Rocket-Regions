@@ -70,6 +70,7 @@ namespace RocketRegions
             RegionFlag.RegisterFlag("LeaveAddGroup", typeof(LeaveAddGroupFlag));
             RegionFlag.RegisterFlag("LeaveRemoveGroup", typeof(LeaveRemoveGroupFlag));
             RegionFlag.RegisterFlag("Decay", typeof(DecayFlag));
+            RegionFlag.RegisterFlag("NoVehicleDamage", typeof(NoVehiclesDamageFlag));
             Configuration.Load();
 
             _defaultPermissionsProvider = R.Permissions;
@@ -153,10 +154,6 @@ namespace RocketRegions
 
             var untPlayer = PlayerUtil.GetUnturnedPlayer(player);
 
-            Vector3? lastPosition = null;
-            if (_lastPositions.ContainsKey(PlayerUtil.GetId(player)))
-                lastPosition = _lastPositions[PlayerUtil.GetId(player)];
-
             var currentRegion = GetRegionAt(untPlayer.Position);
             //Flag is stop the process of this function because the user opted to disabled the auto-protection feature
             if (currentRegion.Flags.Exists(fg => fg.Name.Equals("DisableGodModeProtection", StringComparison.OrdinalIgnoreCase)))
@@ -170,7 +167,6 @@ namespace RocketRegions
 
         private void OnDamageVehicle(CSteamID instigatorSteamID, InteractableVehicle vehicle, ref ushort pendingTotalDamage, ref bool canRepair, ref bool shouldAllow, EDamageOrigin damageOrigin)
         {
-            Vector3 position = vehicle.transform.position;
             var currentRegion = GetRegionAt(vehicle.transform.position);
             if (currentRegion == null)
                 return;
