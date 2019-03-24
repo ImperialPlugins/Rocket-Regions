@@ -30,7 +30,7 @@ namespace RocketRegions
 
         private IRocketPermissionsProvider _defaultPermissionsProvider;
         public event RegionsLoaded OnRegionsLoaded;
-        public const string VERSION = "1.4.5.0";
+        public const string VERSION = "1.5.0.0";
 
         protected override void Load()
         {
@@ -181,9 +181,21 @@ namespace RocketRegions
             var currentRegion = GetRegionAt(StRegion.structures[Index].point);
             if (currentRegion == null)
                 return;
-            if (currentRegion.Flags.Exists(fg => fg.Name.Equals("NoDestroy", StringComparison.OrdinalIgnoreCase)) && !R.Permissions.HasPermission(new RocketPlayer(instigatorSteamID.m_SteamID.ToString()), Configuration.Instance.NoDestroyIgnorePermission) && !Configuration.Instance.NoDestroyIgnoredItems.Exists(k => k == StRegion.structures[Index].structure.id))
-                shouldAllow = false;
 
+            if (currentRegion.Flags.Exists(fg => fg.Name.Equals("NoDestroy", StringComparison.OrdinalIgnoreCase)))
+            {
+                UnturnedPlayer dealer = UnturnedPlayer.FromCSteamID(instigatorSteamID);
+
+                if (dealer == null)
+                    return;
+                
+                if (dealer.HasPermission(Configuration.Instance.NoDestroyIgnorePermission) || Configuration.Instance.NoDestroyIgnoredItems.Exists(k => k == StRegion.structures[Index].structure.id))
+                    return;
+
+                shouldAllow = false;
+            }
+            else
+                return;
         }
 
         private void OnDamageBarric(CSteamID instigatorSteamID, Transform structureTransform, ref ushort pendingTotalDamage, ref bool shouldAllow, EDamageOrigin damageOrigin)
@@ -192,9 +204,21 @@ namespace RocketRegions
             var currentRegion = GetRegionAt(BarRegion.barricades[Index].point);
             if (currentRegion == null)
                 return;
-            if (currentRegion.Flags.Exists(fg => fg.Name.Equals("NoDestroy", StringComparison.OrdinalIgnoreCase)) && !R.Permissions.HasPermission(new RocketPlayer(instigatorSteamID.m_SteamID.ToString()), Configuration.Instance.NoDestroyIgnorePermission) && !Configuration.Instance.NoDestroyIgnoredItems.Exists(k => k == BarRegion.barricades[Index].barricade.id))
-                shouldAllow = false;
 
+            if (currentRegion.Flags.Exists(fg => fg.Name.Equals("NoDestroy", StringComparison.OrdinalIgnoreCase)))
+            {
+                UnturnedPlayer dealer = UnturnedPlayer.FromCSteamID(instigatorSteamID);
+
+                if (dealer == null)
+                    return;
+                
+                if (dealer.HasPermission(Configuration.Instance.NoDestroyIgnorePermission) || Configuration.Instance.NoDestroyIgnoredItems.Exists(k => k == BarRegion.barricades[Index].barricade.id))
+                    return;
+
+                shouldAllow = false;
+            }
+            else
+                return;
         }
 
         internal void OnRegionCreated(Region region)
