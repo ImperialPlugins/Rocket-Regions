@@ -2,6 +2,7 @@
 using Rocket.Core;
 using Rocket.Core.Plugins;
 using Rocket.Unturned;
+using Rocket.Unturned.Events;
 using Rocket.Unturned.Player;
 using RocketRegions.Model;
 using RocketRegions.Model.Flag;
@@ -24,6 +25,9 @@ namespace RocketRegions
         private readonly Dictionary<ulong, Region> _playersInRegions = new Dictionary<ulong, Region>();
         private readonly Dictionary<ulong, Vector3> _lastPositions = new Dictionary<ulong, Vector3>();
         public List<Region> Regions => Configuration?.Instance?.Regions ?? new List<Region>();
+
+        public object InteractionVehicle { get; private set; }
+
         private IRocketPermissionsProvider _defaultPermissionsProvider;
         public event RegionsLoaded OnRegionsLoaded;
         public const string VERSION = "1.4.5.0";
@@ -124,6 +128,9 @@ namespace RocketRegions
             //UnturnedPlayerEvents.OnPlayerUpdatePosition += OnPlayerUpdatePosition;
             StructureManager.onDamageStructureRequested += OnDamageStruct;
             BarricadeManager.onDamageBarricadeRequested += OnDamageBarric;
+            VehicleManager.onDamageVehicleRequested += OnDamageVehicle;
+
+            UnturnedEvents.OnPlayerDamaged += OnPlayerDamaged;
             U.Events.OnPlayerConnected += OnPlayerConnect;
             U.Events.OnPlayerDisconnected += OnPlayerDisconnect;
         }
@@ -134,8 +141,36 @@ namespace RocketRegions
             //UnturnedPlayerEvents.OnPlayerUpdatePosition -= OnPlayerUpdatePosition;
             StructureManager.onDamageStructureRequested -= OnDamageStruct;
             BarricadeManager.onDamageBarricadeRequested -= OnDamageBarric;
+            VehicleManager.onDamageVehicleRequested -= OnDamageVehicle;
             U.Events.OnPlayerConnected -= OnPlayerConnect;
             U.Events.OnPlayerDisconnected -= OnPlayerDisconnect;
+        }
+
+        //This is to prevent other plugins overwriting god mode by accident
+        private void OnPlayerDamaged(UnturnedPlayer player, ref EDeathCause cause, ref ELimb limb, ref UnturnedPlayer killer, ref Vector3 direction, ref float damage, ref float times, ref bool canDamage)
+        {
+            if (player.GodMode) return;
+
+            var untPlayer = PlayerUtil.GetUnturnedPlayer(player);
+            _lastPositions.Add(PlayerUtil.GetId(player), untPlayer.Position);
+            var currentRegion = GetRegionAt(untPlayer.Position);
+            //Flag is stop the process of this function because the user opted to disabled the auto-protection feature
+            if (currentRegion.Flags.Exists(fg => fg.Name.Equals("DisableGodModeProtection", StringComparison.OrdinalIgnoreCase)))
+                return;
+            if (currentRegion != null)
+                OnPlayerEnteredRegion(player, currentRegion);
+        }
+
+        private void OnDamageVehicle(CSteamID instigatorSteamID, InteractableVehicle vehicle, ref ushort pendingTotalDamage, ref bool canRepair, ref bool shouldAllow, EDamageOrigin damageOrigin)
+        {
+            Vector3 position = vehicle.transform.position;
+            var currentRegion = GetRegionAt(vehicle.transform.position);
+            if (currentRegion == null)
+                return;
+            if (currentRegion.Flags.Exists(fg => fg.Name.Equals("NoVehicleDamage", StringComparison.OrdinalIgnoreCase)) && !R.Permissions.HasPermission(new RocketPlayer(instigatorSteamID.m_SteamID.ToString()), Configuration.Instance.NoVehicleDamageIgnorePermission) && !Configuration.Instance.NoDestroyIgnoredItems.Exists(k => k == vehicle.id))
+                shouldAllow = false;
+            Rocket.Unturned.Chat.UnturnedChat.Say("Veh Dmg: " + shouldAllow);
+
         }
 
         private void OnDamageStruct(CSteamID instigatorSteamID, Transform structureTransform, ref ushort pendingTotalDamage, ref bool shouldAllow, EDamageOrigin damageOrigin)
@@ -146,8 +181,7 @@ namespace RocketRegions
                 return;
             if (currentRegion.Flags.Exists(fg => fg.Name.Equals("NoDestroy", StringComparison.OrdinalIgnoreCase)) && !R.Permissions.HasPermission(new RocketPlayer(instigatorSteamID.m_SteamID.ToString()), Configuration.Instance.NoDestroyIgnorePermission) && !Configuration.Instance.NoDestroyIgnoredItems.Exists(k => k == StRegion.structures[Index].structure.id))
                 shouldAllow = false;
-            else
-                return;
+
         }
 
         private void OnDamageBarric(CSteamID instigatorSteamID, Transform structureTransform, ref ushort pendingTotalDamage, ref bool shouldAllow, EDamageOrigin damageOrigin)
@@ -158,8 +192,7 @@ namespace RocketRegions
                 return;
             if (currentRegion.Flags.Exists(fg => fg.Name.Equals("NoDestroy", StringComparison.OrdinalIgnoreCase)) && !R.Permissions.HasPermission(new RocketPlayer(instigatorSteamID.m_SteamID.ToString()), Configuration.Instance.NoDestroyIgnorePermission) && !Configuration.Instance.NoDestroyIgnoredItems.Exists(k => k == BarRegion.barricades[Index].barricade.id))
                 shouldAllow = false;
-            else
-                return;
+
         }
 
         internal void OnRegionCreated(Region region)

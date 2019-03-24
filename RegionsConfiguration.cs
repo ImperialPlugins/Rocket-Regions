@@ -14,6 +14,7 @@ namespace RocketRegions
         public List<ushort> NoEquipIgnoredItems { get; set; }
         public List<ushort> NoDestroyIgnoredItems { get; set; }
         public string NoDestroyIgnorePermission { get; set; }
+        public string NoVehicleDamageIgnorePermission { get; set; }
 
         public void LoadDefaults()
         {
@@ -24,6 +25,7 @@ namespace RocketRegions
             NoEquipIgnoredItems = new List<ushort> { 1337 };
             NoDestroyIgnoredItems = new List<ushort> { 369 };
             NoDestroyIgnorePermission = "regions.nodestroy.ignore";
+            NoVehicleDamageIgnorePermission = "regions.novehicledamage.ignore";
         }
     }
 }
