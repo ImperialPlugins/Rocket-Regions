@@ -152,7 +152,11 @@ namespace RocketRegions
             if (player.GodMode) return;
 
             var untPlayer = PlayerUtil.GetUnturnedPlayer(player);
-            _lastPositions.Add(PlayerUtil.GetId(player), untPlayer.Position);
+
+            Vector3? lastPosition = null;
+            if (_lastPositions.ContainsKey(PlayerUtil.GetId(player)))
+                lastPosition = _lastPositions[PlayerUtil.GetId(player)];
+
             var currentRegion = GetRegionAt(untPlayer.Position);
             //Flag is stop the process of this function because the user opted to disabled the auto-protection feature
             if (currentRegion.Flags.Exists(fg => fg.Name.Equals("DisableGodModeProtection", StringComparison.OrdinalIgnoreCase)))
