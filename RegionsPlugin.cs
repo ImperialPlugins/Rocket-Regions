@@ -176,7 +176,6 @@ namespace RocketRegions
                 return;
             if (currentRegion.Flags.Exists(fg => fg.Name.Equals("NoVehicleDamage", StringComparison.OrdinalIgnoreCase)) && !R.Permissions.HasPermission(new RocketPlayer(instigatorSteamID.m_SteamID.ToString()), Configuration.Instance.NoVehicleDamageIgnorePermission) && !Configuration.Instance.NoDestroyIgnoredItems.Exists(k => k == vehicle.id))
                 shouldAllow = false;
-            Rocket.Unturned.Chat.UnturnedChat.Say("Veh Dmg: " + shouldAllow);
 
         }
 
@@ -296,7 +295,8 @@ namespace RocketRegions
         private void OnPlayerEnteredRegion(IRocketPlayer player, Region region)
         {
             var id = PlayerUtil.GetId(player);
-            _playersInRegions.Add(id, region);
+            if (!_playersInRegions.ContainsKey(id))
+                _playersInRegions.Add(id, region);
 
             foreach (RegionFlag f in region.ParsedFlags)
                 f.OnRegionEnter((UnturnedPlayer)player);
