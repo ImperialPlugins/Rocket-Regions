@@ -32,13 +32,13 @@ namespace RocketRegions
         public event RegionsLoaded OnRegionsLoaded;
         public const string VERSION = "1.5.0.0";
 
-        public delegate void OnHandleStructureDamage(Region region, Transform structureTransform, EDamageOrigin damageOrigin, ref bool shouldHandle)
+        public delegate void OnHandleStructureDamage(Region region, Transform structureTransform, EDamageOrigin damageOrigin, ref bool shouldHandle);
         public event OnHandleStructureDamage HandleStructureDamage;
         
-        public delegate void OnHandleBarricadeDamage(Region region, Transform barricadeTransform, EDamageOrigin damageOrigin, ref bool shouldHandle)
+        public delegate void OnHandleBarricadeDamage(Region region, Transform barricadeTransform, EDamageOrigin damageOrigin, ref bool shouldHandle);
         public event OnHandleBarricadeDamage HandleBarricadeDamage;
         
-        public delegate void OnHandleVehicleDamage(Region region, InteractableVehicle vehicle, EDamageOrigin damageOrigin, ref bool shouldHandle)
+        public delegate void OnHandleVehicleDamage(Region region, InteractableVehicle vehicle, EDamageOrigin damageOrigin, ref bool shouldHandle);
         public event OnHandleVehicleDamage HandleVehicleDamage;
 
         protected override void Load()
