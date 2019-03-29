@@ -182,7 +182,7 @@ namespace RocketRegions
                 return;
             
             bool shouldHandle = true;
-            HandleVehicleDamage?.Invoke(region, vehicle, damageOrigin, ref shouldHandle);
+            HandleVehicleDamage?.Invoke(currentRegion, vehicle, damageOrigin, ref shouldHandle);
   
             if(!shouldHandle)
                return;
@@ -199,7 +199,7 @@ namespace RocketRegions
                 return;
 
             bool shouldHandle = true;
-            HandleStructureDamage?.Invoke(region, structureTransform, damageOrigin, ref shouldHandle);
+            HandleStructureDamage?.Invoke(currentRegion, structureTransform, damageOrigin, ref shouldHandle);
   
             if(!shouldHandle)
                return;
@@ -228,7 +228,7 @@ namespace RocketRegions
                 return;
                 
             bool shouldHandle = true;
-            HandleBarricadeDamage?.Invoke(region, barricadeTransform, damageOrigin, ref shouldHandle);
+            HandleBarricadeDamage?.Invoke(currentRegion, barricadeTransform, damageOrigin, ref shouldHandle);
   
             if(!shouldHandle)
                return;
