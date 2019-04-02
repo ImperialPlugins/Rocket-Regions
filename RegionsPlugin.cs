@@ -171,17 +171,7 @@ namespace RocketRegions
             if (currentRegion == null)
                 return;
             if (currentRegion.Flags.Exists(fg => fg.Name.Equals("NoVehicleDamage", StringComparison.OrdinalIgnoreCase)) && !R.Permissions.HasPermission(new RocketPlayer(instigatorSteamID.m_SteamID.ToString()), Configuration.Instance.NoVehicleDamageIgnorePermission) && !Configuration.Instance.NoDestroyIgnoredItems.Exists(k => k == vehicle.id))
-            {
-                UnturnedPlayer dealer = UnturnedPlayer.FromCSteamID(instigatorSteamID);
-
-                if (dealer == null)
-                    return;
-
-                if (dealer.HasPermission(Configuration.Instance.NoDestroyIgnorePermission) || Configuration.Instance.NoDestroyIgnoredItems.Exists(k => k == BarRegion.barricades[Index].barricade.id))
-                    return;
-
                 shouldAllow = false;
-            }
 
         }
 
