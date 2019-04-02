@@ -167,32 +167,38 @@ namespace RocketRegions
 
         private void OnDamageVehicle(CSteamID instigatorSteamID, InteractableVehicle vehicle, ref ushort pendingTotalDamage, ref bool canRepair, ref bool shouldAllow, EDamageOrigin damageOrigin)
         {
+            if (damageOrigin.ToString().Equals("Unknown")) //In hopes to support with WreckPlugin
+                return;
             var currentRegion = GetRegionAt(vehicle.transform.position);
             if (currentRegion == null)
                 return;
-            if (currentRegion.Flags.Exists(fg => fg.Name.Equals("NoVehicleDamage", StringComparison.OrdinalIgnoreCase)) && !R.Permissions.HasPermission(new RocketPlayer(instigatorSteamID.m_SteamID.ToString()), Configuration.Instance.NoVehicleDamageIgnorePermission) && !Configuration.Instance.NoDestroyIgnoredItems.Exists(k => k == vehicle.id))
+            if (currentRegion.Flags.Exists(fg => fg.Name.Equals("NoVehicleDamage", StringComparison.OrdinalIgnoreCase)) && (bool)currentRegion.Flags.Find(fg => fg.Name.Equals("NoVehicleDamage", StringComparison.OrdinalIgnoreCase)).Value && !R.Permissions.HasPermission(new RocketPlayer(instigatorSteamID.m_SteamID.ToString()), Configuration.Instance.NoVehicleDamageIgnorePermission) && !Configuration.Instance.NoDestroyIgnoredItems.Exists(k => k == vehicle.id))
                 shouldAllow = false;
 
         }
 
         private void OnDamageStruct(CSteamID instigatorSteamID, Transform structureTransform, ref ushort pendingTotalDamage, ref bool shouldAllow, EDamageOrigin damageOrigin)
         {
+            if (damageOrigin.ToString().Equals("Unknown")) //In hopes to support with WreckPlugin
+                return;
             StructureManager.tryGetInfo(structureTransform, out byte x, out byte y, out ushort Index, out StructureRegion StRegion);
             var currentRegion = GetRegionAt(StRegion.structures[Index].point);
-            if (currentRegion == null)
-                return;
-            if (currentRegion.Flags.Exists(fg => fg.Name.Equals("NoDestroy", StringComparison.OrdinalIgnoreCase)) && !R.Permissions.HasPermission(new RocketPlayer(instigatorSteamID.m_SteamID.ToString()), Configuration.Instance.NoDestroyIgnorePermission) && !Configuration.Instance.NoDestroyIgnoredItems.Exists(k => k == StRegion.structures[Index].structure.id))
+
+            if (currentRegion.Flags.Exists(fg => fg.Name.Equals("NoDestroy", StringComparison.OrdinalIgnoreCase)) && (bool)currentRegion.Flags.Find(fg => fg.Name.Equals("NoDestroy", StringComparison.OrdinalIgnoreCase)).Value && !R.Permissions.HasPermission(new RocketPlayer(instigatorSteamID.m_SteamID.ToString()), Configuration.Instance.NoDestroyIgnorePermission) && !Configuration.Instance.NoDestroyIgnoredItems.Exists(k => k == StRegion.structures[Index].structure.id))
                 shouldAllow = false;
 
         }
 
         private void OnDamageBarric(CSteamID instigatorSteamID, Transform structureTransform, ref ushort pendingTotalDamage, ref bool shouldAllow, EDamageOrigin damageOrigin)
         {
+            if (damageOrigin.ToString().Equals("Unknown")) //In hopes to support with WreckPlugin
+                return;
+
             BarricadeManager.tryGetInfo(structureTransform, out byte x, out byte y, out ushort plant, out ushort Index, out BarricadeRegion BarRegion);
             var currentRegion = GetRegionAt(BarRegion.barricades[Index].point);
             if (currentRegion == null)
                 return;
-            if (currentRegion.Flags.Exists(fg => fg.Name.Equals("NoDestroy", StringComparison.OrdinalIgnoreCase)) && !R.Permissions.HasPermission(new RocketPlayer(instigatorSteamID.m_SteamID.ToString()), Configuration.Instance.NoDestroyIgnorePermission) && !Configuration.Instance.NoDestroyIgnoredItems.Exists(k => k == BarRegion.barricades[Index].barricade.id))
+            if (currentRegion.Flags.Exists(fg => fg.Name.Equals("NoDestroy", StringComparison.OrdinalIgnoreCase)) && (bool)currentRegion.Flags.Find(fg => fg.Name.Equals("NoDestroy", StringComparison.OrdinalIgnoreCase)).Value && !R.Permissions.HasPermission(new RocketPlayer(instigatorSteamID.m_SteamID.ToString()), Configuration.Instance.NoDestroyIgnorePermission) && !Configuration.Instance.NoDestroyIgnoredItems.Exists(k => k == BarRegion.barricades[Index].barricade.id))
                 shouldAllow = false;
 
         }
