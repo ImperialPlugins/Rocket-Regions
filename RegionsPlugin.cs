@@ -41,6 +41,12 @@ namespace RocketRegions
         public delegate void OnHandleVehicleDamage(Region region, InteractableVehicle vehicle, EDamageOrigin damageOrigin, ref bool shouldHandle);
         public event OnHandleVehicleDamage HandleVehicleDamage;
 
+        public delegate void OnRegionEnter(UnturnedPlayer player, Region region);
+        public event OnRegionEnter RegionEnter;
+
+        public delegate void OnRegionLeave(UnturnedPlayer player, Region region);
+        public event OnRegionLeave RegionLeave;
+
         protected override void Load()
         {
             Logger.Log($"Regions v{VERSION}", ConsoleColor.Cyan);
@@ -344,6 +350,8 @@ namespace RocketRegions
             if (!_playersInRegions.ContainsKey(id))
                 _playersInRegions.Add(id, region);
 
+            RegionEnter?.Invoke((UnturnedPlayer)player, region);
+
             foreach (RegionFlag f in region.ParsedFlags)
                 f.OnRegionEnter((UnturnedPlayer)player);
         }
@@ -352,6 +360,8 @@ namespace RocketRegions
         {
             var id = PlayerUtil.GetId(player);
             _playersInRegions.Remove(id);
+
+            RegionLeave?.Invoke((UnturnedPlayer)player, region);
 
             foreach (RegionFlag f in region.ParsedFlags)
             {
