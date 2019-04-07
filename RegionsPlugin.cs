@@ -32,6 +32,21 @@ namespace RocketRegions
         public event RegionsLoaded OnRegionsLoaded;
         public const string VERSION = "1.5.0.0";
 
+        public delegate void OnHandleStructureDamage(Region region, Transform structureTransform, EDamageOrigin damageOrigin, ref bool shouldHandle);
+        public event OnHandleStructureDamage HandleStructureDamage;
+        
+        public delegate void OnHandleBarricadeDamage(Region region, Transform barricadeTransform, EDamageOrigin damageOrigin, ref bool shouldHandle);
+        public event OnHandleBarricadeDamage HandleBarricadeDamage;
+        
+        public delegate void OnHandleVehicleDamage(Region region, InteractableVehicle vehicle, EDamageOrigin damageOrigin, ref bool shouldHandle);
+        public event OnHandleVehicleDamage HandleVehicleDamage;
+
+        public delegate void OnRegionEnter(UnturnedPlayer player, Region region);
+        public event OnRegionEnter RegionEnter;
+
+        public delegate void OnRegionLeave(UnturnedPlayer player, Region region);
+        public event OnRegionLeave RegionLeave;
+
         protected override void Load()
         {
             Logger.Log($"Regions v{VERSION}", ConsoleColor.Cyan);
@@ -127,8 +142,8 @@ namespace RocketRegions
         {
             //Start listening to events
             //UnturnedPlayerEvents.OnPlayerUpdatePosition += OnPlayerUpdatePosition;
-            StructureManager.onDamageStructureRequested += OnDamageStruct;
-            BarricadeManager.onDamageBarricadeRequested += OnDamageBarric;
+            StructureManager.onDamageStructureRequested += OnDamageStructure;
+            BarricadeManager.onDamageBarricadeRequested += OnDamageBarricade;
             VehicleManager.onDamageVehicleRequested += OnDamageVehicle;
 
             UnturnedEvents.OnPlayerDamaged += OnPlayerDamaged;
@@ -140,8 +155,8 @@ namespace RocketRegions
         {
             //Stop listening to events
             //UnturnedPlayerEvents.OnPlayerUpdatePosition -= OnPlayerUpdatePosition;
-            StructureManager.onDamageStructureRequested -= OnDamageStruct;
-            BarricadeManager.onDamageBarricadeRequested -= OnDamageBarric;
+            StructureManager.onDamageStructureRequested -= OnDamageStructure;
+            BarricadeManager.onDamageBarricadeRequested -= OnDamageBarricade;
             VehicleManager.onDamageVehicleRequested -= OnDamageVehicle;
             U.Events.OnPlayerConnected -= OnPlayerConnect;
             U.Events.OnPlayerDisconnected -= OnPlayerDisconnect;
@@ -168,8 +183,16 @@ namespace RocketRegions
         private void OnDamageVehicle(CSteamID instigatorSteamID, InteractableVehicle vehicle, ref ushort pendingTotalDamage, ref bool canRepair, ref bool shouldAllow, EDamageOrigin damageOrigin)
         {
             var currentRegion = GetRegionAt(vehicle.transform.position);
+            
             if (currentRegion == null)
                 return;
+            
+            bool shouldHandle = true;
+            HandleVehicleDamage?.Invoke(currentRegion, vehicle, damageOrigin, ref shouldHandle);
+  
+            if(!shouldHandle)
+               return;
+            
             if (currentRegion.Flags.Exists(fg => fg.Name.Equals("NoVehicleDamage", StringComparison.OrdinalIgnoreCase)) && !R.Permissions.HasPermission(new RocketPlayer(instigatorSteamID.m_SteamID.ToString()), Configuration.Instance.NoVehicleDamageIgnorePermission) && !Configuration.Instance.NoDestroyIgnoredItems.Exists(k => k == vehicle.id))
             {
                 UnturnedPlayer dealer = UnturnedPlayer.FromCSteamID(instigatorSteamID);
@@ -182,15 +205,20 @@ namespace RocketRegions
 
                 shouldAllow = false;
             }
+        }
 
-            }
-
-        private void OnDamageStruct(CSteamID instigatorSteamID, Transform structureTransform, ref ushort pendingTotalDamage, ref bool shouldAllow, EDamageOrigin damageOrigin)
+        private void OnDamageStructure(CSteamID instigatorSteamID, Transform structureTransform, ref ushort pendingTotalDamage, ref bool shouldAllow, EDamageOrigin damageOrigin)
         {
             StructureManager.tryGetInfo(structureTransform, out byte x, out byte y, out ushort Index, out StructureRegion StRegion);
             var currentRegion = GetRegionAt(StRegion.structures[Index].point);
             if (currentRegion == null)
                 return;
+
+            bool shouldHandle = true;
+            HandleStructureDamage?.Invoke(currentRegion, structureTransform, damageOrigin, ref shouldHandle);
+  
+            if(!shouldHandle)
+               return;
 
             if (currentRegion.Flags.Exists(fg => fg.Name.Equals("NoDestroy", StringComparison.OrdinalIgnoreCase)))
             {
@@ -208,12 +236,18 @@ namespace RocketRegions
                 return;
         }
 
-        private void OnDamageBarric(CSteamID instigatorSteamID, Transform structureTransform, ref ushort pendingTotalDamage, ref bool shouldAllow, EDamageOrigin damageOrigin)
+        private void OnDamageBarricade(CSteamID instigatorSteamID, Transform barricadeTransform, ref ushort pendingTotalDamage, ref bool shouldAllow, EDamageOrigin damageOrigin)
         {
-            BarricadeManager.tryGetInfo(structureTransform, out byte x, out byte y, out ushort plant, out ushort Index, out BarricadeRegion BarRegion);
+            BarricadeManager.tryGetInfo(barricadeTransform, out byte x, out byte y, out ushort plant, out ushort Index, out BarricadeRegion BarRegion);
             var currentRegion = GetRegionAt(BarRegion.barricades[Index].point);
             if (currentRegion == null)
                 return;
+                
+            bool shouldHandle = true;
+            HandleBarricadeDamage?.Invoke(currentRegion, barricadeTransform, damageOrigin, ref shouldHandle);
+  
+            if(!shouldHandle)
+               return;
 
             if (currentRegion.Flags.Exists(fg => fg.Name.Equals("NoDestroy", StringComparison.OrdinalIgnoreCase)))
             {
@@ -227,8 +261,6 @@ namespace RocketRegions
 
                 shouldAllow = false;
             }
-            else
-                return;
         }
 
         internal void OnRegionCreated(Region region)
@@ -328,6 +360,8 @@ namespace RocketRegions
             if (!_playersInRegions.ContainsKey(id))
                 _playersInRegions.Add(id, region);
 
+            RegionEnter?.Invoke((UnturnedPlayer)player, region);
+
             foreach (RegionFlag f in region.ParsedFlags)
                 f.OnRegionEnter((UnturnedPlayer)player);
         }
@@ -336,6 +370,8 @@ namespace RocketRegions
         {
             var id = PlayerUtil.GetId(player);
             _playersInRegions.Remove(id);
+
+            RegionLeave?.Invoke((UnturnedPlayer)player, region);
 
             foreach (RegionFlag f in region.ParsedFlags)
             {
