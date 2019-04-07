@@ -194,7 +194,17 @@ namespace RocketRegions
                return;
             
             if (currentRegion.Flags.Exists(fg => fg.Name.Equals("NoVehicleDamage", StringComparison.OrdinalIgnoreCase)) && !R.Permissions.HasPermission(new RocketPlayer(instigatorSteamID.m_SteamID.ToString()), Configuration.Instance.NoVehicleDamageIgnorePermission) && !Configuration.Instance.NoDestroyIgnoredItems.Exists(k => k == vehicle.id))
+            {
+                UnturnedPlayer dealer = UnturnedPlayer.FromCSteamID(instigatorSteamID);
+
+                if (dealer == null)
+                    return;
+
+                if (dealer.HasPermission(Configuration.Instance.NoDestroyIgnorePermission) || Configuration.Instance.NoDestroyIgnoredItems.Exists(k => k == vehicle.id))
+                    return;
+
                 shouldAllow = false;
+            }
         }
 
         private void OnDamageStructure(CSteamID instigatorSteamID, Transform structureTransform, ref ushort pendingTotalDamage, ref bool shouldAllow, EDamageOrigin damageOrigin)
