@@ -170,6 +170,7 @@ namespace RocketRegions
             var untPlayer = PlayerUtil.GetUnturnedPlayer(player);
 
             var currentRegion = GetRegionAt(untPlayer.Position);
+            if (currentRegion == null) return; //No region? Not our problem!
             //Flag is stop the process of this function because the user opted to disabled the auto-protection feature
             if (currentRegion.Flags.Exists(fg => fg.Name.Equals("DisableGodModeProtection", StringComparison.OrdinalIgnoreCase)))
                 return;
