@@ -174,9 +174,14 @@ namespace RocketRegions
                 return;
             }
 
-            if(currentRegion.Flags.Exists(fg => fg.Name.Equals("NoVehiclesLockpick", StringComparison.OrdinalIgnoreCase)))
+            IRocketPlayer rPlayer = (IRocketPlayer)instigatingPlayer;
+
+            if (currentRegion.Flags.Exists(fg => fg.Name.Equals("NoVehiclesLockpick", StringComparison.OrdinalIgnoreCase)))
             {
-                allow = false;
+                if (currentRegion.GetFlag<NoVehiclesLockpickFlag>()?.GetValueSafe(currentRegion.GetGroup(rPlayer)) ?? false)
+                {
+                    allow = false;
+                }
             }
         }
 
