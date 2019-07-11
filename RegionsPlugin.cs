@@ -1,4 +1,4 @@
-﻿using Rocket.API;
+using Rocket.API;
 using Rocket.Core;
 using Rocket.Core.Plugins;
 using Rocket.Unturned;
@@ -86,6 +86,7 @@ namespace RocketRegions
             RegionFlag.RegisterFlag("LeaveRemoveGroup", typeof(LeaveRemoveGroupFlag));
             RegionFlag.RegisterFlag("Decay", typeof(DecayFlag));
             RegionFlag.RegisterFlag("NoVehicleDamage", typeof(NoVehiclesDamageFlag));
+            RegionFlag.RegisterFlag("NoVehiclesLockpick", typeof(NoVehiclesLockpickFlag));
             Configuration.Load();
 
             _defaultPermissionsProvider = R.Permissions;
@@ -145,6 +146,7 @@ namespace RocketRegions
             StructureManager.onDamageStructureRequested += OnDamageStructure;
             BarricadeManager.onDamageBarricadeRequested += OnDamageBarricade;
             VehicleManager.onDamageVehicleRequested += OnDamageVehicle;
+            VehicleManager.onVehicleLockpicked += OnLockpickVehicle;
 
             UnturnedEvents.OnPlayerDamaged += OnPlayerDamaged;
             U.Events.OnPlayerConnected += OnPlayerConnect;
@@ -158,8 +160,24 @@ namespace RocketRegions
             StructureManager.onDamageStructureRequested -= OnDamageStructure;
             BarricadeManager.onDamageBarricadeRequested -= OnDamageBarricade;
             VehicleManager.onDamageVehicleRequested -= OnDamageVehicle;
+            VehicleManager.onVehicleLockpicked -= OnLockpickVehicle;
             U.Events.OnPlayerConnected -= OnPlayerConnect;
             U.Events.OnPlayerDisconnected -= OnPlayerDisconnect;
+        }
+
+        private void OnLockpickVehicle(InteractableVehicle vehicle, Player instigatingPlayer, ref bool allow)
+        {
+            var currentRegion = GetRegionAt(vehicle.transform.position);
+
+            if (currentRegion == null)
+            {
+                return;
+            }
+
+            if(currentRegion.Flags.Exists(fg => fg.Name.Equals("NoVehiclesLockpick", StringComparison.OrdinalIgnoreCase)))
+            {
+                allow = false;
+            }
         }
 
         //This is to prevent other plugins overwriting god mode by accident
