@@ -106,6 +106,7 @@
     <Compile Include="Model\Flag\Impl\NoEquipFlag.cs" />
     <Compile Include="Model\Flag\Impl\NoVehiclesDamageFlag.cs" />
     <Compile Include="Model\Flag\Impl\NoVehiclesUsageFlag.cs" />
+    <Compile Include=“Model\Flag\Impl\NoVehiclesLockpickFlag.cs />
     <Compile Include="Model\Flag\Impl\TeleportFlag.cs" />
     <Compile Include="Model\Flag\Impl\UnlimitedGeneratorFlag.cs" />
     <Compile Include="Model\Flag\IDFlag.cs" />
