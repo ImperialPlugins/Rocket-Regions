@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Rocket.API;
 using RocketRegions.Model;
 
 namespace RocketRegions.Commands
@@ -15,7 +16,9 @@ namespace RocketRegions.Commands
             => region.GetOwners();
 
         #region Properties
-        
+
+        public override AllowedCaller AllowedCaller => AllowedCaller.Both;
+
         public override List<string> Aliases => new List<string> { "regionsowner" };
         
         public override List<string> Permissions => new List<string>() { "regions.command.owner" };
