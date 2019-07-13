@@ -130,7 +130,7 @@ namespace RocketRegions.Commands
         
         #region Properties
 
-        public AllowedCaller AllowedCaller => AllowedCaller.Player;
+        public abstract AllowedCaller AllowedCaller { get; }
         
         public abstract string Name { get; }
         
