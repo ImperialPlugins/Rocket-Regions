@@ -1,9 +1,18 @@
+# Abandoned
+Rocket-Regions was the first plugin I have ever made, made in 2015 (!) with almost no improvements to it after that. The plugin got abandoned and will not be updated anymore. In the last 4 years I have learnt a lot more about coding and it was about time to reflect these improvements on a new regions plugin, which is based on modern code and using programming and Unity best practices.
+
+Please check it out here: 
+
+[AdvancedRegions on ImperialPlugins](https://imperialplugins.com/Products/ProductDetails/211)
+
+NOTE:
+Keep in mind the license below. It still applies.
+This plugin can not be reuploaded to Rocket Harbor since the license is not compatible. Rocket Harbor only permits MIT license based plugins, which is not the case here.
+
 # Rocket-Regions 
 Build Status (AppVeyor): [![AppVeyor](https://ci.appveyor.com/api/projects/status/icsl7uawhm3mo3yw?svg=true)](https://ci.appveyor.com/project/Trojaner25/rocket-regions)<br/><br/>
 Developer repository for Rocket-Regions<br/>
 Feels free to [open pull requests](https://github.com/Trojaner25/Rocket-Regions/compare) or to [report issues](https://github.com/Trojaner25/Rocket-Regions/issues/new)
-
-
 
 Important:
 
